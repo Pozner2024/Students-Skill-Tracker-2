@@ -1,0 +1,149 @@
+/* Контейнер для заголовка "Итоги тестирования" */
+.header-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 0;
+  margin: 15px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  text-align: center;
+  color: #ff8a65;
+  font-weight: bold;
+  line-height: 40px;
+  transition: box-shadow 0.3s ease, opacity 0.5s ease;
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+  width: 90%;
+  height: 80px;
+}
+.header-container {
+  font-size: 20px;
+}
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Контейнер для всей панели прогресса */
+.progress-container {
+  background: linear-gradient(120deg, #f9fbfd, #eef3fa);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 900px;
+  transition: box-shadow 0.3s ease;
+  width: 90%;
+  position: relative;
+}
+
+/* Заголовок для каждой полосы прогресса */
+.progress-container p {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 10px;
+  letter-spacing: 0.5px;
+}
+
+/* Общая шкала прогресса с тик-маркерами */
+.scale-container {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85em;
+  color: #888;
+  margin-bottom: 8px;
+  font-weight: 500;
+  position: relative;
+}
+
+/* Линия для тиков */
+.scale-container::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #ddd;
+  z-index: -1;
+}
+
+/* Тики для каждого значения шкалы */
+.scale-label {
+  color: #666;
+  font-size: 0.9em;
+  font-weight: 500;
+  position: relative;
+}
+
+.scale-label::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 6px;
+  background-color: #888;
+}
+
+/* Стиль полосы прогресса */
+.progress-bar {
+  background-color: #e3e9ff;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 22px;
+  margin-bottom: 18px;
+  position: relative;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+/* Заполнение полосы прогресса с анимацией */
+.progress-fill {
+  height: 100%;
+  width: 0;
+  transition: width 1s ease;
+  min-width: 10px;
+  background-size: 200% 200%;
+  background: linear-gradient(90deg, #ff8a65, #ff6f00);
+  background-position: -50% 0;
+  animation: loadingGradient 2s linear infinite;
+  position: relative;
+}
+
+@keyframes loadingGradient {
+  0% {
+    background-position: -50% 0;
+  }
+  100% {
+    background-position: 150% 0;
+  }
+}
+
+/* Цвета и градиенты для разных полосок */
+.progress-container:nth-child(2) .progress-fill {
+  background: linear-gradient(90deg, #ff8a65, #ff6f00);
+}
+
+.progress-container:nth-child(3) .progress-fill {
+  background: linear-gradient(90deg, #66bb6a, #2e7d32);
+}
+
+.progress-container:nth-child(4) .progress-fill {
+  background: linear-gradient(90deg, #42a5f5, #1e88e5);
+}
+
+/* Галочка над шкалой */
+.progress-fill.complete::before {
+  content: "✔";
+  color: #4caf50;
+  font-size: 1.2em;
+  position: absolute;
+  top: -24px; /* Поднимаем галочку над шкалой */
+  right: 0;
+  transform: translateY(-50%);
+  opacity: 1;
+}

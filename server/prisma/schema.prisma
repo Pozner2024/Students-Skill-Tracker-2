@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tests {
+  id         Int       @id @default(autoincrement())
+  test_code  String    @unique @db.VarChar(20)
+  test_title String
+  variant    Int
+  questions  Json
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+
+  @@map("tests")
+}
+
+model TestImages {
+  id         Int      @id @default(autoincrement())
+  test_code  String   @db.VarChar(20)
+  variant    Int
+  topic_id   Int
+  image_url  String?
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
+
+  @@unique([test_code, variant, topic_id])
+  @@map("test_images")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique @db.VarChar(255)
+  password    String   @db.VarChar(255)
+  created_at  DateTime @default(now()) @db.Timestamp(6)
+  updated_at  DateTime @default(now()) @updatedAt @db.Timestamp(6)
+  fullName    String?  @db.VarChar(255)
+  groupNumber String?  @db.VarChar(50)
+  role        String   @default("student") @db.VarChar(20)
+  testResults Json?
+  totalQuestionsAnswered Int @default(0)
+  averageScore Float? @default(0.0)
+
+  @@map("users")
+}

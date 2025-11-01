@@ -1,0 +1,289 @@
+/* Применяем стили только если элемент находится в контейнере с классом .login-page */
+.login-page {
+  height: 100vh; /* Занимает всю высоту экрана */
+  width: 100vw; /* Занимает всю ширину экрана */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-page .page-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-page .main-container {
+  background-color: #4f2568; /* Фиолетовый цвет для основного контейнера */
+  width: 80%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 1),
+    inset 0 0 20px rgba(255, 255, 255, 0.8);
+}
+
+.login-page .text-section {
+  width: 50%;
+  padding-right: 40px;
+  font-weight: bold;
+  color: white; /* Белый текст для текстовой секции */
+  text-align: center;
+}
+.login-page .text-section h1 {
+  font-size: 32px;
+  margin-top: 30px;
+}
+
+.login-page .text-section p {
+  font-size: 18px;
+  margin: 0;
+  margin-top: 40px;
+}
+.login-wrapper {
+  width: 45%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-box h2 {
+  margin-bottom: 20px;
+  color: #a259ff; /* Фиолетовый цвет заголовка */
+  text-align: center; /* Центрирование заголовка */
+}
+
+.login-page .input-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.login-page .input-group label {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.login-page .input-group input[type="email"],
+.login-page .input-group input[type="password"],
+.login-page .input-group input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.login-page .submit-btn {
+  background-color: #4caf50; /* Зеленый цвет кнопки */
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.login-page .submit-btn:hover {
+  background-color: #45a049; /* Более тёмный зелёный цвет при наведении */
+}
+
+.login-page .logo {
+  margin-top: -80px;
+  height: 80px;
+  width: auto;
+}
+
+/* Стили для переключателя видимости пароля */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input[type="password"],
+.password-input-wrapper input[type="text"] {
+  width: 100%;
+  padding: 10px 45px 10px 10px; /* Добавляем отступ справа для кнопки */
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.password-input-wrapper input:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(
+    calc(-50% - 7.5px)
+  ); /* Учитываем margin-bottom поля ввода */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.password-toggle-btn:hover {
+  background-color: rgba(33, 150, 243, 0.1);
+  transform: translateY(calc(-50% - 7.5px)) scale(1.1);
+  border-radius: 50%;
+}
+
+.password-toggle-btn:active {
+  transform: translateY(calc(-50% - 7.5px)) scale(0.95);
+}
+
+.eye-icon {
+  width: 20px;
+  height: 20px;
+  stroke: #666;
+  transition: all 0.3s ease;
+  stroke-width: 2;
+  fill: none;
+}
+
+.password-toggle-btn:hover .eye-icon {
+  stroke: #2196f3;
+  transform: scale(1.1);
+}
+
+.eye-open {
+  display: none;
+}
+
+.eye-closed {
+  display: block;
+}
+
+/* Анимация для плавного переключения иконок */
+.eye-icon {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .password-toggle-btn {
+    width: 28px;
+    height: 28px;
+    right: 10px;
+  }
+
+  .eye-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .password-input-wrapper input[type="password"],
+  .password-input-wrapper input[type="text"] {
+    padding: 10px 40px 10px 10px;
+  }
+}
+
+/* Стили для индикатора силы пароля */
+.password-strength-indicator {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.password-strength-indicator.incomplete {
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  color: #ff9800;
+}
+
+.password-strength-indicator.complete {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #4caf50;
+}
+
+.indicator-text {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.stars-container {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.star {
+  font-size: 28px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.star.filled {
+  color: #ffc107;
+  text-shadow: 0 0 4px rgba(255, 193, 7, 0.5);
+}
+
+.star.empty {
+  color: #e0e0e0;
+}
+
+.password-strength-indicator.complete .star.filled {
+  color: #4caf50;
+  text-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+}
+
+/* Анимация появления индикатора */
+.password-strength-indicator {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

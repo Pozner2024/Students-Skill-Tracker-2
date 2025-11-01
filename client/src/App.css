@@ -1,0 +1,331 @@
+:root {
+  font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #4f2568;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  font-size: 28px;
+  line-height: 1.1;
+  font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 320px;
+  max-width: 1280px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+#root > section {
+  flex-grow: 1;
+}
+
+a {
+  font-weight: 500;
+  color: #646470;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: white;
+}
+
+.site-menu {
+  margin-top: 20px;
+  margin-left: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #5b2d77;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15),
+    inset 0 8px 16px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.9),
+    0 24px 40px rgba(4, 3, 5, 0.9),
+    0 -8px 14px rgba(0, 0, 0, 0.7);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  padding: 15px 0;
+}
+
+.site-header {
+  display: flex;
+  align-items: center; /* Выравниваем элементы по вертикали по центру */
+  justify-content: center; /* Центрируем логотип и заголовок по горизонтали */
+  gap: 60px; /* Промежуток между логотипом и заголовком */
+}
+
+.logo {
+  width: auto;
+  height: 120px;
+}
+
+.site-header h1 {
+  font-size: 36px;
+  margin: 0;
+}
+
+.menu {
+  margin-left: 17px;
+}
+
+.site-menu nav {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.site-menu nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+.site-menu nav ul li {
+  margin-right: 65px;
+  position: relative;
+}
+
+.site-menu nav ul li:not(:last-child)::after {
+  content: "|";
+  margin-left: 10px;
+  line-height: 1;
+  position: absolute;
+  right: -32px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.menu__link {
+  text-decoration: none;
+  color: #a6e89c;
+  font-size: 24px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.menu__link:hover {
+  transform: scale(1.2);
+  color: white;
+}
+
+.menu__link.active {
+  color: white;
+}
+
+.container h1 {
+  text-align: center;
+  color: black;
+  background-color: white;
+  padding: 2px;
+  margin-top: 10px;
+  height: 40px;
+  margin: auto;
+}
+
+footer {
+  margin-top: auto;
+  padding: 20px;
+  color: white;
+  text-align: center;
+}
+
+/* Стабилизация высоты для админ-страницы во время загрузки */
+#admin .test-results-section {
+  min-height: 60vh;
+}
+
+.loading-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #fff;
+}
+
+.rectangles-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+  max-width: 1300px;
+  margin: 40px auto;
+}
+
+.rectangle {
+  width: calc(20% - 20px);
+  height: auto;
+  background-color: #058548;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: flyIn 1.5s forwards;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.9),
+    inset 0 8px 16px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.9),
+    0 24px 40px rgba(4, 3, 5, 0.9),
+    0 -8px 14px rgba(0, 0, 0, 0.7);
+}
+.topics-container {
+  margin-top: -30px;
+}
+
+.rectangle p {
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  color: white;
+  background-color: #59b149;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn:hover {
+  background-color: #4f2568;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes flyIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contacts p {
+  font-size: 1.2em;
+  color: white;
+  margin: 10px 0;
+}
+
+/* Стили для контактной информации */
+.contacts p strong {
+  color: #000;
+  font-weight: bold;
+}
+
+/* Стили для адресов */
+.contacts p strong + p {
+  margin-left: 20px;
+}
+
+.contacts p a:hover {
+  text-decoration: underline;
+}
+
+/* Стили для таблицы контактов */
+.contact-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.contact-table td {
+  border: 1px solid white;
+  padding: 15px;
+  vertical-align: top;
+  color: white;
+  width: 50%;
+}
+
+/* Горизонтальная линия */
+.contact-table .horizontal-line {
+  border-top: 2px solid white;
+  padding: 0;
+  height: 2px;
+}
+
+/* Стили для ссылок */
+.contact-table a {
+  color: #058548;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.contact-table a:hover {
+  text-decoration: underline;
+}
+
+/* Стили для блоков текста, которые должны быть на новой строке */
+.contact-table .block {
+  display: block;
+}
+
+/* Стили для заголовков и контактной информации */
+.contact-table p {
+  font-size: 1.2em;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.contact-table p strong {
+  font-weight: bold;
+  color: white;
+}
+
+.about-page p {
+  text-indent: 50px; /* Красная строка */
+}
+
+.about-images {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.about-images img {
+  width: 30%;
+  border-radius: 8px;
+}

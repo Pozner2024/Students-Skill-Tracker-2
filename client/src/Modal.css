@@ -1,0 +1,139 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 11;
+}
+.modal-content {
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 70%;
+  width: auto;
+  max-height: 90%;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.modal-body {
+  background-color: rgba(106, 13, 173, 0.7);
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  margin: 10px 0;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background-color: red;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: white;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 3px;
+}
+
+.close-button:hover {
+  background-color: white;
+  color: red;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.action-button {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+
+.action-button:hover {
+  background-color: white;
+  color: purple;
+}
+
+.action-button:active {
+  background-color: #3e8e41;
+  color: white;
+}
+
+/* Стили для модального окна успеха */
+.success-modal-content {
+  text-align: center;
+  min-width: 400px;
+  max-width: 500px;
+}
+
+.success-icon {
+  font-size: 48px;
+  color: #4caf50;
+  margin: 20px 0;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.success-title {
+  color: white;
+  font-size: 24px;
+  font-weight: 900;
+  margin: 10px 0 20px 0;
+  padding: 12px 20px;
+  background-color: rgba(76, 175, 80, 0.9);
+  border-radius: 8px;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.7), 0 0 10px rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 2px solid #4caf50;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.success-modal-body {
+  background-color: rgba(76, 175, 80, 0.8);
+  border: 2px solid #4caf50;
+  margin: 20px 0;
+}
+
+.success-message {
+  color: white;
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.success-action-button {
+  background-color: #4caf50;
+  font-size: 18px;
+  padding: 12px 30px;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.success-action-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}

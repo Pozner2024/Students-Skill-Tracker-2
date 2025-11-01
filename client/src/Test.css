@@ -1,0 +1,485 @@
+/* Основной стиль страницы */
+.test-page-styles {
+  color: black;
+  padding: 20px;
+  border-radius: 5px;
+  height: auto;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.9),
+    /* Очень насыщенная внешняя тень */ inset 0 8px 16px rgba(0, 0, 0, 0.8),
+    /* Глубокая и насыщенная внутренняя тень */ 0 0 20px
+      rgba(255, 255, 255, 0.9),
+    /* Очень яркое свечение */ 0 24px 40px rgba(4, 3, 5, 0.9),
+    0 -8px 14px rgba(0, 0, 0, 0.7);
+}
+
+.test-info {
+  background-color: rgba(
+    106,
+    13,
+    173,
+    0.6
+  ); /* Фиолетовый цвет с прозрачностью */
+  padding: 0;
+  border-radius: 8px;
+  color: white; /* Белый текст для контраста */
+  text-align: center; /* Центрирование текста */
+  margin-bottom: 15px; /* Отступ снизу */
+}
+
+.test-info h2 {
+  font-size: 24px;
+  color: white; /* Цвет заголовка */
+  margin: 0;
+}
+
+.test-info p {
+  font-size: 16px;
+  color: white; /* Цвет параграфа */
+  margin: 0;
+}
+
+/* Контейнер пагинации */
+.indicator-panel {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+}
+
+/* Кнопки пагинации */
+.page-button {
+  padding: 8px 12px;
+  width: 50px; /* Устанавливаем фиксированную ширину */
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+  text-align: center; /* Центрируем текст внутри кнопки */
+  display: inline-block; /* Позволяет кнопкам находиться на одной линии */
+}
+
+/* Подсветка активной кнопки */
+.page-button.active {
+  color: #fff;
+  border-color: #ae0404;
+  box-shadow: 0 0 0 4px #ae0404; /* Зелёный квадрат */
+}
+
+/* Подсветка посещенной кнопки */
+.page-button.visited {
+  background-color: #6f42c1;
+  color: #fff;
+  border-color: #6f42c1;
+}
+
+/* Навигационная панель */
+.navigation-panel {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+}
+
+/* Базовые стили для кнопок навигации */
+.nav-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  background-color: #6f42c1;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3),
+    inset 0px -2px 4px rgba(255, 255, 255, 0.3);
+  margin: 0 10px; /* Устанавливает горизонтальный отступ в 10px между кнопками */
+}
+
+/* Эффект при наведении на кнопки навигации */
+.nav-button:hover {
+  background-color: #5a359d; /* Темный фон при наведении */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4),
+    inset 0px -3px 6px rgba(255, 255, 255, 0.3); /* Увеличенная тень */
+  transform: scale(1.07); /* Легкое увеличение */
+}
+
+/* Эффект при нажатии на кнопки навигации */
+.nav-button:active {
+  transform: scale(0.97); /* Легкое уменьшение при нажатии */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4),
+    inset 0px 2px 4px rgba(0, 0, 0, 0.2); /* Тень для нажатия */
+}
+
+/* Стили для кнопки "Завершить тест" */
+.finish-button {
+  background-color: #dc3545; /* Красный фон для кнопки завершения */
+}
+
+/* Эффект при наведении на кнопку завершения */
+.finish-button:hover {
+  background-color: #7d0612; /* Темный красный при наведении */
+}
+
+/* Контейнер для вопроса */
+.question {
+  height: 384px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #fafafa;
+  margin-bottom: 20px;
+  display: grid;
+  place-items: center; /* Центрирование и по горизонтали, и по вертикали */
+  text-align: center;
+}
+.question-part {
+  white-space: nowrap;
+}
+/* Базовый стиль для текстовых полей ввода внутри класса .question */
+.question input[type="text"] {
+  width: 220px;
+  padding: 10px; /* Внутренний отступ */
+  font-size: 20px; /* Размер шрифта */
+  color: #333; /* Цвет текста */
+  background-color: #f9f9f9; /* Светлый фон */
+  border: 1px solid #ccc; /* Светлая граница */
+  border-radius: 8px; /* Закругленные углы */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень для объема */
+  transition: background-color 0.3s, border-color 0.3s; /* Плавные переходы */
+}
+
+/* Квадратные радиокнопки с фиолетовой точкой */
+input[type="radio"] {
+  appearance: none; /* Убираем стандартный вид радиокнопок */
+  width: 16px; /* Размер радиокнопки */
+  height: 16px;
+  border: 2px solid #6f42c1; /* Фиолетовая граница */
+  border-radius: 0; /* Делаем кнопки квадратными */
+  outline: none;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Стиль для фиолетового квадрата внутри при выборе */
+input[type="radio"]:checked::before {
+  content: "";
+  width: 8px; /* Размер внутреннего квадрата */
+  height: 8px;
+  background-color: #6f42c1; /* Фиолетовый цвет для точки */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Эффект при наведении */
+.question input[type="text"]:hover {
+  background-color: #e6e6e6; /* Более светлый фон при наведении */
+}
+
+/* Эффект при фокусе */
+.question input[type="text"]:focus {
+  border-color: #6f42c1; /* Цвет границы при фокусе */
+  box-shadow: 0 0 5px rgba(111, 66, 193, 0.5); /* Подсветка тенью при фокусе */
+  outline: none; /* Убираем стандартную обводку */
+}
+
+.question p {
+  font-size: 22px;
+  margin: 0;
+}
+
+.question label {
+  font-size: 20px;
+}
+
+.questions-panel h3 {
+  background-color: rgba(
+    106,
+    13,
+    173,
+    0.7
+  ); /* Фиолетовая подложка с прозрачностью */
+  color: white; /* Белый текст */
+  padding: 2px;
+  border-radius: 8px; /* Скругленные углы */
+  text-align: left; /* Текст будет выровнен по левому краю */
+  margin-bottom: 15px; /* Отступ снизу */
+  width: 120px; /* Фиксированная ширина подложки */
+  display: inline-block; /* Оставляем подложку ограниченной по ширине */
+  font-size: 14px;
+  margin: 0;
+}
+
+.questions-panel p {
+  margin: 0;
+  padding: 0;
+}
+
+.general-question .question-text p {
+  margin: 50px 100px 20px;
+}
+
+.question.matching-only {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Центрирует элементы по горизонтали */
+  justify-content: center; /* Центрирует элементы по вертикали, если контейнер имеет большую высоту */
+  width: 100%; /* Занимает всю ширину контейнера */
+  text-align: center; /* Центрирует текст внутри */
+}
+
+/* Центрирование для вопросов на установление порядка */
+.question.ordering-only {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Центрирует элементы по горизонтали */
+  justify-content: center; /* Центрирует элементы по вертикали, если контейнер имеет большую высоту */
+  width: 100%; /* Занимает всю ширину контейнера */
+  text-align: center; /* Центрирует текст внутри */
+  margin: 0 auto; /* Центрирует блок по горизонтали */
+}
+
+/* Дополнительные стили для списков, если необходимо */
+.question.matching-only ul,
+.question.ordering-only ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: auto; /* Список будет занимать минимально необходимую ширину */
+  text-align: center;
+}
+
+/* Базовый стиль для перетаскиваемых элементов с уменьшенной шириной и высотой */
+.draggable-item {
+  width: 100%;
+  padding: 4px 8px;
+  margin: 4px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  font-size: 16px; /* Немного уменьшенный шрифт */
+  color: #333;
+  cursor: move;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+/* Эффект при наведении */
+.draggable-item:hover {
+  background-color: #b0b0b0; /* Серый цвет при наведении */
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15); /* Усиленная тень */
+}
+
+/* Эффект при активном состоянии (перетаскивании) */
+.draggable-item:active {
+  background-color: #6f42c1; /* Фиолетовый цвет при перетаскивании */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
+  color: white;
+}
+.matching-question {
+  margin-top: 30px;
+}
+
+/* Основной контейнер, который увеличим */
+.matching-question {
+  width: 100%; /* Или задайте фиксированную ширину, например, width: 800px; */
+  max-width: 1200px; /* Ограничим максимальную ширину */
+  margin-top: 30px;
+}
+
+/* Для элементов списка в разделе matching-question */
+.matching-question li {
+  display: flex;
+  justify-content: space-between; /* Элементы будут выровнены по краям */
+  align-items: center;
+  margin-bottom: 10px; /* Увеличим отступ снизу */
+  width: 100%; /* Занимаем всю ширину контейнера */
+}
+
+/* Ограничиваем ширину label для одинаковой длины */
+.matching-items li label {
+  width: 65%; /* Увеличиваем ширину метки */
+  margin-right: 20px; /* Отступ справа от метки */
+  text-align: left; /* Выравнивание метки по левому краю */
+  white-space: nowrap; /* Запрещаем перенос текста */
+}
+
+/* Селект будет занимать оставшееся пространство */
+/* Ограничим высоту выпадающего списка и добавим прокрутку */
+.matching-question select {
+  flex-grow: 1;
+  padding: 5px;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 100%; /* Ограничиваем максимальную ширину селекта */
+  white-space: normal; /* Позволяем тексту переноситься */
+  overflow: auto; /* Добавляем прокрутку для длинного текста */
+}
+
+/* Эффект при наведении */
+.matching-question select:hover {
+  background-color: #6f42c1;
+  color: white;
+}
+
+/* Эффект при фокусе */
+.matching-question select:focus {
+  border-color: #6f42c1;
+  box-shadow: 0 0 5px rgba(73, 42, 130, 0.5);
+  outline: none;
+}
+
+/* Общие стили контейнера страницы */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  /* padding: 20px; */
+  font-family: Arial, sans-serif;
+}
+
+/* Стили для макета результатов */
+.results-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+/* Стили для секции с тестовыми результатами */
+.test-results {
+  width: 55%;
+}
+
+.test-results h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.test-results p {
+  font-size: 18px;
+  margin: 8px 0;
+}
+
+/* Стили для секции с анимацией или изображением */
+.animation {
+  width: 40%;
+  text-align: center;
+}
+
+.animation img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+/* Общий контейнер для вопроса и изображения */
+.question {
+  display: flex;
+  justify-content: space-between; /* Разделение текста и изображения */
+  align-items: flex-start; /* Выровнять элементы по верхнему краю */
+  padding: 20px; /* Внутренний отступ для общего контейнера */
+}
+
+/* Стили для блока с текстом */
+.question-text {
+  flex: 1; /* Занимает оставшуюся ширину */
+  max-width: 60%; /* Максимальная ширина текста — 60% контейнера */
+}
+
+/* Стили для блока с изображением */
+.question-image {
+  max-width: 340px; /* Устанавливаем максимальную ширину изображения */
+}
+
+.question-image img {
+  width: 110%; /* Изображение занимает всю ширину блока question-image */
+  height: auto; /* Сохраняем пропорции изображения */
+  border-radius: 8px; /* Закругленные углы, если требуется */
+  margin-top: -16px;
+  margin-left: 15px;
+}
+
+/* Стили для индикатора загрузки изображений */
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 18px;
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  margin: 20px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.loading-indicator::before {
+  content: "⏳";
+  margin-right: 10px;
+  font-size: 24px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Стили для сообщения о выборе теста */
+.test-message {
+  text-align: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.test-message p {
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.back-to-home-btn {
+  display: inline-block;
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #59b149 0%, #4f9e3f 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 12px rgba(89, 177, 73, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.back-to-home-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(89, 177, 73, 0.4);
+  text-decoration: none;
+  color: white;
+}
