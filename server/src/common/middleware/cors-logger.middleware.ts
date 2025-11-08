@@ -1,3 +1,7 @@
+//Middleware для логирования CORS-запросов
+//Логирует информацию о кросс-доменных запросах и preflight OPTIONS запросах.
+//Помогает в отладке взаимодействия между фронтендом и бэкендом при работе с CORS.
+
 import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
@@ -20,5 +24,3 @@ export class CorsLoggerMiddleware implements NestMiddleware {
     next();
   }
 }
-
-

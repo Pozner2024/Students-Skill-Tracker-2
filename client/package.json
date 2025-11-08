@@ -30,6 +30,7 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
-    "canvas-confetti": "^1.9.3"
+    "canvas-confetti": "^1.9.3",
+    "sharp": "^0.34.5"
   }
 }

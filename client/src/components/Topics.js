@@ -12,6 +12,11 @@ export default class Topics extends Section {
   constructor() {
     super({ id: "topics-section", customClass: "topics-container" });
     this.renderer = new TopicsRenderer();
+    this.topics = [];
+  }
+
+  async loadTopics() {
+    await this.renderer.loadTopics();
     this.topics = this.renderer.topics;
   }
 
@@ -60,7 +65,8 @@ export default class Topics extends Section {
             if (variant && topicId) {
               event.preventDefault();
 
-              const topic = this.topics[topicId - 1];
+              // Находим тему по id, а не по индексу
+              const topic = this.topics.find((t) => t.id === parseInt(topicId, 10));
 
               const modal = new TestModal({ variant, topic });
               modal.showTestInfo();
@@ -75,14 +81,15 @@ export default class Topics extends Section {
     }
   }
 
-  renderWithEvents() {
-    const sectionElement = document.querySelector("#home section");
+  async renderWithEvents() {
+    // Загружаем темы перед рендерингом
+    await this.loadTopics();
 
     const renderedContent = this.render();
 
+    const sectionElement = document.querySelector("#home section");
     if (sectionElement) {
       sectionElement.innerHTML = renderedContent;
-
       this.addEventListeners();
     }
 

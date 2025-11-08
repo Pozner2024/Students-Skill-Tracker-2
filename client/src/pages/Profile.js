@@ -54,6 +54,7 @@ class ProfilePage extends Page {
                 : ""
             }
             ${this.renderUserData(result.user)}
+            ${await this.renderFilesSection()}
             ${this.renderTestResults(testResults)}
           </div>
         `;
@@ -160,6 +161,372 @@ class ProfilePage extends Page {
     return testTitles[testCode] || testCode;
   }
 
+  // Метод для отображения секции загрузки файлов
+  async renderFilesSection() {
+    try {
+      const filesResult = await authService.getUserFiles();
+      const files = filesResult.success ? filesResult.files : [];
+
+      return `
+        <div class="files-section">
+          <h3>Мои файлы</h3>
+          <div class="upload-area">
+            <input type="file" id="file-input" class="file-input" accept="image/*,application/pdf,.doc,.docx,.txt,.docs,.xls,.xlsx,.ppt,.pptx" />
+            <label for="file-input" class="upload-btn">
+              <span class="upload-icon">📁</span>
+              <span class="upload-text">Выберите файл для загрузки</span>
+            </label>
+            <div class="upload-info">
+              <small>Максимальный размер: 10 MB. Разрешенные форматы: изображения, PDF, документы Word (.doc, .docx, .docs), Excel (.xls, .xlsx), PowerPoint (.ppt, .pptx), текстовые файлы (.txt)</small>
+            </div>
+          </div>
+          ${this.renderFilesList(files)}
+        </div>
+      `;
+    } catch (error) {
+      return `
+        <div class="files-section">
+          <h3>Мои файлы</h3>
+          <div class="error-message">Ошибка загрузки списка файлов: ${error.message}</div>
+        </div>
+      `;
+    }
+  }
+
+  // Метод для отображения списка файлов
+  renderFilesList(files) {
+    if (!files || files.length === 0) {
+      return `
+        <div class="files-list empty">
+          <p>Нет загруженных файлов</p>
+        </div>
+      `;
+    }
+
+    const filesHtml = files
+      .map(
+        (file) => `
+      <div class="file-item" data-key="${this.escapeHtml(file.key)}">
+        <div class="file-info">
+          <span class="file-name">${this.escapeHtml(file.fileName)}</span>
+          <span class="file-size">${this.formatFileSize(file.size)}</span>
+          <span class="file-date">${new Date(file.lastModified).toLocaleDateString("ru-RU")}</span>
+        </div>
+        <div class="file-actions">
+          <a href="#" class="file-download" data-key="${this.escapeHtml(file.key)}" title="Скачать">⬇️</a>
+          <button type="button" class="file-delete" data-key="${this.escapeHtml(file.key)}" title="Удалить">🗑️</button>
+        </div>
+      </div>
+    `
+      )
+      .join("");
+
+    return `
+      <div class="files-list">
+        ${filesHtml}
+      </div>
+    `;
+  }
+
+  // Метод для форматирования размера файла
+  formatFileSize(bytes) {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i];
+  }
+
+  // Метод для обработки загрузки файлов
+  handleFileUpload() {
+    const fileInput = document.getElementById("file-input");
+    if (!fileInput) return;
+
+    fileInput.addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Показываем индикатор загрузки
+      const uploadBtn = document.querySelector(".upload-btn");
+      const originalText = uploadBtn?.querySelector(".upload-text")?.textContent;
+      if (uploadBtn) {
+        uploadBtn.disabled = true;
+        const uploadText = uploadBtn.querySelector(".upload-text");
+        if (uploadText) {
+          uploadText.textContent = "Загрузка...";
+        }
+      }
+
+      try {
+        const result = await authService.uploadFile(file);
+
+        if (result.success) {
+          // Показываем уведомление без alert
+          this.showSuccessMessage("Файл успешно загружен!");
+          
+          // Обновляем список файлов без перезагрузки страницы
+          await this.refreshFilesList();
+        } else {
+          this.showErrorMessage("Ошибка при загрузке файла: " + result.error);
+        }
+      } catch (error) {
+        this.showErrorMessage("Ошибка при загрузке файла: " + error.message);
+      } finally {
+        // Восстанавливаем кнопку
+        if (uploadBtn) {
+          uploadBtn.disabled = false;
+          const uploadText = uploadBtn.querySelector(".upload-text");
+          if (uploadText && originalText) {
+            uploadText.textContent = originalText;
+          }
+        }
+        // Очищаем input
+        fileInput.value = "";
+      }
+    });
+  }
+
+  // Метод для обновления списка файлов без перезагрузки страницы
+  async refreshFilesList() {
+    try {
+      const filesResult = await authService.getUserFiles();
+      const files = filesResult.success ? filesResult.files : [];
+      
+      // Находим контейнер со списком файлов
+      const filesListContainer = document.querySelector(".files-list");
+      const filesSection = document.querySelector(".files-section");
+      
+      if (filesListContainer && filesSection) {
+        // Обновляем только список файлов
+        filesListContainer.outerHTML = this.renderFilesList(files);
+        
+        // Обработчики уже работают через делегирование на #profile,
+        // поэтому не нужно их переинициализировать
+      }
+    } catch (error) {
+      console.error("Ошибка при обновлении списка файлов:", error);
+    }
+  }
+
+  // Метод для показа сообщения об успехе
+  showSuccessMessage(message) {
+    // Удаляем предыдущие сообщения
+    const existingMessage = document.querySelector(".upload-message");
+    if (existingMessage) {
+      existingMessage.remove();
+    }
+
+    // Создаем новое сообщение
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "upload-message success-message";
+    messageDiv.style.cssText = "padding: 12px 16px; background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; margin: 10px 0; color: #155724;";
+    messageDiv.textContent = message;
+
+    // Вставляем сообщение перед списком файлов
+    const filesSection = document.querySelector(".files-section");
+    if (filesSection) {
+      const filesList = filesSection.querySelector(".files-list");
+      if (filesList) {
+        filesSection.insertBefore(messageDiv, filesList);
+      } else {
+        filesSection.appendChild(messageDiv);
+      }
+
+      // Автоматически скрываем сообщение через 3 секунды
+      setTimeout(() => {
+        if (messageDiv.parentNode) {
+          messageDiv.style.transition = "opacity 0.3s";
+          messageDiv.style.opacity = "0";
+          setTimeout(() => {
+            if (messageDiv.parentNode) {
+              messageDiv.remove();
+            }
+          }, 300);
+        }
+      }, 3000);
+    }
+  }
+
+  // Метод для показа сообщения об ошибке
+  showErrorMessage(message) {
+    // Удаляем предыдущие сообщения
+    const existingMessage = document.querySelector(".upload-message");
+    if (existingMessage) {
+      existingMessage.remove();
+    }
+
+    // Создаем новое сообщение
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "upload-message error-message";
+    messageDiv.style.cssText = "padding: 12px 16px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; margin: 10px 0; color: #721c24;";
+    messageDiv.textContent = message;
+
+    // Вставляем сообщение перед списком файлов
+    const filesSection = document.querySelector(".files-section");
+    if (filesSection) {
+      const filesList = filesSection.querySelector(".files-list");
+      if (filesList) {
+        filesSection.insertBefore(messageDiv, filesList);
+      } else {
+        filesSection.appendChild(messageDiv);
+      }
+
+      // Автоматически скрываем сообщение через 5 секунд
+      setTimeout(() => {
+        if (messageDiv.parentNode) {
+          messageDiv.style.transition = "opacity 0.3s";
+          messageDiv.style.opacity = "0";
+          setTimeout(() => {
+            if (messageDiv.parentNode) {
+              messageDiv.remove();
+            }
+          }, 300);
+        }
+      }, 5000);
+    }
+  }
+
+  // Метод для обработки удаления файлов
+  handleFileDelete() {
+    // Используем делегирование на более стабильном родительском элементе
+    // Ищем контейнер профиля, который не пересоздается
+    const profileContainer = document.querySelector("#profile");
+    if (!profileContainer) {
+      console.warn("Profile container not found");
+      return;
+    }
+
+    // Проверяем, были ли уже добавлены обработчики
+    if (profileContainer.dataset.fileHandlers === "true") {
+      console.log("File handlers already added to profile");
+      return;
+    }
+
+    profileContainer.dataset.fileHandlers = "true";
+    console.log("Adding file event listeners to profile container");
+
+    // Сохраняем ссылку на this для использования в обработчиках
+    const self = this;
+
+    // Используем делегирование событий на стабильном контейнере
+    profileContainer.addEventListener("click", async (e) => {
+      console.log("Click event in profile container:", e.target, e.target.classList);
+      // Обработка скачивания файла
+      const downloadLink = e.target.closest(".file-download");
+      if (downloadLink) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const key = downloadLink.dataset.key;
+        if (!key) return;
+
+        const fileItem = downloadLink.closest('.file-item');
+        const fileNameElement = fileItem?.querySelector('.file-name');
+        const fileName = fileNameElement?.textContent || key.split('/').pop() || 'download';
+
+        const originalText = downloadLink.textContent;
+        downloadLink.textContent = "⏳";
+
+        try {
+          const result = await authService.getDownloadUrl(key);
+          if (result.success && result.url) {
+            try {
+              // Получаем файл через fetch как blob
+              const response = await fetch(result.url, {
+                method: 'GET',
+                mode: 'cors',
+              });
+              
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              
+              const blob = await response.blob();
+              
+              // Создаем blob URL и скачиваем файл
+              const blobUrl = window.URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = blobUrl;
+              link.download = fileName;
+              link.style.display = 'none';
+              document.body.appendChild(link);
+              link.click();
+              
+              // Удаляем ссылку и освобождаем blob URL после небольшой задержки
+              setTimeout(() => {
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(blobUrl);
+              }, 100);
+            } catch (fetchError) {
+              // Если fetch не работает, пробуем напрямую через ссылку
+              console.warn('Fetch failed, trying direct link:', fetchError);
+              const link = document.createElement('a');
+              link.href = result.url;
+              link.download = fileName;
+              link.style.display = 'none';
+              document.body.appendChild(link);
+              link.click();
+              setTimeout(() => document.body.removeChild(link), 100);
+            }
+          } else {
+            alert("Ошибка при получении ссылки на файл: " + (result.error || 'Неизвестная ошибка'));
+          }
+        } catch (error) {
+          console.error('Download error:', error);
+          alert("Ошибка при скачивании файла: " + (error.message || 'Неизвестная ошибка'));
+        } finally {
+          downloadLink.textContent = originalText;
+        }
+        return;
+      }
+
+      // Обработка удаления файла
+      const deleteBtn = e.target.closest(".file-delete");
+      if (deleteBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const key = deleteBtn.dataset.key;
+        if (!key) {
+          console.error("File key not found in delete button");
+          return;
+        }
+
+        // Подтверждение удаления
+        if (!confirm("Вы уверены, что хотите удалить этот файл?")) {
+          return;
+        }
+
+        // Показываем индикатор удаления
+        deleteBtn.disabled = true;
+        const originalText = deleteBtn.textContent;
+        deleteBtn.textContent = "⏳";
+
+        try {
+          console.log("Deleting file with key:", key);
+          const result = await authService.deleteFile(key);
+
+          if (result.success) {
+            // Показываем уведомление без alert
+            self.showSuccessMessage("Файл успешно удален!");
+            
+            // Обновляем список файлов без перезагрузки страницы
+            await self.refreshFilesList();
+          } else {
+            self.showErrorMessage("Ошибка при удалении файла: " + (result.error || "Неизвестная ошибка"));
+            deleteBtn.disabled = false;
+            deleteBtn.textContent = originalText;
+          }
+        } catch (error) {
+          console.error("Error deleting file:", error);
+          self.showErrorMessage("Ошибка при удалении файла: " + (error.message || "Неизвестная ошибка"));
+          deleteBtn.disabled = false;
+          deleteBtn.textContent = originalText;
+        }
+      }
+    });
+  }
+
   // Метод для отображения результатов тестов
   renderTestResults(testResults) {
     if (!testResults.success) {
@@ -257,15 +624,36 @@ class ProfilePage extends Page {
 
   // Метод для рендеринга страницы
   async renderPage() {
-    const userInfo = await this.displayUserInfo();
-    return `
-      <main id="${this.id}" class="profile">
-        <h1>${this.title}</h1>
-        <section>
-          ${userInfo}
-        </section>
-      </main>
-    `;
+    try {
+      const userInfo = await this.displayUserInfo();
+      return `
+        <main id="${this.id}" class="profile">
+          <h1>${this.title}</h1>
+          <section>
+            ${userInfo}
+          </section>
+        </main>
+      `;
+    } catch (error) {
+      console.error("Ошибка при рендеринге профиля:", error);
+      const errorMessage = error.message || "Не удалось загрузить данные профиля. Пожалуйста, обновите страницу.";
+      return `
+        <main id="${this.id}" class="profile">
+          <h1>${this.title}</h1>
+          <section>
+            <div class="profile-container">
+              <div class="error-message" style="padding: 20px; background-color: #fee; border: 1px solid #fcc; border-radius: 4px; margin: 20px 0;">
+                <h3>Ошибка загрузки профиля</h3>
+                <p>${errorMessage}</p>
+                <button onclick="window.location.reload()" style="margin-top: 10px; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                  Обновить страницу
+                </button>
+              </div>
+            </div>
+          </section>
+        </main>
+      `;
+    }
   }
 
   // Метод для обработки редактирования полей
@@ -449,6 +837,8 @@ class ProfilePage extends Page {
     setTimeout(() => {
       this.handleProfileForm(); // Устанавливаем обработчик формы профиля
       this.handleEditableFields(); // Устанавливаем обработчики редактируемых полей
+      this.handleFileUpload(); // Устанавливаем обработчик загрузки файлов
+      this.handleFileDelete(); // Устанавливаем обработчик удаления файлов
     }, 10);
   }
 }

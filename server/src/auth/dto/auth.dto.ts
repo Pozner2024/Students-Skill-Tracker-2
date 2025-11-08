@@ -1,3 +1,6 @@
+// DTO-классы для регистрации и авторизации пользователей.
+// Используются декораторы из пакета class-validator для проверки корректности введённых данных:
+// Эти проверки автоматически выполняются через ValidationPipe при обработке входящих запросов.
 import { IsString, MinLength, IsEmail } from 'class-validator';
 
 export class RegisterDto {

@@ -1,3 +1,6 @@
+//Этот файл содержит unit-тесты для сервиса аутентификации (AuthService).
+// Используется Jest и тестовый модуль NestJS для создания изолированного
+//окружения тестирования.
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 

@@ -11,9 +11,20 @@ export const API_CONFIG = {
     AUTH: {
       REGISTER: "/auth/register",
       LOGIN: "/auth/login",
-      PROFILE: "/auth/profile",
-      TEST_RESULTS: "/auth/test-results",
-      SAVE_TEST_RESULT: "/auth/test-results",
+    },
+    USERS: {
+      PROFILE: "/users/profile",
+    },
+    TEST_RESULTS: {
+      GET: "/test-results",
+      SAVE: "/test-results",
+    },
+    TOPICS: "/topics",
+    UPLOAD: {
+      UPLOAD: "/upload",
+      FILES: "/upload/files",
+      DELETE: "/upload/delete",
+      DOWNLOAD: "/upload/download",
     },
   },
 };

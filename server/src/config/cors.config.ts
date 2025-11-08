@@ -1,3 +1,6 @@
+//Конфигурация CORS (Cross-Origin Resource Sharing) для NestJS приложения
+// Настройки определяют, какие домены могут обращаться к API, какие методы
+//и заголовки разрешены. Включает безопасную обработку для development и production.
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 export const corsConfig: CorsOptions = {
@@ -6,11 +9,10 @@ export const corsConfig: CorsOptions = {
     if (!origin) return callback(null, true);
 
     const allowedOrigins = [
-      'http://localhost:3000',
-      'http://127.0.0.1:3000',
+      'http://localhost:5000',
+      'http://127.0.0.1:5000',
       'http://localhost:9000',
       'http://127.0.0.1:9000',
-      'http://localhost:5000',
     ];
 
     const productionOrigins =
@@ -21,7 +23,6 @@ export const corsConfig: CorsOptions = {
     if (allAllowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.warn(`🚫 CORS blocked origin: ${origin}`);
       callback(new Error(`Not allowed by CORS: ${origin}`));
     }
   },
@@ -36,5 +37,5 @@ export const corsConfig: CorsOptions = {
   ],
   credentials: true,
   preflightContinue: false,
-  optionsSuccessStatus: 200, // ✅ ВАЖНО! (браузеры ждут 200, не 204)
+  optionsSuccessStatus: 200,
 };

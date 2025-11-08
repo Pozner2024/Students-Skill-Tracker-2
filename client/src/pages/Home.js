@@ -24,30 +24,60 @@ class HomePage extends Page {
   }
 
   // Метод для рендеринга страницы
-  renderPage() {
-    this.cleanDynamicContent(); // Очищаем динамическую часть
-
-    // Рендерим основную структуру через метод родительского класса Page
-    const mainContent = this.render();
-
+  async renderPage() {
     // Находим элемент, куда нужно вставить контент
     const contentElement = document.getElementById("content");
+    if (!contentElement) {
+      return "";
+    }
 
-    if (contentElement) {
-      // Вставляем основной контент в элемент content
+    try {
+      // Загружаем темы заранее, чтобы избежать задержек
+      await this.topicsComponent.loadTopics();
+      
+      // Рендерим Topics компонент
+      const topicsContent = this.topicsComponent.render();
+
+      // Рендерим основную структуру через метод родительского класса Page
+      // Вставляем контент Topics сразу в структуру страницы
+      const mainContent = `
+        <main id="${this.id}" class="container">
+          <h1>${this.title}</h1>
+          <section>${topicsContent}</section>
+        </main>
+      `;
+
+      // Очищаем динамическую часть только после подготовки нового контента
+      this.cleanDynamicContent();
+
+      // Вставляем весь контент сразу, чтобы избежать множественных перерисовок
       contentElement.innerHTML = mainContent;
 
-      // Далее ищем контейнер main и добавляем в него компонент Topics
-      const mainContainer = document.querySelector("#home"); // Ищем элемент с id #home
-      if (mainContainer) {
-        // Вставляем отрендеренный компонент Topics внутрь секции в main
-        const renderedTopics = this.topicsComponent.renderWithEvents();
+      // Используем requestAnimationFrame для плавного обновления DOM
+      await new Promise(resolve => requestAnimationFrame(resolve));
 
-        if (renderedTopics !== undefined) {
-          mainContainer.querySelector("section").innerHTML = renderedTopics;
-        }
-      }
+      // Добавляем обработчики событий после рендеринга
+      this.topicsComponent.addEventListeners();
+    } catch (error) {
+      console.error("Ошибка при загрузке тем:", error);
+      // Отображаем сообщение об ошибке пользователю
+      const errorMessage = error.message || "Не удалось загрузить тесты. Пожалуйста, обновите страницу.";
+      contentElement.innerHTML = `
+        <main id="${this.id}" class="container">
+          <h1>${this.title}</h1>
+          <section>
+            <div class="error-message" style="padding: 20px; background-color: #fee; border: 1px solid #fcc; border-radius: 4px; margin: 20px 0;">
+              <h3>Ошибка загрузки тестов</h3>
+              <p>${errorMessage}</p>
+              <button onclick="window.location.reload()" style="margin-top: 10px; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Обновить страницу
+              </button>
+            </div>
+          </section>
+        </main>
+      `;
     }
+    
     return "";
   }
 }

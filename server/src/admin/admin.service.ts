@@ -1,17 +1,29 @@
-import { Injectable } from '@nestjs/common';
+//Группируем студентов по учебным группам и предоставляем полную историю их тестирования для преподавателя
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { TestResult, StudentWithTests } from '../auth/types/user.types';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class AdminService {
-  constructor(private prisma: PrismaService) {}
+  private readonly logger = new Logger(AdminService.name);
+
+  constructor(
+    private prisma: PrismaService,
+    private uploadService: UploadService,
+  ) {}
 
   async getResultsGroupedByGroup() {
+    // 🔹 Функция для расчёта максимального количества баллов по количеству вопросов
     const computeMaxPointsByCount = (count?: number | null) => {
       if (count === 10) return 100;
       if (count === 15) return 100;
       return null;
     };
 
+    // 🔹 Получаем всех пользователей из базы с нужными полями
+    // Включаем всех пользователей, не только тех, у кого есть результаты тестов
+    // Это нужно, чтобы показывать файлы даже у студентов без тестов
     const users = await this.prisma.user.findMany({
       select: {
         id: true,
@@ -20,49 +32,116 @@ export class AdminService {
         groupNumber: true,
         testResults: true,
       },
+      where: {
+        role: {
+          not: 'admin', // Исключаем админов из списка студентов
+        },
+      },
     });
 
-    const withResults = users.filter(
-      (u: any) => Array.isArray(u.testResults) && u.testResults.length > 0,
-    );
+    // 🔹 Обрабатываем всех пользователей (не только с результатами тестов)
+    // Это позволяет показывать файлы даже у студентов без тестов
+    const processedUsers = users.map((u) => ({
+      id: u.id,
+      email: u.email,
+      fullName: u.fullName,
+      groupNumber: u.groupNumber,
+      testResults: Array.isArray(u.testResults) ? u.testResults : [],
+    }));
 
-    const normalizeLatest = (results: any[]) => {
-      const sorted = [...results].sort((a, b) => {
-        const at = a?.completed_at ? new Date(a.completed_at).getTime() : 0;
-        const bt = b?.completed_at ? new Date(b.completed_at).getTime() : 0;
-        return bt - at;
-      });
-      const latest = sorted[0] || {};
-      return {
-        grade: latest.grade ?? null,
-        completed_at: latest.completed_at ?? null,
-        test_code: latest.test_code ?? null,
-        answers_details: latest.answers_details ?? [],
-        score: latest.score ?? null,
-        total_questions: latest.total_questions ?? null,
-        variant: latest.variant ?? null,
-        max_points: latest.max_points ?? computeMaxPointsByCount(latest.total_questions ?? null),
-      };
+    // 🔹 Возвращаем все результаты тестов студента, отсортированные по дате (от новых к старым)
+    const getAllTestResults = (results: unknown[]): TestResult[] => {
+      return results
+        .map((r: unknown): TestResult => {
+          const result = r as Record<string, unknown>;
+          return {
+            grade:
+              (typeof result.grade === 'number' ? result.grade : null) ?? null,
+            completed_at: (result.completed_at as string | Date | null) ?? null,
+            test_code:
+              (typeof result.test_code === 'string'
+                ? result.test_code
+                : null) ?? null,
+            answers_details:
+              (Array.isArray(result.answers_details)
+                ? result.answers_details
+                : []) ?? [],
+            score:
+              (typeof result.score === 'number' ? result.score : null) ?? null,
+            total_questions:
+              (typeof result.total_questions === 'number'
+                ? result.total_questions
+                : null) ?? null,
+            variant:
+              (typeof result.variant === 'number' ? result.variant : null) ??
+              null,
+            max_points:
+              (typeof result.max_points === 'number'
+                ? result.max_points
+                : null) ??
+              computeMaxPointsByCount(
+                typeof result.total_questions === 'number'
+                  ? result.total_questions
+                  : null,
+              ),
+          };
+        })
+        .sort((a, b) => {
+          const at = a.completed_at ? new Date(a.completed_at).getTime() : 0;
+          const bt = b.completed_at ? new Date(b.completed_at).getTime() : 0;
+          return bt - at; // От новых к старым
+        });
     };
 
-    const groupsMap = new Map<string, any[]>();
-    const noGroup: any[] = [];
+    const groupsMap = new Map<string, StudentWithTests[]>();
+    const noGroup: StudentWithTests[] = [];
 
-    for (const u of withResults) {
-      const latest = normalizeLatest(u.testResults as any[]);
-      const student = {
+    // 🔹 Формируем список студентов со всеми результатами тестов и файлами
+    // Включаем всех студентов, даже без результатов тестов (чтобы показать их файлы)
+    for (const u of processedUsers) {
+      const allResults = getAllTestResults(u.testResults);
+
+      // Получаем файлы студента
+      const files = await this.getStudentFiles(u.id);
+      
+      this.logger.debug(
+        `Student ${u.id} (${u.fullName}): ${allResults.length} tests, ${files.length} files`,
+      );
+
+      // Показываем студента, если у него есть тесты ИЛИ файлы
+      if (allResults.length === 0 && files.length === 0) {
+        // Пропускаем студентов без тестов и без файлов
+        continue;
+      }
+
+      // Преобразуем даты в строки для правильной сериализации JSON
+      const filesWithSerializedDates = files.map((file) => ({
+        ...file,
+        lastModified:
+          file.lastModified instanceof Date
+            ? file.lastModified.toISOString()
+            : typeof file.lastModified === 'string'
+              ? file.lastModified
+              : new Date(file.lastModified).toISOString(),
+      }));
+
+      const student: StudentWithTests & {
+        files?: Array<{
+          key: string;
+          fileName: string;
+          size: number;
+          lastModified: string; // Изменено на string для сериализации
+          contentType?: string;
+        }>;
+      } = {
         id: u.id,
         email: u.email,
         fullName: u.fullName || '',
-        grade: latest.grade,
-        completed_at: latest.completed_at,
-        test_code: latest.test_code,
-        answers_details: latest.answers_details,
-        score: latest.score,
-        total_questions: latest.total_questions,
-        variant: latest.variant,
-        max_points: latest.max_points,
+        groupNumber: u.groupNumber || '',
+        tests: allResults, // 👈 теперь у студента массив всех пройденных тестов
+        files: filesWithSerializedDates, // 👈 добавляем файлы студента с сериализованными датами
       };
+
       const key = (u.groupNumber || '').trim();
       if (!key) {
         noGroup.push(student);
@@ -72,25 +151,15 @@ export class AdminService {
       }
     }
 
-    // Sort students in each group by name, then by latest date desc
-    for (const [k, arr] of groupsMap.entries()) {
-      arr.sort((a, b) => {
-        const nameA = (a.fullName || '').localeCompare(b.fullName || '');
-        if (nameA !== 0) return nameA;
-        const at = a.completed_at ? new Date(a.completed_at).getTime() : 0;
-        const bt = b.completed_at ? new Date(b.completed_at).getTime() : 0;
-        return bt - at;
-      });
+    // 🔹 Сортируем студентов внутри каждой группы по имени
+    for (const [, arr] of groupsMap.entries()) {
+      arr.sort((a, b) => a.fullName.localeCompare(b.fullName));
     }
-    noGroup.sort((a, b) => {
-      const nameA = (a.fullName || '').localeCompare(b.fullName || '');
-      if (nameA !== 0) return nameA;
-      const at = a.completed_at ? new Date(a.completed_at).getTime() : 0;
-      const bt = b.completed_at ? new Date(b.completed_at).getTime() : 0;
-      return bt - at;
-    });
 
-    // Sort groups by numeric group number if possible
+    // 🔹 Сортируем студентов без группы
+    noGroup.sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    // 🔹 Сортируем группы по номеру (если число — по числу, если нет — по строке)
     const groups = Array.from(groupsMap.entries())
       .map(([groupNumber, students]) => ({ groupNumber, students }))
       .sort((a, b) => {
@@ -104,6 +173,58 @@ export class AdminService {
         return a.groupNumber.localeCompare(b.groupNumber);
       });
 
+    // 🔹 Возвращаем сгруппированные результаты
     return { groups, noGroup };
+  }
+
+  /**
+   * Получает список файлов студента (для админа)
+   * @param studentId - ID студента
+   * @returns Promise с массивом файлов
+   */
+  async getStudentFiles(studentId: number) {
+    try {
+      this.logger.debug(`Getting files for student ${studentId}`);
+      const files = await this.uploadService.getUserFiles(studentId);
+      // Логируем для отладки
+      if (files && files.length > 0) {
+        this.logger.log(
+          `Found ${files.length} files for student ${studentId}:`,
+          files.map((f) => ({ name: f.fileName, key: f.key, size: f.size })),
+        );
+      } else {
+        this.logger.debug(`No files found for student ${studentId}`);
+      }
+      return files || [];
+    } catch (error) {
+      // Логируем ошибку для отладки
+      this.logger.error(
+        `Error getting files for student ${studentId}:`,
+        error instanceof Error ? error.message : String(error),
+      );
+      // Если файлов нет или произошла ошибка, возвращаем пустой массив
+      return [];
+    }
+  }
+
+  /**
+   * Удаляет файл студента (для админа)
+   * @param key - Ключ файла
+   * @returns Promise<boolean>
+   */
+  async deleteStudentFile(key: string): Promise<boolean> {
+    // Для админа используем метод uploadService с пропуском проверки принадлежности
+    return this.uploadService.deleteFile(key, undefined, true);
+  }
+
+  /**
+   * Получает URL для скачивания файла студента (для админа)
+   * @param key - Ключ файла
+   * @returns Promise<string> - URL для скачивания
+   */
+  async getStudentFileDownloadUrl(key: string): Promise<string> {
+    // Используем uploadService для получения URL
+    // Для админа пропускаем проверку принадлежности
+    return this.uploadService.getDownloadUrl(key, 0, true);
   }
 }

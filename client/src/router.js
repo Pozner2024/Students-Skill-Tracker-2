@@ -93,7 +93,8 @@ const updateDOM = async (root, component) => {
         component.renderPage();
       } else if (component.constructor.name === "HomePage") {
         // Для главной страницы вызываем renderPage() напрямую (она сама управляет DOM)
-        component.renderPage();
+        // renderPage теперь асинхронный, нужно дождаться его выполнения
+        await component.renderPage();
       } else if (component.constructor.name === "TestPage") {
         // Проверяем, есть ли параметры теста в URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -129,18 +130,42 @@ const updateDOM = async (root, component) => {
         }
       } else {
         // Для обычных страниц сначала рендерим контент, затем проверяем, не изменился ли маршрут
-        const pageContent = await component.renderPage();
+        try {
+          const pageContent = await component.renderPage();
 
-        // Если в процессе рендера произошла смена маршрута (например, редирект из профиля в админ), не перезаписываем DOM
-        if (window.location.pathname !== initialPath) {
-          return;
-        }
+          // Если в процессе рендера произошла смена маршрута (например, редирект из профиля в админ), не перезаписываем DOM
+          if (window.location.pathname !== initialPath) {
+            return;
+          }
 
-        root.innerHTML = pageContent;
+          // Проверяем, что pageContent не пустой
+          if (pageContent) {
+            root.innerHTML = pageContent;
+          } else {
+            console.warn("renderPage() вернул пустой контент для компонента:", component.constructor.name);
+          }
 
-        // Вызываем init() если он есть (для инициализации обработчиков событий)
-        if (component.init && typeof component.init === "function") {
-          component.init();
+          // Вызываем init() если он есть (для инициализации обработчиков событий)
+          if (component.init && typeof component.init === "function") {
+            component.init();
+          }
+        } catch (error) {
+          console.error("Ошибка при рендеринге страницы:", error);
+          const errorMessage = error.message || "Произошла ошибка при загрузке страницы";
+          root.innerHTML = `
+            <main class="container">
+              <h1>Ошибка</h1>
+              <section>
+                <div class="error-message" style="padding: 20px; background-color: #fee; border: 1px solid #fcc; border-radius: 4px; margin: 20px 0;">
+                  <h3>Ошибка загрузки страницы</h3>
+                  <p>${errorMessage}</p>
+                  <button onclick="window.location.reload()" style="margin-top: 10px; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Обновить страницу
+                  </button>
+                </div>
+              </section>
+            </main>
+          `;
         }
       }
     }
@@ -195,7 +220,8 @@ const Router = async (container = "content") => {
       }
     }
   } catch (e) {
-    // Router admin redirect check failed
+    // Router admin redirect check failed - продолжаем обычную обработку
+    console.warn("Ошибка при проверке прав администратора:", e);
   }
 
   // Получаем соответствующий компонент

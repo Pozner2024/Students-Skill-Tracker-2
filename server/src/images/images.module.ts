@@ -1,3 +1,7 @@
+// ImagesModule - Модуль для работы с изображениями вопросов тестирования
+// Этот модуль инкапсулирует всю функциональность, связанную с управлением
+// изображениями в системе тестирования.
+
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ImagesService } from './images.service';

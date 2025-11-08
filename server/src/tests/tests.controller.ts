@@ -25,7 +25,7 @@ export class TestsController {
   // ✅ Добавляем обработку preflight-запросов
   @Options('*')
   handleOptions(@Res() res: Response) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9000');
     res.setHeader(
       'Access-Control-Allow-Methods',
       'GET, POST, PUT, DELETE, PATCH, OPTIONS',

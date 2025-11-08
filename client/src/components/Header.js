@@ -31,10 +31,17 @@ export default class Header extends Section {
     const logoElement = document.getElementById("logo-link");
 
     if (logoElement) {
-      logoElement.addEventListener("click", (event) => {
+      logoElement.addEventListener("click", async (event) => {
         event.preventDefault();
-        this.cubeLoader.show(); // Показываем лоадер при клике на логотип
-        window.location.href = "/";
+        
+        // Используем роутер вместо полной перезагрузки страницы
+        const currentPath = window.location.pathname;
+        if (currentPath !== "/") {
+          window.history.pushState({}, "", "/");
+          // Импортируем роутер динамически, чтобы избежать циклических зависимостей
+          const Router = (await import("../router.js")).default;
+          await Router("content");
+        }
       });
     }
   }

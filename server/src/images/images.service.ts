@@ -1,3 +1,13 @@
+//Сервис для получения изображений из Yandex Cloud Object Storage.
+//Возможности:
+// - Создаёт подключение к хранилищу через AWS S3 SDK.
+//- Формирует путь к изображению по теме, варианту и номеру вопроса.
+// - Генерирует временную (подписанную) ссылку на изображение, действительную 1 час.
+//- Может вернуть одно изображение, проверить его наличие или получить все изображения темы.
+// Настройки (ключи, регион, бакет) берутся из .env через конфигурацию yandex-cloud.config.ts.
+// Используется для загрузки картинок к тестовым заданиям
+//по учебному предмету «Специальная технология».
+
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
@@ -12,14 +22,6 @@ export class ImagesService {
   constructor(private configService: ConfigService) {
     // Получаем типизированную конфигурацию
     const config = this.configService.get<YandexCloudConfig>('yandexCloud')!;
-
-    this.logger.log(`Инициализация Yandex Cloud с конфигурацией:`, {
-      region: config.region,
-      endpoint: config.endpoint,
-      bucketName: config.bucketName,
-      hasAccessKey: !!config.accessKeyId,
-      hasSecretKey: !!config.secretAccessKey,
-    });
 
     this.s3Client = new S3Client({
       region: config.region,
@@ -48,8 +50,6 @@ export class ImagesService {
       const config = this.configService.get<YandexCloudConfig>('yandexCloud')!;
       const key = `img${topicId}_${variant}/${questionNumber}.jpg`;
 
-      this.logger.log(`Попытка получить изображение: ${key} из бакета ${config.bucketName}`);
-
       const command = new GetObjectCommand({
         Bucket: config.bucketName,
         Key: key,
@@ -60,11 +60,12 @@ export class ImagesService {
         expiresIn: 3600, // 1 час
       });
 
-      this.logger.log(`Generated signed URL for image: ${key}`);
       return signedUrl;
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
       this.logger.warn(
-        `Image not found: img${topicId}_${variant}/${questionNumber}.jpg. Error: ${error.message}`,
+        `Image not found: img${topicId}_${variant}/${questionNumber}.jpg. Error: ${errorMessage}`,
       );
       return null;
     }

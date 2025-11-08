@@ -1,13 +1,14 @@
+// DTO для обновления профиля пользователя с проверкой корректности данных
 import { IsString, IsOptional, MaxLength } from 'class-validator';
 
 export class UpdateProfileDto {
   @IsOptional()
   @IsString()
-  @MaxLength(255, { message: 'ФИО не должно превышать 255 символов' })
+  @MaxLength(25, { message: 'ФИО не должно превышать 25 символов' })
   fullName?: string;
 
   @IsOptional()
   @IsString()
-  @MaxLength(50, { message: 'Номер группы не должен превышать 50 символов' })
+  @MaxLength(5, { message: 'Номер группы не должен превышать 5 символов' })
   groupNumber?: string;
 }

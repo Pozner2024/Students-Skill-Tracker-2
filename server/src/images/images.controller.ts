@@ -1,4 +1,14 @@
-import { Controller, Get, Param, ParseIntPipe, Query, Logger } from '@nestjs/common';
+// Контроллер для работы с изображениями вопросов тестирования
+//Предоставляет API для получения URL изображений, проверки их наличия
+//и массового получения изображений для конкретных тем и вариантов тестов.
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+  Logger,
+} from '@nestjs/common';
 import { ImagesService } from './images.service';
 
 @Controller('images')
@@ -42,8 +52,6 @@ export class ImagesController {
     @Param('variant', ParseIntPipe) variant: number,
     @Query('maxQuestions') maxQuestions?: string,
   ) {
-    this.logger.log(`Запрос изображений для topicId=${topicId}, variant=${variant}, maxQuestions=${maxQuestions}`);
-    
     const maxQuestionsNum = maxQuestions ? parseInt(maxQuestions, 10) : 20;
     const images = await this.imagesService.getImagesForTopic(
       topicId,

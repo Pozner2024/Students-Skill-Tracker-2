@@ -1,3 +1,5 @@
+// Базовый юнит-тест для проверки, что AuthController успешно создаётся в тестовом окружении NestJS
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 

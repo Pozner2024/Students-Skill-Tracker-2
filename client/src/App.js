@@ -6,13 +6,13 @@ import Footer from "./components/Footer";
 
 import "./normalize.css";
 import "./App.css";
-import "./Modal.css";
-import "./Test.css";
-import "./CubeLoader.css";
-import "./SkillProgressBar.css";
-import "./Form.css";
-import "./Profile.css";
-import "./Criteria.css";
+import "./common/Modal.css";
+import "./pages/TestPage.css";
+import "./common/CubeLoader.css";
+import "./components/SkillProgressBar.css";
+import "./pages/LoginPage.css";
+import "./pages/Profile.css";
+import "./pages/Criteria.css";
 
 const App = (root) => {
   // Обозначаем id контейнера для отрисовки страниц
