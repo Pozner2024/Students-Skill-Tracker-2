@@ -18,9 +18,11 @@ const getComponentFromPath = (path) => {
     return null;
   }
 
-  // Проверяем, является ли маршрут защищенным
-  if (protectedRoutes.includes(path)) {
-    if (!authService.isAuthenticated()) {
+  // Если пользователь не авторизован, проверяем доступ к маршруту
+  if (!authService.isAuthenticated()) {
+    // Разрешаем доступ только к странице логина и публичным страницам
+    const publicRoutes = ["/login", "/about", "/contacts"];
+    if (!publicRoutes.includes(path)) {
       // Перенаправляем на страницу логина
       window.history.pushState({}, "", "/login");
       return { renderPage: () => renderLoginPage() };
@@ -67,7 +69,8 @@ const getComponentFromPath = (path) => {
 };
 
 // Защищенные маршруты (требуют аутентификации)
-const protectedRoutes = ["/profile", "/test-page", "/criteria", "/admin"];
+// Примечание: теперь логика работает через publicRoutes - все маршруты, кроме публичных, требуют авторизации
+const protectedRoutes = ["/profile", "/test-page", "/criteria", "/admin"]; // Оставлено для документации
 
 // Функция выхода пользователя
 const logoutUser = () => {

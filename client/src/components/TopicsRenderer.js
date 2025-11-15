@@ -4,6 +4,7 @@
 // просматривать темы проектов и контрольные вопросы)
 
 import API_CONFIG from "../config/api.js";
+import pic1 from "../assets/pic/pic1.jpg";
 
 export default class TopicsRenderer {
   constructor() {
@@ -14,7 +15,7 @@ export default class TopicsRenderer {
     try {
       const url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.TOPICS}`;
       console.log("Загрузка тем из:", url);
-      
+
       const response = await fetch(url);
 
       if (!response.ok) {
@@ -39,7 +40,7 @@ export default class TopicsRenderer {
             // Игнорируем ошибку парсинга текста
           }
         }
-        
+
         const error = new Error(errorMessage);
         error.details = errorDetails;
         error.status = response.status;
@@ -54,11 +55,13 @@ export default class TopicsRenderer {
         console.log(`Загружено тем: ${this.topics.length}`);
         return this.topics;
       } else {
-        throw new Error("Неверный формат ответа от сервера: отсутствует success или topics");
+        throw new Error(
+          "Неверный формат ответа от сервера: отсутствует success или topics"
+        );
       }
     } catch (error) {
       console.error("Ошибка при загрузке тем:", error);
-      
+
       // Выводим детали ошибки, если они есть
       if (error instanceof Error && error.details) {
         console.error("Детали ошибки от сервера:", error.details);
@@ -69,12 +72,14 @@ export default class TopicsRenderer {
           }
         }
       }
-      
+
       // Если это ошибка сети (например, сервер не запущен)
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error("Не удалось подключиться к серверу. Убедитесь, что сервер запущен.");
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        throw new Error(
+          "Не удалось подключиться к серверу. Убедитесь, что сервер запущен."
+        );
       }
-      
+
       // Пробрасываем ошибку дальше, чтобы её мог обработать вызывающий код
       this.topics = [];
       throw error;
@@ -84,7 +89,11 @@ export default class TopicsRenderer {
   renderRectangles() {
     let rectanglesHTML = "";
 
-    if (!this.topics || !Array.isArray(this.topics) || this.topics.length === 0) {
+    if (
+      !this.topics ||
+      !Array.isArray(this.topics) ||
+      this.topics.length === 0
+    ) {
       // Если тем нет, возвращаем пустой контейнер
       return "";
     }
@@ -101,6 +110,7 @@ export default class TopicsRenderer {
       // Формируем HTML для прямоугольников с ссылками на тесты
       rectanglesHTML += `
         <div class="rectangle" style="animation-delay: ${index * 0.1}s;">
+          <img src="${pic1}" alt="Изображение темы" class="rectangle-image">
           <p>Тема: ${topicName}</p>
           <div class="buttons-container">
             <a href="/test-page?variant=1&topicId=${topicId}" class="btn test-btn">Выполнить тест. Вариант 1</a>

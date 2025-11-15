@@ -131,4 +131,52 @@ export class AdminController {
       url,
     };
   }
+
+  /**
+   * Удаляет пользователя (для админа)
+   * DELETE /admin/users/:userId
+   */
+  @Delete('users/:userId')
+  @UseGuards(JwtAuthGuard)
+  async deleteUser(
+    @GetUser() user: { id: number; email: string },
+    @Param('userId') userId: string,
+  ) {
+    try {
+      this.logger.debug(`Delete user request: userId=${userId}, admin=${user.id}`);
+
+      const dbUser = await this.prisma.user.findUnique({
+        where: { id: user.id },
+        select: { role: true },
+      });
+      if (!dbUser || dbUser.role !== 'admin') {
+        this.logger.warn(`Access denied for user ${user.id}, role: ${dbUser?.role}`);
+        throw new ForbiddenException('Доступ только для администраторов');
+      }
+
+      const userIdNum = parseInt(userId, 10);
+      if (Number.isNaN(userIdNum)) {
+        throw new BadRequestException('Некорректный ID пользователя');
+      }
+
+      const deleted = await this.adminService.deleteUser(userIdNum);
+
+      if (deleted) {
+        this.logger.log(`User ${userIdNum} deleted successfully by admin ${user.id}`);
+        return {
+          success: true,
+          message: 'Пользователь успешно удален',
+        };
+      } else {
+        throw new BadRequestException('Не удалось удалить пользователя');
+      }
+    } catch (error) {
+      this.logger.error('Error in deleteUser:', error);
+      if (error instanceof Error) {
+        this.logger.error(`Error message: ${error.message}`);
+        this.logger.error(`Error stack: ${error.stack}`);
+      }
+      throw error;
+    }
+  }
 }

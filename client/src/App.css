@@ -194,6 +194,7 @@ footer {
 .rectangle {
   width: calc(20% - 20px);
   height: auto;
+  min-height: 400px;
   background-color: #058548;
   box-sizing: border-box;
   opacity: 0;
@@ -201,7 +202,7 @@ footer {
   animation: flyIn 1.5s forwards;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
   padding: 20px;
@@ -214,19 +215,33 @@ footer {
   margin-top: -30px;
 }
 
+.rectangle-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  display: block;
+}
+
 .rectangle p {
   font-size: 20px;
   color: white;
   font-weight: bold;
-  margin: 0 0 10px 0;
+  margin: auto 0;
   font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .buttons-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: auto;
+  width: 100%;
 }
 
 .btn {

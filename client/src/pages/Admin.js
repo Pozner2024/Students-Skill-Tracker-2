@@ -33,23 +33,39 @@ class AdminPage extends Page {
           ${g.students
             .map(
               (s, studentIndex) => `
-              <div class="accordion-item">
-                <button class="accordion-header" type="button" 
-                        onclick="this.classList.toggle('active');
-                                 this.nextElementSibling.classList.toggle('active');"
-                        aria-expanded="false">
+              <div class="accordion-item" data-student-id="${s.id}">
+                <div class="accordion-header" 
+                     onclick="this.classList.toggle('active');
+                              this.nextElementSibling.classList.toggle('active');"
+                     aria-expanded="false">
                   <span class="student-number">${studentIndex + 1}.</span>
                   <span class="student-name">${(s.fullName || "").trim()}${
                 s.email ? `, ${s.email}` : ""
               }</span>
-                  <span class="tests-count">Тестов: ${s.tests?.length || 0}</span>
-                  <span class="files-indicator ${s.files && s.files.length > 0 ? '' : 'no-files'}" data-student-id="${s.id}">
-                    ${s.files && s.files.length > 0 
-                      ? `📁 Файлов: ${s.files.length}` 
-                      : '📁 Нет файлов'}
-                  </span>
-                  <span class="accordion-icon">▼</span>
-                </button>
+                  <div class="header-right-group">
+                    <span class="tests-count">Тестов: ${
+                      s.tests?.length || 0
+                    }</span>
+                    <span class="files-indicator ${
+                      s.files && s.files.length > 0 ? "" : "no-files"
+                    }" data-student-id="${s.id}">
+                      ${
+                        s.files && s.files.length > 0
+                          ? `📁 Файлов: ${s.files.length}`
+                          : "📁 Нет файлов"
+                      }
+                    </span>
+                    <button class="delete-user-btn" type="button" 
+                            data-user-id="${s.id}" 
+                            data-user-name="${this.escape(
+                              (s.fullName || "").trim()
+                            )}"
+                            title="Удалить пользователя">
+                      Удалить
+                    </button>
+                    <span class="accordion-icon">▼</span>
+                  </div>
+                </div>
                 <div class="accordion-content">
                   ${this.renderStudentTests(s.tests || [])}
                   ${this.renderStudentFiles(s.files || [], s.id)}
@@ -79,8 +95,7 @@ class AdminPage extends Page {
                 ${(() => {
                   const title = this.getTestTitle(test.test_code) || "-";
                   const needVariant =
-                    typeof test.variant === "number" &&
-                    !/вариант/i.test(title);
+                    typeof test.variant === "number" && !/вариант/i.test(title);
                   return `${title}${
                     needVariant ? `, вариант ${test.variant}` : ""
                   }`;
@@ -135,23 +150,39 @@ class AdminPage extends Page {
         ${noGroup
           .map(
             (s, studentIndex) => `
-            <div class="accordion-item">
-              <button class="accordion-header" type="button" 
-                      onclick="this.classList.toggle('active');
-                               this.nextElementSibling.classList.toggle('active');"
-                      aria-expanded="false">
+            <div class="accordion-item" data-student-id="${s.id}">
+              <div class="accordion-header" 
+                   onclick="this.classList.toggle('active');
+                            this.nextElementSibling.classList.toggle('active');"
+                   aria-expanded="false">
                 <span class="student-number">${studentIndex + 1}.</span>
                 <span class="student-name">${(s.fullName || "").trim()}${
               s.email ? `, ${s.email}` : ""
             }</span>
-                <span class="tests-count">Тестов: ${s.tests?.length || 0}</span>
-                <span class="files-indicator ${s.files && s.files.length > 0 ? '' : 'no-files'}" data-student-id="${s.id}">
-                  ${s.files && s.files.length > 0 
-                    ? `📁 Файлов: ${s.files.length}` 
-                    : '📁 Нет файлов'}
-                </span>
-                <span class="accordion-icon">▼</span>
-              </button>
+                <div class="header-right-group">
+                  <span class="tests-count">Тестов: ${
+                    s.tests?.length || 0
+                  }</span>
+                  <span class="files-indicator ${
+                    s.files && s.files.length > 0 ? "" : "no-files"
+                  }" data-student-id="${s.id}">
+                    ${
+                      s.files && s.files.length > 0
+                        ? `📁 Файлов: ${s.files.length}`
+                        : "📁 Нет файлов"
+                    }
+                  </span>
+                  <button class="delete-user-btn" type="button" 
+                          data-user-id="${s.id}" 
+                          data-user-name="${this.escape(
+                            (s.fullName || "").trim()
+                          )}"
+                          title="Удалить пользователя">
+                    Удалить
+                  </button>
+                  <span class="accordion-icon">▼</span>
+                </div>
+              </div>
               <div class="accordion-content">
                 ${this.renderStudentTests(s.tests || [])}
                 ${this.renderStudentFiles(s.files || [], s.id)}
@@ -252,14 +283,22 @@ class AdminPage extends Page {
         <div class="file-item-admin" data-key="${this.escape(file.key)}">
           <div class="file-info-admin">
             <span class="file-name-admin">${this.escape(file.fileName)}</span>
-            <span class="file-size-admin">${this.formatFileSize(file.size)}</span>
-            <span class="file-date-admin">${new Date(file.lastModified).toLocaleDateString("ru-RU")}</span>
+            <span class="file-size-admin">${this.formatFileSize(
+              file.size
+            )}</span>
+            <span class="file-date-admin">${new Date(
+              file.lastModified
+            ).toLocaleDateString("ru-RU")}</span>
           </div>
           <div class="file-actions-admin">
-            <button class="file-download-admin" data-key="${this.escape(file.key)}" title="Скачать">
+            <button class="file-download-admin" data-key="${this.escape(
+              file.key
+            )}" title="Скачать">
               ⬇️ Скачать
             </button>
-            <button type="button" class="file-delete-admin" data-key="${this.escape(file.key)}" title="Удалить">
+            <button type="button" class="file-delete-admin" data-key="${this.escape(
+              file.key
+            )}" title="Удалить">
               🗑️ Удалить
             </button>
           </div>
@@ -283,7 +322,7 @@ class AdminPage extends Page {
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
   }
 
   async renderPage() {
@@ -339,14 +378,26 @@ class AdminPage extends Page {
           font-weight: 600;
           color: #000;
         }
+        .header-right-group {
+          display: flex;
+          align-items: center;
+          gap: 0;
+          margin-left: auto;
+        }
         .tests-count {
           margin-left: 1rem;
-          padding: 0.25rem 0.75rem;
+          padding: 0.5rem 0.75rem;
           background: #007bff;
           color: #fff;
           border-radius: 12px;
           font-size: 0.875rem;
           font-weight: 500;
+          white-space: nowrap;
+          min-width: 100px;
+          text-align: center;
+          display: inline-block;
+          line-height: 1.2;
+          box-sizing: border-box;
         }
         .accordion-icon {
           margin-left: 1rem;
@@ -386,12 +437,18 @@ class AdminPage extends Page {
         }
         .files-indicator {
           margin-left: 1rem;
-          padding: 0.25rem 0.75rem;
+          padding: 0.5rem 0.75rem;
           background: #28a745;
           color: #fff;
           border-radius: 12px;
           font-size: 0.875rem;
           font-weight: 500;
+          white-space: nowrap;
+          min-width: 100px;
+          text-align: center;
+          display: inline-block;
+          line-height: 1.2;
+          box-sizing: border-box;
         }
         .files-indicator.no-files {
           background: #6c757d;
@@ -461,6 +518,31 @@ class AdminPage extends Page {
           opacity: 0.6;
           cursor: not-allowed;
         }
+        .delete-user-btn {
+          margin-left: 1rem;
+          padding: 0.5rem 0.75rem;
+          background: #dc3545;
+          color: #fff;
+          border: none;
+          border-radius: 12px;
+          cursor: pointer;
+          font-size: 0.875rem;
+          font-weight: 500;
+          transition: background-color 0.2s;
+          white-space: nowrap;
+          flex-shrink: 0;
+          min-width: 100px;
+          text-align: center;
+          line-height: 1.2;
+          box-sizing: border-box;
+        }
+        .delete-user-btn:hover {
+          background: #c82333;
+        }
+        .delete-user-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
       </style>
     `;
   }
@@ -470,24 +552,34 @@ class AdminPage extends Page {
     if (!container) return;
     try {
       const data = await this.fetchResults();
-      
+
       // Логируем данные для отладки
       console.log("Admin data received:", data);
       if (data.groups) {
         data.groups.forEach((group, idx) => {
-          console.log(`Group ${group.groupNumber}:`, group.students.length, "students");
+          console.log(
+            `Group ${group.groupNumber}:`,
+            group.students.length,
+            "students"
+          );
           group.students.forEach((student, sidx) => {
-            console.log(`  Student ${sidx + 1}: ${student.fullName}, files:`, student.files?.length || 0, student.files);
+            console.log(
+              `  Student ${sidx + 1}: ${student.fullName}, files:`,
+              student.files?.length || 0,
+              student.files
+            );
           });
         });
       }
-      
+
       const groupsHtml = this.renderGroupsTable(data.groups);
       const noGroupHtml = this.renderNoGroupTable(data.noGroup);
       container.innerHTML = `${groupsHtml}<hr />${noGroupHtml}`;
-      
+
       // Добавляем обработчики событий для файлов
       this.addFileEventListeners();
+      // Добавляем обработчики событий для удаления пользователей
+      this.addUserDeleteEventListeners();
     } catch (e) {
       console.error("Error loading admin data:", e);
       container.innerHTML = `<div class="no-results"><p>${e.message}</p></div>`;
@@ -517,12 +609,24 @@ class AdminPage extends Page {
 
     // Обработчик для скачивания и удаления файлов через делегирование
     adminContainer.addEventListener("click", async (e) => {
-      console.log("Click event in admin container:", e.target, e.target.classList);
+      console.log(
+        "Click event in admin container:",
+        e.target,
+        e.target.classList
+      );
+      
+      // Сначала проверяем, не это ли кнопка удаления пользователя (чтобы не конфликтовать)
+      const userDeleteBtn = e.target.closest(".delete-user-btn");
+      if (userDeleteBtn) {
+        // Это обрабатывается другим обработчиком
+        return;
+      }
+      
       const downloadBtn = e.target.closest(".file-download-admin");
       if (downloadBtn) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         const key = downloadBtn.dataset.key;
         if (!key) return;
 
@@ -534,32 +638,35 @@ class AdminPage extends Page {
           const result = await authService.getStudentFileDownloadUrl(key);
           if (result.success && result.url) {
             // Получаем имя файла из элемента
-            const fileItem = downloadBtn.closest('.file-item-admin');
-            const fileNameElement = fileItem?.querySelector('.file-name-admin');
-            const fileName = fileNameElement?.textContent || key.split('/').pop() || 'download';
+            const fileItem = downloadBtn.closest(".file-item-admin");
+            const fileNameElement = fileItem?.querySelector(".file-name-admin");
+            const fileName =
+              fileNameElement?.textContent ||
+              key.split("/").pop() ||
+              "download";
 
             try {
               // Получаем файл через fetch как blob
               const response = await fetch(result.url, {
-                method: 'GET',
-                mode: 'cors',
+                method: "GET",
+                mode: "cors",
               });
-              
+
               if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
               }
-              
+
               const blob = await response.blob();
-              
+
               // Создаем blob URL и скачиваем файл
               const blobUrl = window.URL.createObjectURL(blob);
-              const link = document.createElement('a');
+              const link = document.createElement("a");
               link.href = blobUrl;
               link.download = fileName;
-              link.style.display = 'none';
+              link.style.display = "none";
               document.body.appendChild(link);
               link.click();
-              
+
               // Удаляем ссылку и освобождаем blob URL после небольшой задержки
               setTimeout(() => {
                 document.body.removeChild(link);
@@ -567,21 +674,27 @@ class AdminPage extends Page {
               }, 100);
             } catch (fetchError) {
               // Если fetch не работает, пробуем напрямую через ссылку
-              console.warn('Fetch failed, trying direct link:', fetchError);
-              const link = document.createElement('a');
+              console.warn("Fetch failed, trying direct link:", fetchError);
+              const link = document.createElement("a");
               link.href = result.url;
               link.download = fileName;
-              link.style.display = 'none';
+              link.style.display = "none";
               document.body.appendChild(link);
               link.click();
               setTimeout(() => document.body.removeChild(link), 100);
             }
           } else {
-            alert("Ошибка при получении ссылки на файл: " + (result.error || 'Неизвестная ошибка'));
+            alert(
+              "Ошибка при получении ссылки на файл: " +
+                (result.error || "Неизвестная ошибка")
+            );
           }
         } catch (error) {
-          console.error('Download error:', error);
-          alert("Ошибка при скачивании файла: " + (error.message || 'Неизвестная ошибка'));
+          console.error("Download error:", error);
+          alert(
+            "Ошибка при скачивании файла: " +
+              (error.message || "Неизвестная ошибка")
+          );
         } finally {
           downloadBtn.disabled = false;
           downloadBtn.textContent = originalText;
@@ -595,7 +708,7 @@ class AdminPage extends Page {
         console.log("Delete button clicked:", deleteBtn);
         e.preventDefault();
         e.stopPropagation();
-        
+
         const key = deleteBtn.dataset.key;
         console.log("Delete button key:", key);
         if (!key) {
@@ -615,28 +728,36 @@ class AdminPage extends Page {
           console.log("Deleting file with key:", key);
           const result = await authService.deleteStudentFile(key);
           console.log("Delete result:", result);
-          
+
           if (result.success) {
             // Удаляем элемент из DOM
             const fileItem = deleteBtn.closest(".file-item-admin");
             if (fileItem) {
               fileItem.remove();
-              
+
               // Обновляем индикатор файлов
-              const studentId = fileItem.closest(".accordion-item")?.querySelector(".files-indicator")?.dataset.studentId;
+              const studentId = fileItem
+                .closest(".accordion-item")
+                ?.querySelector(".files-indicator")?.dataset.studentId;
               if (studentId) {
                 self.updateFilesIndicator(studentId);
               }
             }
             alert("Файл успешно удален");
           } else {
-            alert("Ошибка при удалении файла: " + (result.error || "Неизвестная ошибка"));
+            alert(
+              "Ошибка при удалении файла: " +
+                (result.error || "Неизвестная ошибка")
+            );
             deleteBtn.disabled = false;
             deleteBtn.textContent = originalText;
           }
         } catch (error) {
           console.error("Error deleting file:", error);
-          alert("Ошибка при удалении файла: " + (error.message || "Неизвестная ошибка"));
+          alert(
+            "Ошибка при удалении файла: " +
+              (error.message || "Неизвестная ошибка")
+          );
           deleteBtn.disabled = false;
           deleteBtn.textContent = originalText;
         }
@@ -648,7 +769,9 @@ class AdminPage extends Page {
   async updateFilesIndicator(studentId) {
     try {
       const result = await authService.getStudentFiles(studentId);
-      const indicator = document.querySelector(`.files-indicator[data-student-id="${studentId}"]`);
+      const indicator = document.querySelector(
+        `.files-indicator[data-student-id="${studentId}"]`
+      );
       if (indicator) {
         if (result.success && result.files && result.files.length > 0) {
           indicator.textContent = `📁 Файлов: ${result.files.length}`;
@@ -663,6 +786,93 @@ class AdminPage extends Page {
     } catch (error) {
       console.error("Ошибка при обновлении индикатора файлов:", error);
     }
+  }
+
+  addUserDeleteEventListeners() {
+    const adminContainer = document.querySelector("#admin");
+    if (!adminContainer) {
+      console.warn("Admin container not found");
+      return;
+    }
+
+    // Проверяем, были ли уже добавлены обработчики
+    if (adminContainer.dataset.userDeleteHandlers === "true") {
+      console.log("User delete handlers already added");
+      return;
+    }
+
+    adminContainer.dataset.userDeleteHandlers = "true";
+    console.log("Adding user delete event listeners to admin container");
+
+    // Сохраняем ссылку на this
+    const self = this;
+
+    // Обработчик для удаления пользователей через делегирование
+    adminContainer.addEventListener("click", async (e) => {
+      console.log("Click event in admin container:", e.target, e.target.classList);
+      const deleteBtn = e.target.closest(".delete-user-btn");
+      if (deleteBtn) {
+        console.log("Delete button clicked:", deleteBtn);
+        e.preventDefault();
+        e.stopPropagation();
+
+        const userId = deleteBtn.dataset.userId;
+        const userName = deleteBtn.dataset.userName || "пользователя";
+
+        console.log("User ID:", userId, "User name:", userName);
+
+        if (!userId) {
+          console.error("User ID not found in delete button");
+          alert("Ошибка: ID пользователя не найден");
+          return;
+        }
+
+        if (
+          !confirm(
+            `Вы уверены, что хотите удалить пользователя "${userName}"?\n\nЭто действие удалит:\n- Пользователя\n- Все его тесты\n- Все его файлы\n\nЭто действие нельзя отменить!`
+          )
+        ) {
+          return;
+        }
+
+        deleteBtn.disabled = true;
+        const originalText = deleteBtn.textContent;
+        deleteBtn.textContent = "⏳";
+
+        try {
+          console.log("Deleting user with ID:", userId);
+          const result = await authService.deleteUser(userId);
+          console.log("Delete user result:", result);
+
+          if (result.success) {
+            // Удаляем элемент из DOM
+            const accordionItem = deleteBtn.closest(".accordion-item");
+            if (accordionItem) {
+              accordionItem.remove();
+              alert("Пользователь успешно удален");
+              // Перезагружаем страницу для обновления списка
+              window.location.reload();
+            }
+          } else {
+            alert(
+              "Ошибка при удалении пользователя: " +
+                (result.error || "Неизвестная ошибка")
+            );
+            deleteBtn.disabled = false;
+            deleteBtn.textContent = originalText;
+          }
+        } catch (error) {
+          console.error("Error deleting user:", error);
+          alert(
+            "Ошибка при удалении пользователя: " +
+              (error.message || "Неизвестная ошибка")
+          );
+          deleteBtn.disabled = false;
+          deleteBtn.textContent = originalText;
+        }
+        return;
+      }
+    });
   }
 }
 

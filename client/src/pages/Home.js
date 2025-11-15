@@ -34,7 +34,7 @@ class HomePage extends Page {
     try {
       // Загружаем темы заранее, чтобы избежать задержек
       await this.topicsComponent.loadTopics();
-      
+
       // Рендерим Topics компонент
       const topicsContent = this.topicsComponent.render();
 
@@ -54,14 +54,16 @@ class HomePage extends Page {
       contentElement.innerHTML = mainContent;
 
       // Используем requestAnimationFrame для плавного обновления DOM
-      await new Promise(resolve => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
 
       // Добавляем обработчики событий после рендеринга
       this.topicsComponent.addEventListeners();
     } catch (error) {
       console.error("Ошибка при загрузке тем:", error);
       // Отображаем сообщение об ошибке пользователю
-      const errorMessage = error.message || "Не удалось загрузить тесты. Пожалуйста, обновите страницу.";
+      const errorMessage =
+        error.message ||
+        "Не удалось загрузить тесты. Пожалуйста, обновите страницу.";
       contentElement.innerHTML = `
         <main id="${this.id}" class="container">
           <h1>${this.title}</h1>
@@ -77,7 +79,7 @@ class HomePage extends Page {
         </main>
       `;
     }
-    
+
     return "";
   }
 }

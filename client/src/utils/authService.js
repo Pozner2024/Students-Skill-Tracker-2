@@ -628,6 +628,46 @@ class AuthService {
       };
     }
   }
+
+  // Удаление пользователя (для админа)
+  async deleteUser(userId) {
+    try {
+      const token = this.getToken();
+
+      if (!token) {
+        return {
+          success: false,
+          error: "Пользователь не авторизован",
+        };
+      }
+
+      const headers = this.getAuthHeaders();
+
+      const response = await fetch(
+        `${this.baseURL}/admin/users/${userId}`,
+        {
+          method: "DELETE",
+          headers: headers,
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || "Ошибка при удалении пользователя");
+      }
+
+      return {
+        success: true,
+        message: data.message || "Пользователь успешно удален",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
 }
 
 // Создаем единственный экземпляр сервиса

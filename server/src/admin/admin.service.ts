@@ -227,4 +227,61 @@ export class AdminService {
     // Для админа пропускаем проверку принадлежности
     return this.uploadService.getDownloadUrl(key, 0, true);
   }
+
+  /**
+   * Удаляет пользователя и все его файлы (для админа)
+   * @param userId - ID пользователя
+   * @returns Promise<boolean> - true если пользователь успешно удален
+   */
+  async deleteUser(userId: number): Promise<boolean> {
+    try {
+      this.logger.log(`Deleting user ${userId} and all associated files`);
+
+      // Проверяем, что пользователь существует и не является админом
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true, role: true, email: true },
+      });
+
+      if (!user) {
+        this.logger.warn(`User ${userId} not found`);
+        throw new Error('Пользователь не найден');
+      }
+
+      if (user.role === 'admin') {
+        this.logger.warn(`Attempt to delete admin user ${userId}`);
+        throw new Error('Нельзя удалить администратора');
+      }
+
+      // Получаем все файлы пользователя
+      const files = await this.getStudentFiles(userId);
+      this.logger.debug(`Found ${files.length} files for user ${userId}`);
+
+      // Удаляем все файлы из S3
+      for (const file of files) {
+        try {
+          await this.deleteStudentFile(file.key);
+          this.logger.debug(`Deleted file: ${file.key}`);
+        } catch (error) {
+          this.logger.error(
+            `Error deleting file ${file.key}: ${error instanceof Error ? error.message : String(error)}`,
+          );
+          // Продолжаем удаление остальных файлов даже если один не удалился
+        }
+      }
+
+      // Удаляем пользователя из БД (файлы удалятся автоматически через cascade)
+      await this.prisma.user.delete({
+        where: { id: userId },
+      });
+
+      this.logger.log(`User ${userId} (${user.email}) deleted successfully`);
+      return true;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Error deleting user ${userId}: ${errorMessage}`, error);
+      throw error;
+    }
+  }
 }

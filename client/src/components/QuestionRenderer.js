@@ -28,7 +28,7 @@ class QuestionRenderer {
 
     // Добавляем изображение, если путь существует
     let imageHTML = "";
-    if (imagePath) {
+    if (imagePath && imagePath.trim() !== "") {
       imageHTML = `
         <div class="question-image">
           <img src="${imagePath}" alt="Изображение для вопроса ${index + 1}" />

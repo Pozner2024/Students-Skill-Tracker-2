@@ -407,12 +407,22 @@ input[type="radio"]:checked::before {
   max-width: 340px; /* Устанавливаем максимальную ширину изображения */
 }
 
+.question-image:empty {
+  display: none; /* Скрываем пустой блок изображения */
+}
+
 .question-image img {
   width: 110%; /* Изображение занимает всю ширину блока question-image */
   height: auto; /* Сохраняем пропорции изображения */
   border-radius: 8px; /* Закругленные углы, если требуется */
   margin-top: -16px;
   margin-left: 15px;
+}
+
+/* Скрываем alt-текст для битых изображений */
+.question-image img[alt]:not([src]),
+.question-image img:not([src]) {
+  display: none;
 }
 
 /* Стили для индикатора загрузки изображений */
