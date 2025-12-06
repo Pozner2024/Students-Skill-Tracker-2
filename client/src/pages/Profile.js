@@ -1,5 +1,44 @@
 import Page from "../common/Page.js";
-import authService from "../utils/authService.js";
+import authService from "../services/authService.js";
+
+// Функция для показа Bootstrap alert
+function showBootstrapAlert(message, type = "info") {
+  // Удаляем предыдущие алерты
+  const existingAlert = document.querySelector(".bootstrap-alert-container");
+  if (existingAlert) {
+    existingAlert.remove();
+  }
+
+  // Создаем контейнер для алерта
+  const alertContainer = document.createElement("div");
+  alertContainer.className = "bootstrap-alert-container position-fixed top-0 start-50 translate-middle-x mt-3";
+  alertContainer.style.zIndex = "9999";
+
+  // Создаем алерт
+  const alertDiv = document.createElement("div");
+  alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+  alertDiv.setAttribute("role", "alert");
+  alertDiv.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+
+  alertContainer.appendChild(alertDiv);
+  document.body.appendChild(alertContainer);
+
+  // Автоматически скрываем через 5 секунд
+  setTimeout(() => {
+    if (alertContainer.parentNode) {
+      const bsAlert = new bootstrap.Alert(alertDiv);
+      bsAlert.close();
+      setTimeout(() => {
+        if (alertContainer.parentNode) {
+          alertContainer.remove();
+        }
+      }, 300);
+    }
+  }, 5000);
+}
 
 class ProfilePage extends Page {
   constructor() {
@@ -32,22 +71,22 @@ class ProfilePage extends Page {
               !hasUserData
                 ? `
               <form id="profile-form" class="profile-form">
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="fullName">Фамилия и Имя:</label>
-                    <input type="text" id="fullName" name="fullName" placeholder="Введите ваши фамилию и имя" value="${
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="fullName" class="form-label">Фамилия и Имя:</label>
+                    <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Введите ваши фамилию и имя" value="${
                       result.user.fullName || ""
                     }">
                   </div>
-                  <div class="form-group">
-                    <label for="groupNumber">Номер группы:</label>
-                    <input type="text" id="groupNumber" name="groupNumber" placeholder="Введите номер группы" value="${
+                  <div class="col-md-6">
+                    <label for="groupNumber" class="form-label">Номер группы:</label>
+                    <input type="text" class="form-control" id="groupNumber" name="groupNumber" placeholder="Введите номер группы" value="${
                       result.user.groupNumber || ""
                     }">
                   </div>
                 </div>
-                <div class="form-actions">
-                  <button type="submit" id="save-btn" class="save-btn">Сохранить</button>
+                <div class="mt-3 text-center">
+                  <button type="submit" id="save-btn" class="btn btn-primary">Сохранить</button>
                 </div>
               </form>
             `
@@ -61,16 +100,20 @@ class ProfilePage extends Page {
       } else {
         return `
           <div class="profile-container">
-            <h2>Ошибка загрузки данных</h2>
-            <p>Не удалось загрузить информацию о пользователе: ${result.error}</p>
+            <div class="alert alert-danger" role="alert">
+              <h4 class="alert-heading">Ошибка загрузки данных</h4>
+              <p>Не удалось загрузить информацию о пользователе: ${result.error}</p>
+            </div>
           </div>
         `;
       }
     } catch (error) {
       return `
         <div class="profile-container">
-          <h2>Ошибка</h2>
-          <p>Произошла ошибка при загрузке данных: ${error.message}</p>
+          <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Ошибка</h4>
+            <p>Произошла ошибка при загрузке данных: ${error.message}</p>
+          </div>
         </div>
       `;
     }
@@ -184,10 +227,10 @@ class ProfilePage extends Page {
         </div>
       `;
     } catch (error) {
-      return `
+          return `
         <div class="files-section">
           <h3>Мои файлы</h3>
-          <div class="error-message">Ошибка загрузки списка файлов: ${error.message}</div>
+          <div class="alert alert-danger" role="alert">Ошибка загрузки списка файлов: ${error.message}</div>
         </div>
       `;
     }
@@ -316,11 +359,14 @@ class ProfilePage extends Page {
       existingMessage.remove();
     }
 
-    // Создаем новое сообщение
+    // Создаем новое сообщение с Bootstrap alert
     const messageDiv = document.createElement("div");
-    messageDiv.className = "upload-message success-message";
-    messageDiv.style.cssText = "padding: 12px 16px; background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; margin: 10px 0; color: #155724;";
-    messageDiv.textContent = message;
+    messageDiv.className = "upload-message alert alert-success alert-dismissible fade show";
+    messageDiv.setAttribute("role", "alert");
+    messageDiv.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
 
     // Вставляем сообщение перед списком файлов
     const filesSection = document.querySelector(".files-section");
@@ -335,13 +381,8 @@ class ProfilePage extends Page {
       // Автоматически скрываем сообщение через 3 секунды
       setTimeout(() => {
         if (messageDiv.parentNode) {
-          messageDiv.style.transition = "opacity 0.3s";
-          messageDiv.style.opacity = "0";
-          setTimeout(() => {
-            if (messageDiv.parentNode) {
-              messageDiv.remove();
-            }
-          }, 300);
+          const bsAlert = new bootstrap.Alert(messageDiv);
+          bsAlert.close();
         }
       }, 3000);
     }
@@ -355,11 +396,14 @@ class ProfilePage extends Page {
       existingMessage.remove();
     }
 
-    // Создаем новое сообщение
+    // Создаем новое сообщение с Bootstrap alert
     const messageDiv = document.createElement("div");
-    messageDiv.className = "upload-message error-message";
-    messageDiv.style.cssText = "padding: 12px 16px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; margin: 10px 0; color: #721c24;";
-    messageDiv.textContent = message;
+    messageDiv.className = "upload-message alert alert-danger alert-dismissible fade show";
+    messageDiv.setAttribute("role", "alert");
+    messageDiv.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
 
     // Вставляем сообщение перед списком файлов
     const filesSection = document.querySelector(".files-section");
@@ -374,13 +418,8 @@ class ProfilePage extends Page {
       // Автоматически скрываем сообщение через 5 секунд
       setTimeout(() => {
         if (messageDiv.parentNode) {
-          messageDiv.style.transition = "opacity 0.3s";
-          messageDiv.style.opacity = "0";
-          setTimeout(() => {
-            if (messageDiv.parentNode) {
-              messageDiv.remove();
-            }
-          }, 300);
+          const bsAlert = new bootstrap.Alert(messageDiv);
+          bsAlert.close();
         }
       }, 5000);
     }
@@ -469,11 +508,11 @@ class ProfilePage extends Page {
               setTimeout(() => document.body.removeChild(link), 100);
             }
           } else {
-            alert("Ошибка при получении ссылки на файл: " + (result.error || 'Неизвестная ошибка'));
+            showBootstrapAlert("Ошибка при получении ссылки на файл: " + (result.error || 'Неизвестная ошибка'), "danger");
           }
         } catch (error) {
           console.error('Download error:', error);
-          alert("Ошибка при скачивании файла: " + (error.message || 'Неизвестная ошибка'));
+          showBootstrapAlert("Ошибка при скачивании файла: " + (error.message || 'Неизвестная ошибка'), "danger");
         } finally {
           downloadLink.textContent = originalText;
         }
@@ -492,7 +531,7 @@ class ProfilePage extends Page {
           return;
         }
 
-        // Подтверждение удаления
+        // Подтверждение удаления через Bootstrap modal или confirm (пока оставляем confirm)
         if (!confirm("Вы уверены, что хотите удалить этот файл?")) {
           return;
         }
@@ -533,8 +572,8 @@ class ProfilePage extends Page {
       return `
         <div class="test-results-section">
           <h3>Ваши результаты</h3>
-          <div class="no-results">
-            <p>Ошибка загрузки результатов: ${testResults.error}</p>
+          <div class="alert alert-warning" role="alert">
+            Ошибка загрузки результатов: ${testResults.error}
           </div>
         </div>
       `;
@@ -544,8 +583,8 @@ class ProfilePage extends Page {
       return `
         <div class="test-results-section">
           <h3>Ваши результаты</h3>
-          <div class="no-results">
-            <p>Нет пройденных тестов</p>
+          <div class="alert alert-info" role="alert">
+            Нет пройденных тестов
           </div>
         </div>
       `;
@@ -602,15 +641,17 @@ class ProfilePage extends Page {
           const result = await authService.updateProfile(fullName, groupNumber);
 
           if (result.success) {
-            alert("Данные успешно сохранены!");
+            showBootstrapAlert("Данные успешно сохранены!", "success");
 
             // Перезагружаем страницу, чтобы скрыть форму и показать данные
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1500);
           } else {
-            alert("Ошибка при сохранении: " + result.error);
+            showBootstrapAlert("Ошибка при сохранении: " + result.error, "danger");
           }
         } catch (error) {
-          alert("Ошибка при сохранении: " + error.message);
+          showBootstrapAlert("Ошибка при сохранении: " + error.message, "danger");
         } finally {
           // Восстанавливаем кнопку только если не было успешного сохранения
           if (saveBtn) {
@@ -627,7 +668,7 @@ class ProfilePage extends Page {
     try {
       const userInfo = await this.displayUserInfo();
       return `
-        <main id="${this.id}" class="profile">
+        <main id="${this.id}" class="container my-4 profile">
           <h1>${this.title}</h1>
           <section>
             ${userInfo}
@@ -638,14 +679,15 @@ class ProfilePage extends Page {
       console.error("Ошибка при рендеринге профиля:", error);
       const errorMessage = error.message || "Не удалось загрузить данные профиля. Пожалуйста, обновите страницу.";
       return `
-        <main id="${this.id}" class="profile">
+        <main id="${this.id}" class="container my-4 profile">
           <h1>${this.title}</h1>
           <section>
             <div class="profile-container">
-              <div class="error-message" style="padding: 20px; background-color: #fee; border: 1px solid #fcc; border-radius: 4px; margin: 20px 0;">
-                <h3>Ошибка загрузки профиля</h3>
+              <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Ошибка загрузки профиля</h4>
                 <p>${errorMessage}</p>
-                <button onclick="window.location.reload()" style="margin-top: 10px; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <hr>
+                <button onclick="window.location.reload()" class="btn btn-primary">
                   Обновить страницу
                 </button>
               </div>
@@ -737,10 +779,11 @@ class ProfilePage extends Page {
 
           // Валидация
           if (!newValue) {
-            alert(
+            showBootstrapAlert(
               `${
                 field === "fullName" ? "Фамилия и Имя" : "Номер группы"
-              } не может быть пустым`
+              } не может быть пустым`,
+              "warning"
             );
             editableField.textContent = originalValue;
             return;
@@ -786,13 +829,13 @@ class ProfilePage extends Page {
               saveBtn.style.display = "none";
               cancelBtn.style.display = "none";
               editBtn.style.display = "inline-block";
-              alert("Данные успешно сохранены!");
+              showBootstrapAlert("Данные успешно сохранены!", "success");
             } else {
-              alert("Ошибка при сохранении: " + result.error);
+              showBootstrapAlert("Ошибка при сохранении: " + result.error, "danger");
               editableField.textContent = originalValue;
             }
           } catch (error) {
-            alert("Ошибка при сохранении: " + error.message);
+            showBootstrapAlert("Ошибка при сохранении: " + error.message, "danger");
             editableField.textContent = originalValue;
           } finally {
             saveBtn.textContent = originalText;

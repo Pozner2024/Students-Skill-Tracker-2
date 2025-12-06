@@ -34,100 +34,110 @@ class CriteriaPage extends Page {
     `;
 
     const scoreTable = `
-      <table class="criteria-table">
-        <thead>
-          <tr>
-            <th>№ вопроса</th>
-            ${[...Array(10)].map((_, i) => `<th>${i + 1}</th>`).join("")}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Количество баллов</td>
-            ${[8, 8, 8, 10, 10, 10, 10, 10, 10, 16]
-              .map((score) => `<td>${score}</td>`)
-              .join("")}
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover criteria-table">
+          <thead class="table-dark">
+            <tr>
+              <th>№ вопроса</th>
+              ${[...Array(10)].map((_, i) => `<th>${i + 1}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Количество баллов</strong></td>
+              ${[8, 8, 8, 10, 10, 10, 10, 10, 10, 16]
+                .map((score) => `<td>${score}</td>`)
+                .join("")}
+            </tr>
+          </tbody>
+        </table>
+      </div>
     `;
 
     const gradeTable = `
-      <table class="criteria-table small-table">
-        <thead>
-          <tr>
-            <th>Количество баллов</th>
-            <th class="grade-column">Оценка</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>1-20</td><td class="grade-column">1</td></tr>
-          <tr><td>21-40</td><td class="grade-column">2</td></tr>
-          <tr><td>41-50</td><td class="grade-column">3</td></tr>
-          <tr><td>51-60</td><td class="grade-column">4</td></tr>
-          <tr><td>61-70</td><td class="grade-column">5</td></tr>
-          <tr><td>71-80</td><td class="grade-column">6</td></tr>
-          <tr><td>81-85</td><td class="grade-column">7</td></tr>
-          <tr><td>86-90</td><td class="grade-column">8</td></tr>
-          <tr><td>91-95</td><td class="grade-column">9</td></tr>
-          <tr><td>96-100</td><td class="grade-column">10</td></tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover criteria-table small-table">
+          <thead class="table-dark">
+            <tr>
+              <th>Количество баллов</th>
+              <th class="grade-column">Оценка</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1-20</td><td class="grade-column"><strong>1</strong></td></tr>
+            <tr><td>21-40</td><td class="grade-column"><strong>2</strong></td></tr>
+            <tr><td>41-50</td><td class="grade-column"><strong>3</strong></td></tr>
+            <tr><td>51-60</td><td class="grade-column"><strong>4</strong></td></tr>
+            <tr><td>61-70</td><td class="grade-column"><strong>5</strong></td></tr>
+            <tr><td>71-80</td><td class="grade-column"><strong>6</strong></td></tr>
+            <tr><td>81-85</td><td class="grade-column"><strong>7</strong></td></tr>
+            <tr><td>86-90</td><td class="grade-column"><strong>8</strong></td></tr>
+            <tr><td>91-95</td><td class="grade-column"><strong>9</strong></td></tr>
+            <tr><td>96-100</td><td class="grade-column"><strong>10</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
     `;
 
     const secondScoreTable = `
-      <table class="criteria-table">
-        <thead>
-          <tr>
-            <th>№ вопроса</th>
-            ${[...Array(15)].map((_, i) => `<th>${i + 1}</th>`).join("")}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Количество баллов</td>
-            ${[4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 10, 12, 12]
-              .map((score) => `<td>${score}</td>`)
-              .join("")}
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover criteria-table">
+          <thead class="table-dark">
+            <tr>
+              <th>№ вопроса</th>
+              ${[...Array(15)].map((_, i) => `<th>${i + 1}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Количество баллов</strong></td>
+              ${[4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 10, 12, 12]
+                .map((score) => `<td>${score}</td>`)
+                .join("")}
+            </tr>
+          </tbody>
+        </table>
+      </div>
     `;
 
     const secondGradeTable = `
-      <table class="criteria-table small-table">
-        <thead>
-          <tr>
-            <th>Количество баллов</th>
-            <th class="grade-column">Оценка</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>1-20</td><td class="grade-column">1</td></tr>
-          <tr><td>21-40</td><td class="grade-column">2</td></tr>
-          <tr><td>41-50</td><td class="grade-column">3</td></tr>
-          <tr><td>51-60</td><td class="grade-column">4</td></tr>
-          <tr><td>61-70</td><td class="grade-column">5</td></tr>
-          <tr><td>71-80</td><td class="grade-column">6</td></tr>
-          <tr><td>81-85</td><td class="grade-column">7</td></tr>
-          <tr><td>86-90</td><td class="grade-column">8</td></tr>
-          <tr><td>91-95</td><td class="grade-column">9</td></tr>
-          <tr><td>96-100</td><td class="grade-column">10</td></tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover criteria-table small-table">
+          <thead class="table-dark">
+            <tr>
+              <th>Количество баллов</th>
+              <th class="grade-column">Оценка</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1-20</td><td class="grade-column"><strong>1</strong></td></tr>
+            <tr><td>21-40</td><td class="grade-column"><strong>2</strong></td></tr>
+            <tr><td>41-50</td><td class="grade-column"><strong>3</strong></td></tr>
+            <tr><td>51-60</td><td class="grade-column"><strong>4</strong></td></tr>
+            <tr><td>61-70</td><td class="grade-column"><strong>5</strong></td></tr>
+            <tr><td>71-80</td><td class="grade-column"><strong>6</strong></td></tr>
+            <tr><td>81-85</td><td class="grade-column"><strong>7</strong></td></tr>
+            <tr><td>86-90</td><td class="grade-column"><strong>8</strong></td></tr>
+            <tr><td>91-95</td><td class="grade-column"><strong>9</strong></td></tr>
+            <tr><td>96-100</td><td class="grade-column"><strong>10</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
     `;
 
     // Возвращаем пояснительный текст и таблицы
     return `
       <div class="criteria-container">
-        ${explanatoryText}
-        <h2>Шкала определяющая максимальное количество баллов за каждое задание для теста с 10 вопросами</h2>
+        <div class="alert alert-info mb-4" role="alert">
+          ${explanatoryText.replace(/<p>/g, '<p class="mb-2">')}
+        </div>
+        <h2 class="mb-3">Шкала определяющая максимальное количество баллов за каждое задание для теста с 10 вопросами</h2>
         ${scoreTable}
-        <h2>Шкала перевода суммарного количества баллов для теста с 10 вопросами</h2>
+        <h2 class="mb-3 mt-4">Шкала перевода суммарного количества баллов для теста с 10 вопросами</h2>
         ${gradeTable}
-        <h2>Шкала определяющая максимальное количество баллов за каждое задание для теста с 15 вопросами</h2>
+        <h2 class="mb-3 mt-4">Шкала определяющая максимальное количество баллов за каждое задание для теста с 15 вопросами</h2>
         ${secondScoreTable}
-        <h2>Шкала перевода суммарного количества баллов для теста с 15 вопросами</h2>
+        <h2 class="mb-3 mt-4">Шкала перевода суммарного количества баллов для теста с 15 вопросами</h2>
         ${secondGradeTable}
       </div>
     `;

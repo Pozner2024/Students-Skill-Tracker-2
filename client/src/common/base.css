@@ -1,0 +1,137 @@
+:root {
+  font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #4f2568;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  box-sizing: border-box;
+  background-color: #4f2568;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  background-color: #4f2568;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+h1 {
+  font-size: 28px;
+  line-height: 1.1;
+  font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+/* Заголовки - белые */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: white;
+}
+
+/* Кастомные стили для заголовков на страницах */
+main.container h1 {
+  color: white;
+  background-color: #5b2d77;
+  padding: 2px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Параграфы - белые */
+p {
+  color: white;
+}
+
+/* Списки - белые */
+ul,
+ol,
+li {
+  color: white;
+}
+
+main,
+section,
+div {
+  color: inherit;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 320px;
+  width: min(100%, 1280px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+#root > section {
+  flex-grow: 1;
+}
+
+/* Уменьшаем верхний отступ у #root на мобильных устройствах */
+@media (width < 768px) {
+  #root {
+    padding-top: 10px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+  }
+}
+
+@media (width < 576px) {
+  #root {
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+a {
+  font-weight: 500;
+  color: #646470;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: white;
+}
+
+/* Основной контент - фиолетовый фон */
+main {
+  background-color: #4f2568;
+}
+
+/* ============================================
+   Утилитарные классы
+   ============================================ */
+
+.loading-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #fff;
+}
+

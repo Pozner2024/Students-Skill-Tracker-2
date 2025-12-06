@@ -1,6 +1,25 @@
 import Page from "../common/Page.js";
-import authService from "../utils/authService.js";
+import authService from "../services/authService.js";
+import errorHandler from "../services/errorHandler.js";
+import apiClient from "../services/apiClient.js";
 import API_CONFIG from "../config/api.js";
+
+// Функция для показа Bootstrap alert (использует errorHandler)
+function showBootstrapAlert(message, type = "info") {
+  const alertTypes = {
+    info: "info",
+    success: "success",
+    warning: "warning",
+    danger: "danger",
+    error: "danger",
+  };
+  
+  errorHandler.showNotification(
+    message,
+    alertTypes[type] || "info",
+    { duration: 5000 }
+  );
+}
 
 class AdminPage extends Page {
   constructor() {
@@ -12,13 +31,15 @@ class AdminPage extends Page {
   }
 
   async fetchResults() {
-    const url = `${API_CONFIG.BASE_URL}/admin/results`;
-    const res = await fetch(url, { headers: authService.getAuthHeaders() });
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      throw new Error(data.message || "Ошибка загрузки данных администратора");
+    try {
+      const data = await apiClient.get("/admin/results", {
+        context: "AdminPage.fetchResults",
+      });
+      return data;
+    } catch (error) {
+      errorHandler.handle(error, "AdminPage.fetchResults");
+      throw error;
     }
-    return res.json();
   }
 
   renderGroupsTable(groups) {
@@ -246,7 +267,7 @@ class AdminPage extends Page {
         correct
       )}<br/>Верно: ${right}, Начисленные баллы: ${score}`;
     });
-    return `<div style="max-width:420px; white-space:normal; line-height:1.3">${lines.join(
+    return `<div style="width:min(100%,420px); white-space:normal; line-height:1.3">${lines.join(
       "<br/><br/>"
     )}</div>`;
   }
@@ -271,8 +292,8 @@ class AdminPage extends Page {
     if (!files || files.length === 0) {
       return `
         <div class="student-files-section">
-          <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: #666;">Загруженные файлы</h4>
-          <p style="padding: 0.5rem; color: #999; font-style: italic;">Нет загруженных файлов</p>
+          <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: black;">Загруженные файлы</h4>
+          <p style="padding: 0.5rem; color: black; font-style: italic;">Нет загруженных файлов</p>
         </div>
       `;
     }
@@ -309,7 +330,7 @@ class AdminPage extends Page {
 
     return `
       <div class="student-files-section">
-        <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem; color: #666; border-top: 1px solid #ddd; padding-top: 1rem;">Загруженные файлы (${files.length})</h4>
+        <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem; color: black; border-top: 1px solid #ddd; padding-top: 1rem;">Загруженные файлы (${files.length})</h4>
         <div class="files-list-admin">
           ${filesHtml}
         </div>
@@ -328,7 +349,7 @@ class AdminPage extends Page {
   async renderPage() {
     // Возвращаем разметку; данные подтянутся в init()
     return `
-      <main id="admin" class="container">
+      <main id="admin" class="container my-4">
         <h1>Кабинет преподавателя</h1>
         <section>
           <div class="test-results-section">
@@ -337,6 +358,11 @@ class AdminPage extends Page {
         </section>
       </main>
       <style>
+        #admin h3 {
+          color: black;
+          font-weight: 600;
+          margin-bottom: 1rem;
+        }
         .admin-accordion {
           margin-bottom: 2rem;
         }
@@ -345,6 +371,7 @@ class AdminPage extends Page {
           border-radius: 4px;
           margin-bottom: 0.5rem;
           background: #fff;
+          overflow: hidden;
         }
         .accordion-header {
           width: 100%;
@@ -358,6 +385,7 @@ class AdminPage extends Page {
           justify-content: space-between;
           font-size: 1rem;
           transition: background-color 0.2s;
+          box-sizing: border-box;
         }
         .accordion-header:hover {
           background: #e9ecef;
@@ -377,15 +405,24 @@ class AdminPage extends Page {
           flex: 1;
           font-weight: 600;
           color: #000;
+          min-width: 0;
+        }
+        @media (min-width: 993px) {
+          .student-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
         }
         .header-right-group {
           display: flex;
           align-items: center;
-          gap: 0;
+          gap: 0.5rem;
           margin-left: auto;
+          flex-shrink: 0;
         }
         .tests-count {
-          margin-left: 1rem;
+          margin-left: 0;
           padding: 0.5rem 0.75rem;
           background: #007bff;
           color: #fff;
@@ -393,16 +430,18 @@ class AdminPage extends Page {
           font-size: 0.875rem;
           font-weight: 500;
           white-space: nowrap;
-          min-width: 100px;
+          min-width: 80px;
           text-align: center;
           display: inline-block;
           line-height: 1.2;
           box-sizing: border-box;
+          flex-shrink: 0;
         }
         .accordion-icon {
           margin-left: 1rem;
           transition: transform 0.3s;
           color: #666;
+          flex-shrink: 0;
         }
         .accordion-header.active .accordion-icon {
           transform: rotate(180deg);
@@ -436,7 +475,7 @@ class AdminPage extends Page {
           color: #000;
         }
         .files-indicator {
-          margin-left: 1rem;
+          margin-left: 0;
           padding: 0.5rem 0.75rem;
           background: #28a745;
           color: #fff;
@@ -444,11 +483,12 @@ class AdminPage extends Page {
           font-size: 0.875rem;
           font-weight: 500;
           white-space: nowrap;
-          min-width: 100px;
+          min-width: 80px;
           text-align: center;
           display: inline-block;
           line-height: 1.2;
           box-sizing: border-box;
+          flex-shrink: 0;
         }
         .files-indicator.no-files {
           background: #6c757d;
@@ -484,7 +524,7 @@ class AdminPage extends Page {
         .file-size-admin,
         .file-date-admin {
           font-size: 0.875rem;
-          color: #666;
+          color: black;
         }
         .file-actions-admin {
           display: flex;
@@ -519,7 +559,7 @@ class AdminPage extends Page {
           cursor: not-allowed;
         }
         .delete-user-btn {
-          margin-left: 1rem;
+          margin-left: 0;
           padding: 0.5rem 0.75rem;
           background: #dc3545;
           color: #fff;
@@ -531,7 +571,7 @@ class AdminPage extends Page {
           transition: background-color 0.2s;
           white-space: nowrap;
           flex-shrink: 0;
-          min-width: 100px;
+          min-width: 80px;
           text-align: center;
           line-height: 1.2;
           box-sizing: border-box;
@@ -543,6 +583,66 @@ class AdminPage extends Page {
           opacity: 0.6;
           cursor: not-allowed;
         }
+        @media (width < 992px) {
+          .accordion-header {
+            flex-wrap: wrap;
+            padding: 0.75rem 1rem;
+          }
+          .student-number {
+            order: 1;
+          }
+          .student-name {
+            width: 100%;
+            margin-top: 0.5rem;
+            order: 2;
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            word-break: break-word;
+          }
+          .header-right-group {
+            width: 100%;
+            margin-left: 0;
+            margin-top: 0.5rem;
+            order: 3;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+          }
+          .accordion-icon {
+            margin-left: auto;
+            order: 0;
+          }
+        }
+        @media (width < 768px) {
+          .tests-count,
+          .files-indicator,
+          .delete-user-btn {
+            min-width: 70px;
+            padding: 0.4rem 0.6rem;
+            font-size: 0.8rem;
+          }
+          .accordion-header {
+            padding: 0.75rem;
+          }
+        }
+        @media (width < 576px) {
+          .tests-count,
+          .files-indicator,
+          .delete-user-btn {
+            min-width: 60px;
+            padding: 0.35rem 0.5rem;
+            font-size: 0.75rem;
+          }
+          .tests-count {
+            min-width: auto;
+            padding: 0.35rem 0.6rem;
+          }
+          .files-indicator {
+            min-width: auto;
+            padding: 0.35rem 0.6rem;
+          }
+        }
       </style>
     `;
   }
@@ -551,27 +651,10 @@ class AdminPage extends Page {
     const container = document.querySelector("#admin .test-results-section");
     if (!container) return;
     try {
+      // Начинаем загрузку данных сразу
       const data = await this.fetchResults();
 
-      // Логируем данные для отладки
-      console.log("Admin data received:", data);
-      if (data.groups) {
-        data.groups.forEach((group, idx) => {
-          console.log(
-            `Group ${group.groupNumber}:`,
-            group.students.length,
-            "students"
-          );
-          group.students.forEach((student, sidx) => {
-            console.log(
-              `  Student ${sidx + 1}: ${student.fullName}, files:`,
-              student.files?.length || 0,
-              student.files
-            );
-          });
-        });
-      }
-
+      // Рендерим данные без лишних логов для ускорения
       const groupsHtml = this.renderGroupsTable(data.groups);
       const noGroupHtml = this.renderNoGroupTable(data.noGroup);
       container.innerHTML = `${groupsHtml}<hr />${noGroupHtml}`;
@@ -614,14 +697,14 @@ class AdminPage extends Page {
         e.target,
         e.target.classList
       );
-      
+
       // Сначала проверяем, не это ли кнопка удаления пользователя (чтобы не конфликтовать)
       const userDeleteBtn = e.target.closest(".delete-user-btn");
       if (userDeleteBtn) {
         // Это обрабатывается другим обработчиком
         return;
       }
-      
+
       const downloadBtn = e.target.closest(".file-download-admin");
       if (downloadBtn) {
         e.preventDefault();
@@ -684,17 +767,10 @@ class AdminPage extends Page {
               setTimeout(() => document.body.removeChild(link), 100);
             }
           } else {
-            alert(
-              "Ошибка при получении ссылки на файл: " +
-                (result.error || "Неизвестная ошибка")
-            );
+            errorHandler.handle(result, "AdminPage.downloadFile.getUrl");
           }
         } catch (error) {
-          console.error("Download error:", error);
-          alert(
-            "Ошибка при скачивании файла: " +
-              (error.message || "Неизвестная ошибка")
-          );
+          errorHandler.handle(error, "AdminPage.downloadFile");
         } finally {
           downloadBtn.disabled = false;
           downloadBtn.textContent = originalText;
@@ -743,21 +819,14 @@ class AdminPage extends Page {
                 self.updateFilesIndicator(studentId);
               }
             }
-            alert("Файл успешно удален");
+            errorHandler.showSuccess("Файл успешно удален");
           } else {
-            alert(
-              "Ошибка при удалении файла: " +
-                (result.error || "Неизвестная ошибка")
-            );
+            errorHandler.handle(result, "AdminPage.deleteFile");
             deleteBtn.disabled = false;
             deleteBtn.textContent = originalText;
           }
         } catch (error) {
-          console.error("Error deleting file:", error);
-          alert(
-            "Ошибка при удалении файла: " +
-              (error.message || "Неизвестная ошибка")
-          );
+          errorHandler.handle(error, "AdminPage.deleteFile");
           deleteBtn.disabled = false;
           deleteBtn.textContent = originalText;
         }
@@ -809,7 +878,11 @@ class AdminPage extends Page {
 
     // Обработчик для удаления пользователей через делегирование
     adminContainer.addEventListener("click", async (e) => {
-      console.log("Click event in admin container:", e.target, e.target.classList);
+      console.log(
+        "Click event in admin container:",
+        e.target,
+        e.target.classList
+      );
       const deleteBtn = e.target.closest(".delete-user-btn");
       if (deleteBtn) {
         console.log("Delete button clicked:", deleteBtn);
@@ -823,7 +896,7 @@ class AdminPage extends Page {
 
         if (!userId) {
           console.error("User ID not found in delete button");
-          alert("Ошибка: ID пользователя не найден");
+          errorHandler.showWarning("Ошибка: ID пользователя не найден");
           return;
         }
 
@@ -849,24 +922,19 @@ class AdminPage extends Page {
             const accordionItem = deleteBtn.closest(".accordion-item");
             if (accordionItem) {
               accordionItem.remove();
-              alert("Пользователь успешно удален");
+              errorHandler.showSuccess("Пользователь успешно удален");
               // Перезагружаем страницу для обновления списка
-              window.location.reload();
+              setTimeout(() => {
+                window.location.reload();
+              }, 1500);
             }
           } else {
-            alert(
-              "Ошибка при удалении пользователя: " +
-                (result.error || "Неизвестная ошибка")
-            );
+            errorHandler.handle(result, "AdminPage.deleteUser");
             deleteBtn.disabled = false;
             deleteBtn.textContent = originalText;
           }
         } catch (error) {
-          console.error("Error deleting user:", error);
-          alert(
-            "Ошибка при удалении пользователя: " +
-              (error.message || "Неизвестная ошибка")
-          );
+          errorHandler.handle(error, "AdminPage.deleteUser");
           deleteBtn.disabled = false;
           deleteBtn.textContent = originalText;
         }

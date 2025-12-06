@@ -1,6 +1,6 @@
 // Сервис авторизации (AuthService).
 // Отвечает за регистрацию, вход и проверку пользователей.
-// Использует Prisma для работы с базой данных, bcrypt для хеширования паролей
+// Использует Prisma для работы с базой данных, Argon2 для хеширования паролей
 // и JwtService для генерации токенов доступа (JWT).
 //
 // Основные методы:
@@ -14,7 +14,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcryptjs';
+import * as argon2 from 'argon2';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto, LoginDto } from './dto/auth.dto';
 import { JwtPayload } from './types/user.types';
@@ -37,7 +37,12 @@ export class AuthService {
       throw new ConflictException('Пользователь с таким email уже существует');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    let hashedPassword: string;
+    try {
+      hashedPassword = await argon2.hash(password);
+    } catch (error) {
+      throw new ConflictException('Ошибка при хешировании пароля');
+    }
 
     const user = await this.prisma.user.create({
       data: {
@@ -71,8 +76,18 @@ export class AuthService {
     }
 
     // Проверяем пароль
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
+    try {
+      const isPasswordValid = await argon2.verify(user.password, password);
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Неверный email или пароль');
+      }
+    } catch (error) {
+      // Argon2 выбрасывает исключение при неверном пароле или неверном формате хеша
+      // Если это уже UnauthorizedException, пробрасываем дальше
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      // В остальных случаях (неверный пароль, неверный формат хеша) - ошибка авторизации
       throw new UnauthorizedException('Неверный email или пароль');
     }
 

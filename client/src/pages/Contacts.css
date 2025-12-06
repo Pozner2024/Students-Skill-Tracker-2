@@ -1,0 +1,85 @@
+/* Стили для страницы контактов */
+.contacts p {
+  font-size: 1.2em;
+  color: white;
+  margin: 10px 0;
+}
+
+/* Стили для контактной информации */
+.contacts p strong {
+  color: #000;
+  font-weight: bold;
+}
+
+/* Стили для адресов */
+.contacts p strong + p {
+  margin-left: 20px;
+}
+
+.contacts p a:hover {
+  text-decoration: underline;
+}
+
+/* Стили для таблицы контактов */
+.contact-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.contact-table td {
+  border: 1px solid white;
+  padding: 15px;
+  vertical-align: top;
+  color: white;
+  width: 50%;
+}
+
+/* Горизонтальная линия */
+.contact-table .horizontal-line {
+  border-top: 2px solid white;
+  padding: 0;
+  height: 2px;
+}
+
+/* Стили для ссылок */
+.contact-table a {
+  color: #058548;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.contact-table a:hover {
+  text-decoration: underline;
+}
+
+/* Стили для блоков текста, которые должны быть на новой строке */
+.contact-table .block {
+  display: block;
+}
+
+/* Стили для заголовков и контактной информации */
+.contact-table p {
+  font-size: 1.2em;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.contact-table p strong {
+  font-weight: bold;
+  color: white;
+}
+
+/* Переопределение Bootstrap для таблицы контактов */
+.contact-table.table td {
+  border-color: white;
+  color: white;
+  background-color: transparent;
+}
+
+.contact-table.table thead th {
+  background-color: #5b2d77;
+  color: white;
+  border-color: white;
+}
+

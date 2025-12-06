@@ -20,14 +20,6 @@ module.exports = {
     minimizer: [
       new TerserPlugin(),
       new CssMinimizerPlugin(),
-      new HtmlWebpackPlugin({
-        template: "./src/index.html",
-        minify: {
-          removeAttributeQuotes: true,
-          collapseWhitespace: true,
-          removeComments: true,
-        },
-      }),
     ],
     splitChunks: {
       chunks: "all",
@@ -68,6 +60,16 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      minify: {
+        removeAttributeQuotes: true,
+        collapseWhitespace: true,
+        removeComments: false, // Сохраняем комментарии, чтобы не сломать структуру
+      },
+      // Явно указываем, что нужно сохранить ссылки на фавиконки
+      meta: false, // Не добавлять автоматические meta теги
+    }),
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
     }),
@@ -83,6 +85,7 @@ module.exports = {
         {
           from: path.resolve(__dirname, "public"),
           to: path.resolve(__dirname, "dist"),
+          toType: "dir",
           globOptions: {
             ignore: ["**/about.txt"], // Игнорируем ненужные файлы
           },

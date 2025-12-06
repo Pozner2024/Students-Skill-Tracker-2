@@ -1,0 +1,100 @@
+/* Стили для главной страницы */
+.topics-container {
+  margin-top: -30px;
+}
+
+/* Стили для карточек тем */
+.rectangle {
+  background-color: #058548;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: flyIn 1.5s forwards;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.9),
+    inset 0 8px 16px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.9),
+    0 24px 40px rgba(4, 3, 5, 0.9), 0 -8px 14px rgba(0, 0, 0, 0.7);
+}
+
+.rectangle-image {
+  width: 100%;
+  width: 100%;
+  height: 250px; /* Фиксированная высота для одинакового размера всех картинок */
+  object-fit: cover; /* Обрезаем изображение, сохраняя пропорции, чтобы заполнить контейнер */
+  border-radius: 8px;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.rectangle .card-title {
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+}
+
+/* Кастомные стили для кнопок в карточках тем */
+.rectangle .btn-primary {
+  background-color: #59b149;
+  border-color: #59b149;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.rectangle .btn-primary:hover {
+  background-color: #4f2568;
+  border-color: #4f2568;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(89, 177, 73, 0.9),
+    0 0 40px rgba(89, 177, 73, 0.5);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.rectangle .btn-success {
+  background-color: #59b149;
+  border-color: #59b149;
+  color: white;
+}
+
+.rectangle .btn-success:hover {
+  background-color: #4f2568;
+  border-color: #4f2568;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(89, 177, 73, 0.9),
+    0 0 40px rgba(89, 177, 73, 0.5);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.rectangle .btn-info {
+  background-color: #59b149;
+  border-color: #59b149;
+  color: white;
+}
+
+.rectangle .btn-info:hover {
+  background-color: #4f2568;
+  border-color: #4f2568;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(89, 177, 73, 0.9),
+    0 0 40px rgba(89, 177, 73, 0.5);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+@keyframes flyIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Уменьшаем отступ сверху для контейнера на мобильных устройствах */
+@media (width < 768px) {
+  #home.container.my-4 {
+    margin-top: 0.5rem !important; /* Уменьшаем отступ с 1.5rem до 0.5rem */
+  }
+}
+
+@media (width < 576px) {
+  #home.container.my-4 {
+    margin-top: 0.25rem !important; /* Еще больше уменьшаем для маленьких экранов */
+  }
+}

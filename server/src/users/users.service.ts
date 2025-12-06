@@ -10,27 +10,35 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async getUserById(id: number) {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-    });
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id },
+      });
 
-    return user;
+      return user;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async updateProfile(userId: number, updateProfileDto: UpdateProfileDto) {
-    const updatedUser = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        fullName: updateProfileDto.fullName,
-        groupNumber: updateProfileDto.groupNumber,
-      },
-    });
+    try {
+      const updatedUser = await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          fullName: updateProfileDto.fullName,
+          groupNumber: updateProfileDto.groupNumber,
+        },
+      });
 
-    return {
-      id: updatedUser.id,
-      email: updatedUser.email,
-      fullName: updatedUser.fullName,
-      groupNumber: updatedUser.groupNumber,
-    };
+      return {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        fullName: updatedUser.fullName,
+        groupNumber: updatedUser.groupNumber,
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 }

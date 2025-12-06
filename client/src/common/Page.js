@@ -7,7 +7,7 @@ export default class Page {
   }
 
   // Метод для рендеринга страницы
-  render(className = "container") {
+  render(className = "container my-4") {
     document.title = this.metaTitle; // Устанавливаем мета-заголовок страницы
     return `
       <main id="${this.id}" class="${className}">

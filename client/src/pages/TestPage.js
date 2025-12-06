@@ -1,6 +1,6 @@
-import TestQuestion from "../components/TestQuestion";
-import Pagination from "../components/Pagination";
-import CubeLoader from "../common/CubeLoader"; // Импортируем CubeLoader
+import TestQuestion from "../components/test/TestQuestion";
+import Pagination from "../components/ui/Pagination";
+import CubeLoader from "../components/ui/CubeLoader"; // Импортируем CubeLoader
 import background from "../assets/background1.jpg"; // Импортируем фон
 
 class TestPage {
@@ -24,7 +24,7 @@ class TestPage {
     document.title = this.metaTitle;
 
     return `
-      <main id="${this.id}" class="container">
+      <main id="${this.id}" class="container my-4">
         <div class="test-page-styles">
           <div class="test-info">
             <h2>${title}</h2>
@@ -57,7 +57,7 @@ class TestPage {
       contentElement.innerHTML = this.renderPageStructure(title, variant);
 
       // Устанавливаем фон через JavaScript. Пришлось вынести фон из CSS в JS, т.к. при деплое,
-      // в первом случае (через СSS, он не отображался на Netlify
+      // в первом случае (через CSS) он не отображался
       const testPageStyles = contentElement.querySelector(".test-page-styles");
       if (testPageStyles) {
         testPageStyles.style.backgroundImage = `url(${background})`;

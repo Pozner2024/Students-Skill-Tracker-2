@@ -7,13 +7,26 @@
 //- задаётся порт, на котором запускается сервер (по умолчанию 5000).
 
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, ConsoleLogger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { corsConfig } from './config/cors.config';
 
+// Кастомный logger, который скрывает логи о маппинге роутов
+class CustomLogger extends ConsoleLogger {
+  log(message: string, context?: string) {
+    // Пропускаем логи от RouterExplorer и RoutesResolver
+    if (context === 'RouterExplorer' || context === 'RoutesResolver') {
+      return;
+    }
+    super.log(message, context);
+  }
+}
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new CustomLogger(),
+  });
 
   // Валидация
   app.useGlobalPipes(

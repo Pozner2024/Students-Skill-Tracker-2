@@ -1,6 +1,6 @@
 /* Основной стиль страницы */
 .test-page-styles {
-  color: black;
+  color: white;
   padding: 20px;
   border-radius: 5px;
   height: auto;
@@ -16,13 +16,29 @@
     0 -8px 14px rgba(0, 0, 0, 0.7);
 }
 
+/* Динамические стили для кнопок */
+.test-page-styles .btn {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.test-page-styles .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.test-page-styles .btn:active {
+  transform: translateY(0);
+}
+
 .test-info {
   background-color: rgba(
-    106,
-    13,
-    173,
-    0.6
-  ); /* Фиолетовый цвет с прозрачностью */
+    79,
+    37,
+    104,
+    0.75
+  ); /* Исходный фиолетовый цвет с прозрачностью */
   padding: 0;
   border-radius: 8px;
   color: white; /* Белый текст для контраста */
@@ -31,7 +47,7 @@
 }
 
 .test-info h2 {
-  font-size: 24px;
+  font-size: 28px;
   color: white; /* Цвет заголовка */
   margin: 0;
 }
@@ -54,15 +70,26 @@
 .page-button {
   padding: 8px 12px;
   width: 50px; /* Устанавливаем фиксированную ширину */
-  border: 1px solid #ccc;
-  background-color: #f5f5f5;
-  color: #333;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: white;
+  color: black;
   font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
-  transition: background-color 0.3s, color 0.3s;
+  transition: all 0.3s ease;
   text-align: center; /* Центрируем текст внутри кнопки */
   display: inline-block; /* Позволяет кнопкам находиться на одной линии */
+  position: relative;
+  overflow: hidden;
+}
+
+.page-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.page-button:active {
+  transform: scale(0.95);
 }
 
 /* Подсветка активной кнопки */
@@ -74,9 +101,9 @@
 
 /* Подсветка посещенной кнопки */
 .page-button.visited {
-  background-color: #6f42c1;
+  background-color: #4f2568;
   color: #fff;
-  border-color: #6f42c1;
+  border-color: #4f2568;
 }
 
 /* Навигационная панель */
@@ -84,7 +111,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin: 0;
+  margin: 20px 0 0 0;
 }
 
 /* Базовые стили для кнопок навигации */
@@ -94,17 +121,19 @@
   border: none;
   border-radius: 4px;
   color: #fff;
-  background-color: #6f42c1;
+  background-color: #59b149;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3),
     inset 0px -2px 4px rgba(255, 255, 255, 0.3);
   margin: 0 10px; /* Устанавливает горизонтальный отступ в 10px между кнопками */
+  position: relative;
+  overflow: hidden;
 }
 
 /* Эффект при наведении на кнопки навигации */
 .nav-button:hover {
-  background-color: #5a359d; /* Темный фон при наведении */
+  background-color: #4f2568; /* Фиолетовый цвет при наведении */
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4),
     inset 0px -3px 6px rgba(255, 255, 255, 0.3); /* Увеличенная тень */
   transform: scale(1.07); /* Легкое увеличение */
@@ -120,59 +149,93 @@
 /* Стили для кнопки "Завершить тест" */
 .finish-button {
   background-color: #dc3545; /* Красный фон для кнопки завершения */
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
 }
 
 /* Эффект при наведении на кнопку завершения */
 .finish-button:hover {
   background-color: #7d0612; /* Темный красный при наведении */
+  transform: scale(1.05);
+  box-shadow: 0px 8px 16px rgba(220, 53, 69, 0.5);
 }
 
 /* Контейнер для вопроса */
 .question {
-  height: 384px;
+  min-height: 384px;
+  height: auto;
   padding: 15px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 4px;
-  background-color: #fafafa;
+  background-color: rgba(79, 37, 104, 0.6);
   margin-bottom: 20px;
   display: grid;
   place-items: center; /* Центрирование и по горизонтали, и по вертикали */
   text-align: center;
+  color: white;
+}
+
+/* Вопросы с изображениями используют flex layout */
+.question.general-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  place-items: unset;
+}
+
+/* Fallback для браузеров с поддержкой :has() */
+@supports selector(:has(*)) {
+  .question:has(.question-image) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    place-items: unset;
+  }
 }
 .question-part {
+  /* Не даём разорвать «1) + поле + ,» по разным строкам */
   white-space: nowrap;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
 }
 /* Базовый стиль для текстовых полей ввода внутри класса .question */
 .question input[type="text"] {
   width: 220px;
-  padding: 10px; /* Внутренний отступ */
-  font-size: 20px; /* Размер шрифта */
-  color: #333; /* Цвет текста */
-  background-color: #f9f9f9; /* Светлый фон */
-  border: 1px solid #ccc; /* Светлая граница */
+  padding: 4px 10px; /* Еще больше уменьшенный вертикальный отступ */
+  font-size: 22px; /* Размер шрифта увеличен */
+  color: white; /* Цвет текста */
+  background-color: rgba(79, 37, 104, 0.5); /* Полупрозрачный фиолетовый фон */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Полупрозрачная граница */
   border-radius: 8px; /* Закругленные углы */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень для объема */
   transition: background-color 0.3s, border-color 0.3s; /* Плавные переходы */
+  margin: 0 1px; /* Минимальный горизонтальный отступ */
 }
 
-/* Квадратные радиокнопки с фиолетовой точкой */
+/* Квадратные радиокнопки с зеленой точкой */
 input[type="radio"] {
   appearance: none; /* Убираем стандартный вид радиокнопок */
   width: 16px; /* Размер радиокнопки */
   height: 16px;
-  border: 2px solid #6f42c1; /* Фиолетовая граница */
+  border: 2px solid #59b149; /* Зеленая граница */
   border-radius: 0; /* Делаем кнопки квадратными */
   outline: none;
   cursor: pointer;
   position: relative;
 }
 
-/* Стиль для фиолетового квадрата внутри при выборе */
+/* Стиль для зеленого квадрата внутри при выборе */
 input[type="radio"]:checked::before {
   content: "";
   width: 8px; /* Размер внутреннего квадрата */
   height: 8px;
-  background-color: #6f42c1; /* Фиолетовый цвет для точки */
+  background-color: #59b149; /* Зеленый цвет для точки */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -181,32 +244,43 @@ input[type="radio"]:checked::before {
 
 /* Эффект при наведении */
 .question input[type="text"]:hover {
-  background-color: #e6e6e6; /* Более светлый фон при наведении */
+  background-color: rgba(
+    89,
+    177,
+    73,
+    0.3
+  ); /* Зеленый полупрозрачный фон при наведении */
+  border-color: #59b149; /* Зеленая граница при наведении */
 }
 
 /* Эффект при фокусе */
 .question input[type="text"]:focus {
-  border-color: #6f42c1; /* Цвет границы при фокусе */
-  box-shadow: 0 0 5px rgba(111, 66, 193, 0.5); /* Подсветка тенью при фокусе */
+  border-color: #59b149; /* Цвет границы при фокусе */
+  box-shadow: 0 0 5px rgba(89, 177, 73, 0.5); /* Подсветка тенью при фокусе */
   outline: none; /* Убираем стандартную обводку */
 }
 
 .question p {
-  font-size: 22px;
+  font-size: 28px;
   margin: 0;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .question label {
-  font-size: 20px;
+  font-size: 24px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  display: block;
 }
 
 .questions-panel h3 {
   background-color: rgba(
-    106,
-    13,
-    173,
-    0.7
-  ); /* Фиолетовая подложка с прозрачностью */
+    79,
+    37,
+    104,
+    0.85
+  ); /* Исходный фиолетовый цвет подложки с прозрачностью */
   color: white; /* Белый текст */
   padding: 2px;
   border-radius: 8px; /* Скругленные углы */
@@ -224,7 +298,9 @@ input[type="radio"]:checked::before {
 }
 
 .general-question .question-text p {
-  margin: 50px 100px 20px;
+  margin: 20px;
+  padding: 0 10px;
+  text-align: center;
 }
 
 .question.matching-only {
@@ -262,14 +338,15 @@ input[type="radio"]:checked::before {
   width: 100%;
   padding: 4px 8px;
   margin: 4px 0;
-  border: 1px solid #ddd;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
-  background-color: #f9f9f9;
-  font-size: 16px; /* Немного уменьшенный шрифт */
-  color: #333;
+  background-color: #4f2568; /* Фиолетовый цвет в стиле проекта */
+  font-size: 20px; /* Увеличенный шрифт */
+  color: white;
   cursor: move;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s, box-shadow 0.3s;
+  line-height: 1.5;
 }
 
 /* Эффект при наведении */
@@ -280,7 +357,7 @@ input[type="radio"]:checked::before {
 
 /* Эффект при активном состоянии (перетаскивании) */
 .draggable-item:active {
-  background-color: #6f42c1; /* Фиолетовый цвет при перетаскивании */
+  background-color: #59b149; /* Зеленый цвет при перетаскивании */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   transform: scale(1.02);
   color: white;
@@ -292,7 +369,7 @@ input[type="radio"]:checked::before {
 /* Основной контейнер, который увеличим */
 .matching-question {
   width: 100%; /* Или задайте фиксированную ширину, например, width: 800px; */
-  max-width: 1200px; /* Ограничим максимальную ширину */
+  width: min(100%, 1200px); /* Ограничим максимальную ширину */
   margin-top: 30px;
 }
 
@@ -310,7 +387,9 @@ input[type="radio"]:checked::before {
   width: 65%; /* Увеличиваем ширину метки */
   margin-right: 20px; /* Отступ справа от метки */
   text-align: left; /* Выравнивание метки по левому краю */
-  white-space: nowrap; /* Запрещаем перенос текста */
+  white-space: normal; /* Разрешаем перенос текста */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Селект будет занимать оставшееся пространство */
@@ -318,33 +397,34 @@ input[type="radio"]:checked::before {
 .matching-question select {
   flex-grow: 1;
   padding: 5px;
-  font-size: 16px;
-  color: #333;
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
+  font-size: 20px; /* Увеличенный шрифт */
+  color: white;
+  background-color: rgba(79, 37, 104, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 100%; /* Ограничиваем максимальную ширину селекта */
+  width: 100%; /* Ограничиваем максимальную ширину селекта */
   white-space: normal; /* Позволяем тексту переноситься */
   overflow: auto; /* Добавляем прокрутку для длинного текста */
+  line-height: 1.5;
 }
 
 /* Эффект при наведении */
 .matching-question select:hover {
-  background-color: #6f42c1;
+  background-color: #59b149;
   color: white;
 }
 
 /* Эффект при фокусе */
 .matching-question select:focus {
-  border-color: #6f42c1;
-  box-shadow: 0 0 5px rgba(73, 42, 130, 0.5);
+  border-color: #59b149;
+  box-shadow: 0 0 5px rgba(89, 177, 73, 0.5);
   outline: none;
 }
 
 /* Общие стили контейнера страницы */
 .container {
-  max-width: 1200px;
+  width: min(100%, 1200px);
   margin: 0 auto;
   /* padding: 20px; */
   font-family: Arial, sans-serif;
@@ -357,9 +437,10 @@ input[type="radio"]:checked::before {
   align-items: flex-start;
   gap: 20px;
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: rgba(79, 37, 104, 0.3);
+  color: white;
 }
 
 /* Стили для секции с тестовыми результатами */
@@ -384,27 +465,25 @@ input[type="radio"]:checked::before {
 }
 
 .animation img {
-  max-width: 100%;
+  width: 100%;
   height: auto;
   border-radius: 8px;
 }
-/* Общий контейнер для вопроса и изображения */
-.question {
-  display: flex;
-  justify-content: space-between; /* Разделение текста и изображения */
-  align-items: flex-start; /* Выровнять элементы по верхнему краю */
-  padding: 20px; /* Внутренний отступ для общего контейнера */
-}
+/* Стили для вопросов с изображениями уже определены выше через :has() */
 
 /* Стили для блока с текстом */
 .question-text {
   flex: 1; /* Занимает оставшуюся ширину */
-  max-width: 60%; /* Максимальная ширина текста — 60% контейнера */
+  width: min(100%, 60%); /* Максимальная ширина текста — 60% контейнера */
+  text-align: center;
 }
 
 /* Стили для блока с изображением */
 .question-image {
-  max-width: 340px; /* Устанавливаем максимальную ширину изображения */
+  width: min(
+    100%,
+    374px
+  ); /* Увеличенная максимальная ширина изображения на 10% (340px * 1.1) */
 }
 
 .question-image:empty {
@@ -412,11 +491,12 @@ input[type="radio"]:checked::before {
 }
 
 .question-image img {
-  width: 110%; /* Изображение занимает всю ширину блока question-image */
+  width: 100%; /* Изображение занимает всю ширину блока question-image */
+  width: 100%;
   height: auto; /* Сохраняем пропорции изображения */
   border-radius: 8px; /* Закругленные углы, если требуется */
-  margin-top: -16px;
-  margin-left: 15px;
+  margin-top: 0;
+  margin-left: 0;
 }
 
 /* Скрываем alt-текст для битых изображений */
@@ -432,8 +512,8 @@ input[type="radio"]:checked::before {
   align-items: center;
   height: 200px;
   font-size: 18px;
-  color: #666;
-  background-color: rgba(255, 255, 255, 0.9);
+  color: white;
+  background-color: rgba(79, 37, 104, 0.5);
   border-radius: 8px;
   margin: 20px 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -459,7 +539,7 @@ input[type="radio"]:checked::before {
 .test-message {
   text-align: center;
   padding: 40px 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background-color: rgba(79, 37, 104, 0.5);
   border-radius: 15px;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
   margin: 20px 0;
@@ -467,7 +547,7 @@ input[type="radio"]:checked::before {
 
 .test-message p {
   font-size: 1.2rem;
-  color: #2c3e50;
+  color: white;
   margin-bottom: 30px;
   line-height: 1.6;
 }
@@ -488,9 +568,459 @@ input[type="radio"]:checked::before {
 }
 
 .back-to-home-btn:hover {
+  background: linear-gradient(135deg, #4f2568 0%, #3d1d52 100%);
   transform: translateY(-3px);
-  box-shadow: 0 12px 24px rgba(89, 177, 73, 0.4);
+  box-shadow: 0 12px 24px rgba(79, 37, 104, 0.4);
   text-decoration: none;
   color: white;
 }
 
+/* ========== АДАПТИВНЫЕ СТИЛИ ========== */
+
+/* Адаптация для планшетов */
+@media (width < 992px) {
+  .test-page-styles {
+    padding: 15px;
+    margin-top: 15px;
+  }
+
+  .test-info h2 {
+    font-size: 24px;
+  }
+
+  .test-info p {
+    font-size: 14px;
+  }
+
+  .question {
+    min-height: auto;
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+
+  .question p {
+    font-size: 24px;
+  }
+
+  .question label {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .question input[type="text"] {
+    width: 180px;
+    font-size: 20px;
+    padding: 3px 8px;
+    margin: 0 1px;
+  }
+
+  .nav-button {
+    padding: 6px 12px;
+    font-size: 14px;
+    margin: 0 5px;
+  }
+
+  .page-button {
+    width: 40px;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .general-question .question-text p {
+    margin: 15px;
+    padding: 0 5px;
+    text-align: center;
+  }
+
+  .question-text {
+    width: min(100%, 70%);
+    text-align: center;
+  }
+
+  .question-image {
+    width: min(100%, 280px);
+  }
+
+  /* Адаптация вопросов с изображениями для планшетов - изображения остаются рядом с текстом */
+  .general-question .question-text {
+    width: min(100%, 65%);
+  }
+
+  .matching-question select {
+    font-size: 18px;
+  }
+
+  .draggable-item {
+    font-size: 18px;
+  }
+
+  .results-layout {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .test-results {
+    width: 100%;
+  }
+
+  .animation {
+    width: 100%;
+  }
+}
+
+/* Адаптация для мобильных устройств */
+@media (width < 768px) {
+  .test-page-styles {
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  .test-info {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .test-info h2 {
+    font-size: 20px;
+  }
+
+  .test-info p {
+    font-size: 13px;
+  }
+
+  .indicator-panel {
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .page-button {
+    width: 50px;
+    padding: 7px 10px;
+    font-size: 13px;
+    min-width: 50px;
+  }
+
+  .navigation-panel {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+    margin-top: 15px;
+  }
+
+  /* Порядок кнопок в мобильной версии: Вперед, Назад, Завершить */
+  #nextButton {
+    order: 1;
+  }
+
+  #prevButton {
+    order: 2;
+  }
+
+  #finishButton {
+    order: 3;
+  }
+
+  .nav-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .question {
+    min-height: auto;
+    padding: 10px;
+    margin-bottom: 15px;
+    flex-direction: column;
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible; /* Убираем обрезку содержимого */
+  }
+
+  .question.matching-only {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible; /* Убираем обрезку содержимого */
+    padding: 10px 5px; /* Уменьшаем боковые отступы для большего пространства */
+  }
+
+  .question.general-question {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .question-text {
+    width: 100%;
+    max-width: 100%;
+    order: 1;
+    overflow: visible; /* Убираем обрезку содержимого */
+    min-width: 0; /* Позволяет контейнеру сжиматься */
+  }
+
+  .question-image {
+    width: 100%;
+    width: 100%;
+    order: 2;
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .question-image img {
+    width: 100%;
+    width: min(100%, 300px);
+    height: auto;
+    margin: 0;
+  }
+
+  .question p {
+    font-size: 22px;
+    line-height: 1.5;
+  }
+
+  .question label {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 0px;
+    margin-top: -2px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .question label:first-child {
+    margin-top: 0;
+  }
+
+  .question input[type="text"] {
+    width: 100%;
+    width: min(100%, 250px);
+    font-size: 18px;
+    padding: 3px 8px;
+    margin: 0;
+  }
+
+  .general-question .question-text p {
+    margin: 10px 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .questions-panel h3 {
+    width: auto;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .matching-question {
+    margin-top: 15px;
+  }
+
+  .matching-items li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+    min-width: 0; /* Позволяет элементам сжиматься */
+  }
+
+  .matching-items li label {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 5px;
+    white-space: normal; /* Разрешаем перенос текста */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word; /* Переносим длинные слова */
+    display: block;
+    line-height: 1.4;
+  }
+
+  .matching-question select {
+    width: 100%;
+    width: 100%;
+  }
+
+  .matching-question {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible; /* Убираем обрезку */
+  }
+
+  .matching-items {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible; /* Убираем обрезку */
+  }
+
+  .draggable-item {
+    font-size: 18px;
+    padding: 6px 10px;
+  }
+
+  .results-layout {
+    flex-direction: column;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .test-results {
+    width: 100%;
+  }
+
+  .test-results h2 {
+    font-size: 20px;
+  }
+
+  .test-results p {
+    font-size: 16px;
+  }
+
+  .animation {
+    width: 100%;
+  }
+
+  .back-to-home-btn {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Адаптация для маленьких мобильных устройств */
+@media (width < 480px) {
+  .test-page-styles {
+    padding: 8px;
+    margin-top: 8px;
+  }
+
+  .test-info {
+    padding: 8px;
+  }
+
+  .test-info h2 {
+    font-size: 18px;
+  }
+
+  .test-info p {
+    font-size: 12px;
+  }
+
+  .page-button {
+    width: 45px;
+    padding: 6px 9px;
+    font-size: 12px;
+    min-width: 45px;
+  }
+
+  .indicator-panel {
+    gap: 6px;
+  }
+
+  .nav-button {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .question {
+    padding: 8px;
+    margin-bottom: 12px;
+  }
+
+  .question p {
+    font-size: 20px;
+  }
+
+  .question label {
+    font-size: 16px;
+    margin-bottom: 0px;
+    margin-top: -3px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .question label:first-child {
+    margin-top: 0;
+  }
+
+  .question input[type="text"] {
+    font-size: 16px;
+    padding: 2px 6px;
+    width: 100%;
+    margin: 0;
+  }
+
+  .questions-panel h3 {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .matching-question {
+    margin-top: 10px;
+  }
+
+  .matching-question select {
+    font-size: 18px;
+    padding: 4px;
+  }
+
+  .draggable-item {
+    font-size: 16px;
+    padding: 5px 8px;
+  }
+
+  .results-layout {
+    padding: 10px;
+  }
+
+  .test-results h2 {
+    font-size: 18px;
+  }
+
+  .test-results p {
+    font-size: 14px;
+  }
+
+  .back-to-home-btn {
+    padding: 10px 15px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Адаптация для очень маленьких экранов */
+@media (width < 360px) {
+  .test-page-styles {
+    padding: 5px;
+  }
+
+  .page-button {
+    width: 40px;
+    padding: 5px 8px;
+    font-size: 11px;
+    min-width: 40px;
+  }
+
+  .question p {
+    font-size: 18px;
+  }
+
+  .question label {
+    font-size: 15px;
+    margin-bottom: 0px;
+    margin-top: -4px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .question label:first-child {
+    margin-top: 0;
+  }
+
+  .question input[type="text"] {
+    font-size: 15px;
+    padding: 2px 5px;
+    margin: 0;
+  }
+}

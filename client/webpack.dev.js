@@ -19,7 +19,6 @@ module.exports = {
         publicPath: "/",
         watch: true,
         staticOptions: {
-          // Не использовать index для статических файлов
           index: false,
         },
       },
@@ -36,7 +35,6 @@ module.exports = {
     historyApiFallback: {
       disableDotRule: true,
       htmlAcceptHeaders: ["text/html"],
-      // ВАЖНО: статические файлы должны обрабатываться через static ДО этого
     },
     watchFiles: {
       paths: ["public/**/*"],
@@ -54,31 +52,28 @@ module.exports = {
     setupMiddlewares: (middlewares, devServer) => {
       const publicPath = path.join(__dirname, "public");
       const express = require("express");
-
-      // Принудительно обрабатываем favicon и другие статические файлы
-      // Добавляем в самое начало цепочки
-      devServer.app.get(/^\/(favicon\.ico|apple-touch-icon\.png|favicon-\d+x\d+\.png|site\.webmanifest)$/, (req, res) => {
-        const filePath = path.join(publicPath, req.path);
-        if (fs.existsSync(filePath)) {
-          const ext = path.extname(filePath);
-          const contentType = {
-            ".ico": "image/x-icon",
-            ".png": "image/png",
-            ".webmanifest": "application/manifest+json",
-          }[ext] || "application/octet-stream";
-          
-          res.setHeader("Content-Type", contentType);
-          return res.sendFile(filePath);
+      
+      // Обрабатываем статические файлы ПЕРЕД всеми остальными middleware
+      // Используем devServer.app.use для добавления middleware в самое начало
+      devServer.app.use((req, res, next) => {
+        // Явно обрабатываем запросы к фавиконкам и другим статическим файлам
+        const faviconPattern = /^\/(favicon\.ico|apple-touch-icon\.png|favicon-\d+x\d+\.png|android-chrome-\d+x\d+\.png|site\.webmanifest)$/;
+        if (faviconPattern.test(req.path)) {
+          const filePath = path.join(publicPath, req.path);
+          if (fs.existsSync(filePath)) {
+            const ext = path.extname(filePath);
+            const contentTypeMap = {
+              '.ico': 'image/x-icon',
+              '.png': 'image/png',
+              '.webmanifest': 'application/manifest+json',
+            };
+            const contentType = contentTypeMap[ext] || 'application/octet-stream';
+            res.setHeader('Content-Type', contentType);
+            res.setHeader('Cache-Control', 'no-cache'); // Не кешируем в dev режиме
+            return res.sendFile(filePath);
+          }
         }
-        res.status(404).send("Not found");
-      });
-
-      // Также добавляем express.static для всех файлов из public
-      devServer.app.use(express.static(publicPath));
-
-      // Handle source map requests gracefully
-      devServer.app.get("*.map", (req, res) => {
-        res.status(404).send("Source map not found");
+        next();
       });
 
       return middlewares;

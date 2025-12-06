@@ -1,11 +1,11 @@
 import Page from "../common/Page.js";
-import Topics from "../components/Topics.js"; // Импорт компонента Topics
+import Topics from "../components/topics/Topics.js"; // Импорт компонента Topics
 
 class HomePage extends Page {
   constructor() {
     super({
       id: "home",
-      title: "Выберите формат проверки знаний", // Заголовок на странице
+      title: "Каталог тем", // Заголовок на странице
       content: "",
       metaTitle: "Главная страница", // Мета-заголовок
     });
@@ -41,8 +41,8 @@ class HomePage extends Page {
       // Рендерим основную структуру через метод родительского класса Page
       // Вставляем контент Topics сразу в структуру страницы
       const mainContent = `
-        <main id="${this.id}" class="container">
-          <h1>${this.title}</h1>
+        <main id="${this.id}" class="container my-4">
+          <h1 class="text-center mb-4">${this.title}</h1>
           <section>${topicsContent}</section>
         </main>
       `;
@@ -65,13 +65,14 @@ class HomePage extends Page {
         error.message ||
         "Не удалось загрузить тесты. Пожалуйста, обновите страницу.";
       contentElement.innerHTML = `
-        <main id="${this.id}" class="container">
-          <h1>${this.title}</h1>
+        <main id="${this.id}" class="container my-4">
+          <h1 class="text-center mb-4">${this.title}</h1>
           <section>
-            <div class="error-message" style="padding: 20px; background-color: #fee; border: 1px solid #fcc; border-radius: 4px; margin: 20px 0;">
-              <h3>Ошибка загрузки тестов</h3>
+            <div class="alert alert-danger" role="alert">
+              <h4 class="alert-heading">Ошибка загрузки тестов</h4>
               <p>${errorMessage}</p>
-              <button onclick="window.location.reload()" style="margin-top: 10px; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+              <hr>
+              <button onclick="window.location.reload()" class="btn btn-primary">
                 Обновить страницу
               </button>
             </div>

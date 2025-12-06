@@ -1,0 +1,121 @@
+/* Переопределение цветов Bootstrap для возврата исходной цветовой гаммы */
+
+/* Кнопки - возвращаем исходные цвета */
+.btn-primary {
+  background-color: #59b149;
+  border-color: #59b149;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #4f2568;
+  border-color: #4f2568;
+}
+
+.btn-success {
+  background-color: #59b149;
+  border-color: #59b149;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+  background-color: #4f2568;
+  border-color: #4f2568;
+}
+
+.btn-info {
+  background-color: #59b149;
+  border-color: #59b149;
+}
+
+.btn-info:hover,
+.btn-info:focus {
+  background-color: #4f2568;
+  border-color: #4f2568;
+}
+
+/* Алерты - адаптируем под цветовую схему, но сохраняем различимость */
+.alert-danger {
+  background-color: rgba(248, 215, 218, 0.9);
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+.alert-success {
+  background-color: rgba(212, 237, 218, 0.9);
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.alert-warning {
+  background-color: rgba(255, 243, 205, 0.9);
+  border-color: #ffeaa7;
+  color: #856404;
+}
+
+.alert-info {
+  background-color: rgba(209, 236, 241, 0.9);
+  border-color: #bee5eb;
+  color: #0c5460;
+}
+
+/* Формы - сохраняем исходные цвета */
+.form-control:focus {
+  border-color: #59b149;
+  box-shadow: 0 0 0 0.25rem rgba(89, 177, 73, 0.25);
+}
+
+/* Navbar - сохраняем исходные цвета */
+.navbar-nav .nav-link {
+  color: #a6e89c;
+}
+
+.navbar-nav .nav-link:hover {
+  color: white;
+}
+
+.navbar-nav .nav-link.active {
+  color: white;
+}
+
+/* Bootstrap карточки - фиолетовый фон */
+.card {
+  background-color: transparent;
+}
+
+.card-body {
+  background-color: transparent;
+}
+
+/* Bootstrap контейнеры - прозрачный фон */
+.container,
+.container-fluid {
+  background-color: transparent;
+}
+
+/* Bootstrap таблицы - фиолетовый фон */
+.table {
+  background-color: transparent;
+  color: white;
+}
+
+.table tbody tr {
+  background-color: transparent;
+  color: white;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > td {
+  background-color: rgba(79, 37, 104, 0.3);
+  color: white;
+}
+
+/* Таблицы - белый текст */
+table {
+  color: white;
+}
+
+td,
+th {
+  color: white;
+}
+

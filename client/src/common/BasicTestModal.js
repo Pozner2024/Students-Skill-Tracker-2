@@ -38,7 +38,7 @@ export default class BasicTestModal {
     }
 
     // Устанавливаем фон через JavaScript. Пришлось вынести фон из CSS в JS, т.к. при деплое,
-    // в первом случае (через СSS, он не отображался на Netlify
+    // в первом случае (через CSS) он не отображался
     const modalContent = document.querySelector(`#${this.id} .modal-content`);
     if (modalContent) {
       modalContent.style.backgroundImage = `url(${background})`;

@@ -1,0 +1,206 @@
+.site-header {
+  width: 100%;
+  padding: 20px 0; /* Добавляем отступы сверху и снизу, чтобы логотип не обрезался */
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 15px;
+}
+
+.logo {
+  height: 120px;
+  width: auto; /* Автоматическая ширина для сохранения пропорций */
+  max-width: 100%; /* Предотвращаем переполнение */
+  object-fit: contain; /* Сохраняем пропорции */
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.site-header h1 {
+  font-size: 36px;
+  margin: 0;
+}
+
+/* Переопределяем Bootstrap классы для центрирования на маленьких экранах */
+@media (width < 991px) {
+  .header-content h1.text-end {
+    text-align: center;
+  }
+
+  .header-content h1.ms-3 {
+    margin-left: 0;
+  }
+
+  /* Скрываем заголовок когда бургер-меню видно */
+  .site-header h1 {
+    display: none;
+  }
+
+  /* Убираем пространство над меню, когда заголовок скрыт */
+  .site-header {
+    padding: 0;
+  }
+
+  .header-content {
+    padding: 0;
+    margin: 0;
+  }
+}
+
+/* Адаптация для средних экранов (планшеты в альбомной ориентации) */
+@media (width < 1200px) {
+  .site-header h1 {
+    font-size: 28px;
+  }
+}
+
+/* Адаптация для планшетов */
+@media (width < 991px) {
+  .site-header {
+    padding: 0;
+  }
+
+  .site-header .container-fluid {
+    padding-top: 0;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .site-header h1 {
+    font-size: 24px;
+    text-align: center;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Адаптация для мобильных устройств */
+@media (width < 768px) {
+  .site-header {
+    padding: 10px 0;
+  }
+
+  .site-header .container-fluid {
+    padding-top: 0;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .site-header h1 {
+    font-size: 18px;
+    line-height: 1.3;
+    padding: 0 10px;
+    text-align: center;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Адаптация для маленьких мобильных устройств */
+@media (width < 576px) {
+  .site-header {
+    padding: 8px 0;
+  }
+
+  .site-header .container-fluid {
+    padding-top: 0;
+  }
+
+  .site-header h1 {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+}
+
+/* Адаптация для очень маленьких экранов */
+@media (width < 480px) {
+  .site-header {
+    padding: 5px 0;
+  }
+
+  .site-header .container-fluid {
+    padding-top: 0;
+  }
+
+  .site-header h1 {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  /* Уменьшаем логотип в хедере на очень маленьких экранах */
+  .site-header .logo,
+  #logo.logo {
+    height: 80px;
+    width: auto;
+    max-width: 100%;
+  }
+}
+
+.site-header .logo-link {
+  display: flex; /* Логотип в хедере виден на десктопе */
+}
+
+/* Стили для десктопной версии (ширина >= 991px) */
+@media (width >= 991px) {
+  .header-content {
+    flex-direction: row; /* Горизонтальное расположение: логотип слева, заголовок справа */
+    align-items: flex-start; /* Выравниваем по верхнему краю */
+    justify-content: space-between; /* Логотип слева, заголовок справа */
+    flex-wrap: nowrap; /* Запрещаем перенос на новую строку */
+  }
+
+  .logo-link {
+    padding-top: 10px; /* Отступ сверху для логотипа */
+    margin-top: 0; /* Убираем margin-top из других медиа-запросов */
+  }
+
+  .site-header h1 {
+    padding-top: 10px; /* Отступ сверху для заголовка, чтобы был на одном уровне с логотипом */
+  }
+}
+
+/* Стили для маленьких экранов */
+@media (width < 991px) {
+  .header-content {
+    align-items: flex-start;
+    flex-wrap: nowrap;
+  }
+
+  .logo-link {
+    margin-top: 2rem;
+    padding-top: 0; /* Убираем дополнительный отступ, если он конфликтует */
+  }
+
+  .site-header {
+    padding-top: 0; /* Убираем отступ сверху для бургер-меню */
+  }
+}
+
+/* Скрываем логотип в хедере на маленьких экранах (оставляем только в бургер-меню) */
+@media (width < 991px) {
+  .site-header .logo-link {
+    display: none;
+  }
+}

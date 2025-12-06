@@ -1,0 +1,5 @@
+/* Стили для админ-страницы */
+#admin .test-results-section {
+  min-height: 60vh;
+}
+

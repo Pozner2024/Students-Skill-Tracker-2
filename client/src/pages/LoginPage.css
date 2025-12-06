@@ -1,13 +1,12 @@
-/* Применяем стили только если элемент находится в контейнере с классом .login-page */
 .login-page {
-  height: 100vh; /* Занимает всю высоту экрана */
-  width: 100vw; /* Занимает всю ширину экрана */
+  height: 100vh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.login-page .page-background {
+.page-background {
   position: absolute;
   top: 0;
   left: 0;
@@ -20,12 +19,16 @@
   align-items: center;
 }
 
-.login-page .main-container {
-  background-color: #4f2568; /* Фиолетовый цвет для основного контейнера */
-  width: 80%;
-  max-width: 1200px;
+.main-container {
+  background-color: #4f2568;
+  width: min(100%, 1200px);
   margin: 0 auto;
   padding: 40px;
+  padding-top: clamp(
+    60px,
+    8vw,
+    100px
+  ); /* Адаптивный padding сверху для логотипа */
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
@@ -34,22 +37,27 @@
     inset 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
-.login-page .text-section {
+.text-section {
   width: 50%;
   padding-right: 40px;
+  padding-top: 0; /* Убираем лишний padding, так как он уже в контейнере */
   font-weight: bold;
-  color: white; /* Белый текст для текстовой секции */
+  color: white;
   text-align: center;
-}
-.login-page .text-section h1 {
-  font-size: 32px;
-  margin-top: 30px;
+  position: relative; /* Для позиционирования логотипа */
 }
 
-.login-page .text-section p {
-  font-size: 18px;
+.text-section h1 {
+  font-size: clamp(20px, 2.5vw, 32px);
+  margin-top: clamp(15px, 2vw, 30px);
+  line-height: 1.3;
+}
+
+.text-section p {
+  font-size: clamp(14px, 1.5vw, 18px);
   margin: 0;
-  margin-top: 40px;
+  margin-top: clamp(20px, 2.5vw, 40px);
+  line-height: 1.4;
 }
 .login-wrapper {
   width: 45%;
@@ -60,38 +68,54 @@
 }
 
 .form-box h2 {
-  margin-bottom: 20px;
-  color: #a259ff; /* Фиолетовый цвет заголовка */
-  text-align: center; /* Центрирование заголовка */
+  margin-bottom: clamp(15px, 2vw, 20px); /* Адаптивный отступ под заголовком */
+  color: #a259ff;
+  text-align: center;
 }
 
-.login-page .input-group {
-  margin-bottom: 15px;
+.input-group {
+  margin-bottom: clamp(
+    3px,
+    1vw,
+    15px
+  ); /* Еще более агрессивный адаптивный отступ между группами полей */
   text-align: left;
 }
 
-.login-page .input-group label {
+.input-group label {
   display: block;
   font-size: 14px;
   color: #666;
-  margin-bottom: 5px;
+  margin-bottom: clamp(
+    3px,
+    0.5vw,
+    5px
+  ); /* Адаптивный отступ между label и input */
 }
 
-.login-page .input-group input[type="email"],
-.login-page .input-group input[type="password"],
-.login-page .input-group input[type="text"] {
+.input-group input[type="email"],
+.input-group input[type="password"],
+.input-group input[type="text"] {
   width: 100%;
-  padding: 10px;
-  font-size: 14px;
+  padding: clamp(8px, 1vw, 10px); /* Адаптивный padding внутри поля */
+  font-size: clamp(
+    16px,
+    1.2vw,
+    18px
+  ); /* Увеличенный адаптивный размер шрифта */
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
-  margin-bottom: 15px;
+  margin-bottom: clamp(
+    3px,
+    1vw,
+    15px
+  ); /* Еще более агрессивный адаптивный отступ снизу поля */
   box-sizing: border-box;
 }
 
-.login-page .submit-btn {
-  background-color: #4caf50; /* Зеленый цвет кнопки */
+.submit-btn {
+  background-color: #59b149;
   color: white;
   border: none;
   padding: 10px;
@@ -102,14 +126,41 @@
   margin-bottom: 10px;
 }
 
-.login-page .submit-btn:hover {
-  background-color: #45a049; /* Более тёмный зелёный цвет при наведении */
+.submit-btn:hover {
+  background-color: #4f2568;
 }
 
-.login-page .logo {
-  margin-top: -80px;
-  height: 80px;
+/* Убираем синий цвет при клике на кнопки Bootstrap */
+.btn-primary:focus,
+.btn-primary:focus-visible,
+.btn-success:focus,
+.btn-success:focus-visible {
+  background-color: #59b149 !important;
+  border-color: #59b149 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.btn-primary:active {
+  background-color: #4f2568 !important;
+  border-color: #4f2568 !important;
+  box-shadow: none !important;
+}
+
+.btn-success:active {
+  background-color: #4f2568 !important;
+  border-color: #4f2568 !important;
+  box-shadow: none !important;
+}
+
+.logo {
+  margin-top: clamp(-60px, -5vw, -80px);
+  height: clamp(60px, 5vw, 80px);
   width: auto;
+  width: 100%; /* Предотвращаем выход за пределы */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Стили для переключателя видимости пароля */
@@ -117,33 +168,40 @@
   position: relative;
   display: flex;
   align-items: center;
+  margin-bottom: clamp(
+    3px,
+    1vw,
+    15px
+  ); /* Еще более агрессивный адаптивный отступ для wrapper */
 }
 
 .password-input-wrapper input[type="password"],
 .password-input-wrapper input[type="text"] {
   width: 100%;
-  padding: 10px 45px 10px 10px; /* Добавляем отступ справа для кнопки */
-  font-size: 14px;
+  padding: 10px 50px 10px 10px; /* Увеличенный отступ справа для увеличенной кнопки */
+  font-size: clamp(
+    16px,
+    1.2vw,
+    18px
+  ); /* Увеличенный адаптивный размер шрифта */
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
-  margin-bottom: 15px;
+  margin-bottom: 0; /* Убираем margin-bottom, так как он теперь на wrapper */
   box-sizing: border-box;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .password-input-wrapper input:focus {
-  border-color: #2196f3;
-  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+  border-color: #59b149;
+  box-shadow: 0 0 0 2px rgba(89, 177, 73, 0.2);
 }
 
 .password-toggle-btn {
   position: absolute;
   right: 12px;
   top: 50%;
-  transform: translateY(
-    calc(-50% - 7.5px)
-  ); /* Учитываем margin-bottom поля ввода */
+  transform: translateY(-50%); /* Точное центрирование по вертикали */
   background: none;
   border: none;
   cursor: pointer;
@@ -153,23 +211,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 40px; /* Увеличенный размер кнопки */
+  height: 40px; /* Увеличенный размер кнопки */
+  z-index: 1; /* Чтобы кнопка была поверх input */
 }
 
 .password-toggle-btn:hover {
-  background-color: rgba(33, 150, 243, 0.1);
-  transform: translateY(calc(-50% - 7.5px)) scale(1.1);
+  background-color: rgba(89, 177, 73, 0.1);
+  transform: translateY(-50%) scale(1.1); /* Сохраняем центрирование при масштабировании */
   border-radius: 50%;
 }
 
 .password-toggle-btn:active {
-  transform: translateY(calc(-50% - 7.5px)) scale(0.95);
+  transform: translateY(-50%) scale(0.95); /* Сохраняем центрирование при масштабировании */
 }
 
 .eye-icon {
-  width: 20px;
-  height: 20px;
+  width: 24px; /* Увеличенный размер иконки */
+  height: 24px; /* Увеличенный размер иконки */
   stroke: #666;
   transition: all 0.3s ease;
   stroke-width: 2;
@@ -177,7 +236,7 @@
 }
 
 .password-toggle-btn:hover .eye-icon {
-  stroke: #2196f3;
+  stroke: #59b149;
   transform: scale(1.1);
 }
 
@@ -199,21 +258,150 @@
 }
 
 /* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
+@media (width < 768px) {
+  .main-container {
+    flex-direction: column;
+    width: 95%;
+    padding: 20px;
+    padding-top: 60px; /* Уменьшенный padding для мобильных */
+  }
+
+  .text-section {
+    width: 100%;
+    padding-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .text-section h1 {
+    font-size: 20px;
+    margin-top: 10px;
+  }
+
+  .text-section p {
+    font-size: 14px;
+    margin-top: 15px;
+  }
+
+  .logo {
+    height: 60px;
+    margin-top: -30px;
+    margin-bottom: 10px;
+  }
+
+  .login-wrapper {
+    width: 100%;
+  }
+
+  .form-box h2 {
+    margin-bottom: 8px; /* Еще больше уменьшенный отступ для мобильных */
+  }
+
+  .input-group {
+    margin-bottom: 3px; /* Еще больше уменьшенный отступ между группами полей */
+  }
+
+  .input-group label {
+    margin-bottom: 1px; /* Еще больше уменьшенный отступ между label и input */
+  }
+
+  .input-group input[type="email"],
+  .input-group input[type="password"],
+  .input-group input[type="text"] {
+    padding: 8px; /* Уменьшенный padding внутри поля */
+    font-size: 16px; /* Увеличенный размер шрифта для мобильных */
+    margin-bottom: 3px; /* Еще больше уменьшенный отступ снизу поля */
+  }
+
+  .password-input-wrapper {
+    margin-bottom: 3px; /* Еще больше уменьшенный отступ для wrapper на мобильных */
+  }
+
   .password-toggle-btn {
-    width: 28px;
-    height: 28px;
+    width: 36px; /* Увеличенный размер для мобильных */
+    height: 36px; /* Увеличенный размер для мобильных */
     right: 10px;
   }
 
   .eye-icon {
-    width: 18px;
-    height: 18px;
+    width: 22px; /* Увеличенный размер для мобильных */
+    height: 22px; /* Увеличенный размер для мобильных */
   }
 
   .password-input-wrapper input[type="password"],
   .password-input-wrapper input[type="text"] {
-    padding: 10px 40px 10px 10px;
+    padding: 8px 45px 8px 8px; /* Увеличенный отступ справа для мобильных */
+    font-size: 16px; /* Увеличенный размер шрифта для мобильных */
+  }
+}
+
+/* Адаптивность для средних экранов */
+@media (width < 1200px) and (width >= 993px) {
+  .input-group {
+    margin-bottom: clamp(
+      4px,
+      0.8vw,
+      10px
+    ); /* Еще больше уменьшенный отступ для средних экранов */
+  }
+
+  .input-group input[type="email"],
+  .input-group input[type="password"],
+  .input-group input[type="text"] {
+    margin-bottom: clamp(
+      4px,
+      0.8vw,
+      10px
+    ); /* Еще больше уменьшенный отступ для средних экранов */
+  }
+
+  .password-input-wrapper {
+    margin-bottom: clamp(
+      4px,
+      0.8vw,
+      10px
+    ); /* Еще больше уменьшенный отступ для средних экранов */
+  }
+}
+
+/* Адаптивность для планшетов */
+@media (width < 992px) and (width >= 769px) {
+  .main-container {
+    padding-top: 80px; /* Средний padding для планшетов */
+  }
+
+  .text-section h1 {
+    font-size: 24px;
+    margin-top: 20px;
+  }
+
+  .text-section p {
+    font-size: 16px;
+    margin-top: 25px;
+  }
+
+  .logo {
+    margin-top: -50px;
+    height: 70px;
+  }
+
+  .form-box h2 {
+    margin-bottom: 10px; /* Еще больше уменьшенный отступ для планшетов */
+  }
+
+  .input-group {
+    margin-bottom: 5px; /* Еще больше уменьшенный отступ между группами полей */
+  }
+
+  .input-group input[type="email"],
+  .input-group input[type="password"],
+  .input-group input[type="text"] {
+    padding: 9px; /* Средний padding внутри поля */
+    font-size: 17px; /* Увеличенный размер шрифта для планшетов */
+    margin-bottom: 5px; /* Еще больше уменьшенный отступ снизу поля */
+  }
+
+  .password-input-wrapper {
+    margin-bottom: 5px; /* Еще больше уменьшенный отступ для планшетов */
   }
 }
 
@@ -253,7 +441,11 @@
 }
 
 .star {
-  font-size: 28px;
+  font-size: clamp(
+    24px,
+    2.5vw,
+    32px
+  ); /* Уменьшенный адаптивный размер звездочек */
   transition: all 0.2s ease;
   user-select: none;
 }
@@ -287,4 +479,3 @@
     transform: translateY(0);
   }
 }
-

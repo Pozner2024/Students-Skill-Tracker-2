@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
+const argon2 = require('argon2');
 
 const prisma = new PrismaClient();
 
@@ -31,7 +31,7 @@ async function createAdminUser() {
         where: { email },
         data: {
           role: role,
-          password: await bcrypt.hash(password, 10), // Обновляем пароль
+          password: await argon2.hash(password), // Обновляем пароль
         },
       });
 
@@ -41,7 +41,7 @@ async function createAdminUser() {
       console.log(`   ID: ${updatedUser.id}`);
     } else {
       // Хешируем пароль
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await argon2.hash(password);
 
       // Создаем нового пользователя
       const user = await prisma.user.create({

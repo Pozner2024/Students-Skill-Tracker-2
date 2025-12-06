@@ -13,7 +13,7 @@
 .modal-content {
   padding: 20px;
   border-radius: 8px;
-  max-width: 70%;
+  width: min(100%, 70%);
   width: auto;
   max-height: 90%;
   overflow-y: auto;
@@ -31,20 +31,29 @@
 
 .close-button {
   position: absolute;
-  top: 10px;
+  top: 8px;
   right: 15px;
   background-color: red;
   border: none;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: bold;
   cursor: pointer;
   color: white;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s, color 0.3s;
-  border-radius: 3px;
+  border-radius: 4px;
+  z-index: 12;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .close-button:hover {
@@ -84,7 +93,7 @@
 .success-modal-content {
   text-align: center;
   min-width: 400px;
-  max-width: 500px;
+  width: min(100%, 500px);
 }
 
 .success-icon {

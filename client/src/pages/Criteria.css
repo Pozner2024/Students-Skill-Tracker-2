@@ -24,7 +24,9 @@
 }
 
 .criteria-table .grade-column {
-  width: 5%;
+  width: 15%;
+  min-width: 80px;
+  white-space: nowrap;
 }
 
 .small-table {
@@ -37,6 +39,17 @@
   color: black;
 }
 
+.criteria-container h1 {
+  font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: black;
+  background-color: white;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 15px;
+  height: auto;
+  display: block;
+}
+
 .criteria-container h2 {
   font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-size: 20px;
@@ -45,4 +58,157 @@
   padding: 10px;
   text-align: center;
   margin-bottom: 15px;
+}
+
+/* Выравнивание таблиц по центру */
+.criteria-container .table-responsive {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.criteria-container .table-responsive table {
+  margin: 0 auto;
+}
+
+.small-table {
+  width: 50%;
+  margin: 0 auto;
+}
+
+/* Стили для таблиц критериев с переопределением Bootstrap */
+.criteria-table.table thead th {
+  background-color: white;
+  color: black;
+  border-color: black;
+}
+
+.criteria-table.table td {
+  color: white;
+  background-color: rgba(79, 37, 104, 0.3);
+  border-color: white;
+}
+
+.criteria-table.table tbody tr:hover {
+  background-color: rgba(79, 37, 104, 0.5);
+}
+
+/* Стили для alert в критериях */
+.criteria-container .alert-info {
+  background-color: #4f2568;
+  border-color: #4f2568;
+  color: white;
+  border: none;
+}
+
+/* Адаптация для очень маленьких экранов (< 480px) */
+@media (width < 480px) {
+  /* Уменьшаем главный заголовок страницы "Оценочные критерии тестов" */
+  main#criteria.container h1,
+  #criteria.container h1 {
+    font-size: 18px;
+    height: auto;
+    min-height: 35px;
+    padding: 5px 3px;
+    line-height: 1.3;
+  }
+
+  /* Уменьшаем заголовок h1 внутри контейнера */
+  .criteria-container h1 {
+    font-size: 18px;
+    padding: 8px 5px;
+    margin-bottom: 10px;
+  }
+
+  /* Уменьшаем заголовки h2 */
+  .criteria-container h2 {
+    font-size: 14px;
+    padding: 8px 5px;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  /* Делаем таблицы более компактными */
+  .criteria-table th,
+  .criteria-table td {
+    padding: 3px 1px;
+    font-size: 10px;
+  }
+
+  /* Уменьшаем ширину первой колонки для экономии места */
+  .criteria-table th:first-child,
+  .criteria-table td:first-child {
+    width: 30%;
+    font-size: 9px;
+    padding: 3px 2px;
+    word-break: break-word;
+  }
+
+  /* Уменьшаем размер шрифта в ячейках с номерами вопросов и баллами */
+  .criteria-table th:not(:first-child):not(.grade-column),
+  .criteria-table td:not(:first-child):not(.grade-column) {
+    font-size: 9px;
+    padding: 3px 1px;
+    min-width: 20px;
+  }
+
+  /* Увеличиваем ширину колонки "Оценка" на мобильных */
+  .criteria-table .grade-column {
+    width: 20%;
+    min-width: 70px;
+    font-size: 11px;
+  }
+
+  /* Делаем маленькие таблицы на всю ширину на мобильных */
+  .small-table {
+    width: 100%;
+  }
+
+  /* Уменьшаем отступы у table-responsive */
+  .criteria-container .table-responsive {
+    margin-bottom: 15px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Улучшаем прокрутку таблиц - для широких таблиц устанавливаем минимальную ширину */
+  .criteria-table:not(.small-table) {
+    min-width: 350px;
+    font-size: 10px;
+  }
+
+  /* Для таблицы с 15 вопросами делаем еще более компактной */
+  .criteria-table:not(.small-table) th:not(:first-child),
+  .criteria-table:not(.small-table) td:not(:first-child):not(.grade-column) {
+    font-size: 8px;
+    padding: 2px 1px;
+    min-width: 18px;
+  }
+
+  /* Обеспечиваем плавную прокрутку на мобильных */
+  .criteria-container .table-responsive {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    width: 100%;
+    display: block;
+    width: 100%;
+  }
+
+  /* Уменьшаем отступы между ячейками в широких таблицах */
+  .criteria-table:not(.small-table) {
+    border-spacing: 0;
+    width: auto;
+  }
+
+  /* Уменьшаем отступы в alert */
+  .criteria-container .alert-info {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .criteria-container .alert-info p {
+    font-size: 11px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
 }

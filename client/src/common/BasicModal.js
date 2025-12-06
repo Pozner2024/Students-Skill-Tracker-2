@@ -20,7 +20,7 @@ export default class BasicModal {
         <div class="modal-content">
           <button id="${this.id}-closeModal" class="close-button">×</button>
           <div class="modal-body"></div>
-          <button id="${this.id}-actionButton" class="action-button">${this.buttonText}</button> <!-- Кнопка внизу окна -->
+          <button id="${this.id}-actionButton" class="btn btn-primary action-button">${this.buttonText}</button> <!-- Кнопка внизу окна -->
         </div>
       </div>
     `;
@@ -34,7 +34,7 @@ export default class BasicModal {
     }
 
     // Устанавливаем фон через JavaScript. Пришлось вынести фон из CSS в JS, т.к. при деплое,
-    // в первом случае (через СSS, он не отображался на Netlify
+    // в первом случае (через CSS) он не отображался
     const modalContent = document.querySelector(`#${this.id} .modal-content`);
     if (modalContent) {
       modalContent.style.backgroundImage = `url(${background})`;

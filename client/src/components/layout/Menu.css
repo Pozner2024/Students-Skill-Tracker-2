@@ -1,0 +1,371 @@
+#menu {
+  margin-top: 5px;
+  margin-left: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #5b2d77;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), inset 0 8px 16px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.9), 0 24px 40px rgba(4, 3, 5, 0.9),
+    0 -8px 14px rgba(0, 0, 0, 0.7);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  padding: 2px 0;
+}
+
+.menu {
+  margin-left: 17px;
+}
+
+/* Bootstrap navbar переопределения */
+.navbar {
+  padding: 0;
+}
+
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.3);
+  margin-left: auto;
+  order: 2;
+  display: none;
+}
+
+/* Стили для логотипа в меню */
+.menu-logo-link {
+  display: none;
+  align-items: center;
+  margin-right: auto;
+  order: 1;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 11;
+}
+
+.menu-logo {
+  height: 60px;
+  width: auto;
+  width: 100%;
+  object-fit: contain;
+}
+
+.navbar-close-btn {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  color: white;
+  font-size: 28px;
+  line-height: 1;
+  padding: 5px 10px;
+  cursor: pointer;
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: all 0.3s ease;
+}
+
+.navbar-close-icon {
+  font-size: 32px;
+  line-height: 1;
+  font-weight: bold;
+}
+
+.navbar-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.container-fluid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Базовые стили для navbar-collapse на десктопе */
+.navbar-collapse {
+  order: 1;
+  position: relative;
+}
+
+/* Bootstrap navbar стили переопределены для сохранения дизайна */
+.navbar-nav {
+  align-items: center;
+}
+
+.navbar-nav .nav-item {
+  margin-right: 65px;
+  position: relative;
+}
+
+/* Разделители между пунктами меню на десктопе */
+.navbar-nav .nav-item:not(:last-child)::after {
+  content: "|";
+  position: absolute;
+  right: -35px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 20px;
+  pointer-events: none;
+}
+
+/* Убираем разделители на мобильных */
+@media (width < 992px) {
+  .navbar-nav .nav-item:not(:last-child)::after {
+    content: none;
+  }
+}
+
+.menu-link {
+  text-decoration: none;
+  color: #a6e89c;
+  font-size: 20px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.menu-link:hover {
+  transform: scale(1.2);
+  color: white;
+}
+
+.menu-link.active {
+  color: white;
+}
+
+/* Показываем бургер-меню и логотип в меню только на маленьких экранах */
+@media (width < 991px) {
+  .navbar-toggler {
+    display: block;
+  }
+
+  .menu-logo-link {
+    display: flex;
+  }
+
+  .menu-logo {
+    height: 45px;
+  }
+
+  /* Fullscreen overlay меню на мобильных */
+  .navbar-collapse,
+  .navbar-collapse.collapse,
+  .navbar-collapse.collapsing,
+  .navbar-collapse.show,
+  .navbar-collapse.showing {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(91, 45, 119, 0.98);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+    padding: 80px 20px 40px;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+    display: block;
+    visibility: visible;
+    pointer-events: none;
+  }
+
+  /* Когда меню открыто, разрешаем взаимодействие */
+  .navbar-collapse.show,
+  .navbar-collapse.showing,
+  .navbar-collapse.collapsing {
+    pointer-events: all;
+  }
+
+  /* Отключаем стандартную анимацию высоты Bootstrap collapse */
+  .navbar-collapse.collapsing {
+    height: 100vh;
+    transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition-property: transform;
+  }
+
+  .navbar-collapse.show,
+  .navbar-collapse.showing {
+    transform: translateX(0);
+    height: 100vh;
+  }
+
+  /* Backdrop затемнение фона */
+  .navbar-collapse::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+  }
+
+  .navbar-collapse.show::before,
+  .navbar-collapse.showing::before {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Улучшенные стили для пунктов меню на мобильных */
+  .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+    padding: 20px 0;
+    align-items: center;
+  }
+
+  .navbar-nav .nav-item {
+    width: 100%;
+    width: min(100%, 320px);
+    margin: 0;
+    margin-bottom: 12px;
+    opacity: 0;
+    transform: translateY(-15px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  /* Staggered animation для пунктов меню */
+  .navbar-collapse.show .navbar-nav .nav-item,
+  .navbar-collapse.showing .navbar-nav .nav-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .navbar-collapse.show .navbar-nav .nav-item:nth-child(1),
+  .navbar-collapse.showing .navbar-nav .nav-item:nth-child(1) {
+    transition-delay: 0.1s;
+  }
+
+  .navbar-collapse.show .navbar-nav .nav-item:nth-child(2),
+  .navbar-collapse.showing .navbar-nav .nav-item:nth-child(2) {
+    transition-delay: 0.15s;
+  }
+
+  .navbar-collapse.show .navbar-nav .nav-item:nth-child(3),
+  .navbar-collapse.showing .navbar-nav .nav-item:nth-child(3) {
+    transition-delay: 0.2s;
+  }
+
+  .navbar-collapse.show .navbar-nav .nav-item:nth-child(4),
+  .navbar-collapse.showing .navbar-nav .nav-item:nth-child(4) {
+    transition-delay: 0.25s;
+  }
+
+  .navbar-collapse.show .navbar-nav .nav-item:nth-child(5),
+  .navbar-collapse.showing .navbar-nav .nav-item:nth-child(5) {
+    transition-delay: 0.3s;
+  }
+
+  .navbar-collapse.show .navbar-nav .nav-item:nth-child(6),
+  .navbar-collapse.showing .navbar-nav .nav-item:nth-child(6) {
+    transition-delay: 0.35s;
+  }
+
+  /* Улучшенные стили для ссылок меню на мобильных */
+  .menu-link {
+    display: flex;
+    padding: 12px 18px;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    width: min(100%, 280px);
+    margin: 0 auto;
+  }
+
+  .menu-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .menu-link:active {
+    transform: translateX(4px) scale(0.98);
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .menu-link.active {
+    background: rgba(166, 232, 156, 0.2);
+    border-color: rgba(166, 232, 156, 0.4);
+    color: #a6e89c;
+    font-weight: 600;
+  }
+
+  /* Логотип в мобильном меню (только внутри navbar-collapse) */
+  .navbar-collapse .menu-logo-link {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .navbar-collapse.show .menu-logo-link,
+  .navbar-collapse.showing .menu-logo-link {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.05s;
+  }
+
+  .menu-logo {
+    max-height: 80px;
+    height: auto;
+  }
+
+  /* Улучшенное позиционирование крестика на мобильных */
+  .navbar-close-btn {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    z-index: 10001;
+    background: rgba(91, 45, 119, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-close-icon {
+    position: relative;
+    top: -4px;
+  }
+
+  .navbar-close-btn:hover {
+    background: rgba(91, 45, 119, 1);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.1);
+  }
+
+  .navbar-close-btn:active {
+    transform: scale(0.95);
+  }
+}
