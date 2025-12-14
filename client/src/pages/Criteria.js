@@ -3,15 +3,14 @@ import Page from "../common/Page.js";
 class CriteriaPage extends Page {
   constructor() {
     super({
-      id: "criteria", // Уникальный идентификатор страницы
-      title: "Оценочные критерии тестов", // Заголовок страницы
-      metaTitle: "Оценочные критерии", // Мета-заголовок для вкладки браузера
+      id: "criteria",
+      title: "Оценочные критерии тестов",
+      metaTitle: "Оценочные критерии",
     });
 
     this.content = this.generateCriteriaTables();
   }
 
-  // Метод для очистки динамического контента, если это потребуется
   cleanDynamicContent() {
     const root = document.getElementById("root");
     if (root) {
@@ -19,9 +18,7 @@ class CriteriaPage extends Page {
     }
   }
 
-  // Метод для динамической генерации всех таблиц
   generateCriteriaTables() {
-    // Пояснительный текст перед таблицами
     const explanatoryText = `
       <div class="criteria-explanation">
         <p>Данные таблицы описывают систему оценивания тестов по количеству набранных баллов. В зависимости от числа вопросов в тесте (10 или 15), каждая таблица отображает максимальные баллы, которые можно получить за каждый вопрос, а также шкалу перевода общего числа баллов в итоговую оценку.</p>
@@ -125,7 +122,6 @@ class CriteriaPage extends Page {
       </div>
     `;
 
-    // Возвращаем пояснительный текст и таблицы
     return `
       <div class="criteria-container">
         <div class="alert alert-info mb-4" role="alert">
@@ -143,10 +139,9 @@ class CriteriaPage extends Page {
     `;
   }
 
-  // Метод для рендеринга страницы
   renderPage() {
-    this.cleanDynamicContent(); // Очищаем динамическую часть перед рендерингом
-    return this.render(); // Возвращаем HTML-код страницы
+    this.cleanDynamicContent();
+    return this.render();
   }
 }
 

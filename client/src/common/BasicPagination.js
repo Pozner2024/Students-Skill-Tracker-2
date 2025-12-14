@@ -9,7 +9,6 @@ class BasicPagination {
     this.currentPage = 0;
     this.container = document.getElementById(containerId);
 
-    // Проверяем, был ли найден контейнер
     if (!this.container) {
       return;
     }
@@ -19,12 +18,10 @@ class BasicPagination {
   }
 
   renderPagination() {
-    // Проверяем, существует ли контейнер перед рендерингом
     if (!this.container) {
       return;
     }
 
-    // Очищаем содержимое контейнера
     this.container.innerHTML = "";
     for (let i = 0; i < this.totalPages; i++) {
       const button = document.createElement("button");
@@ -36,12 +33,10 @@ class BasicPagination {
   }
 
   changePage(pageIndex) {
-    // Проверка на валидный индекс страницы
     if (pageIndex < 0 || pageIndex >= this.totalPages) return;
 
     this.currentPage = pageIndex;
 
-    // Вызываем функцию обратного вызова, если она определена
     if (typeof this.onPageChange === "function") {
       this.onPageChange(pageIndex);
     }
@@ -50,7 +45,6 @@ class BasicPagination {
   }
 
   updateActiveButton() {
-    // Проверяем, существует ли контейнер перед выбором кнопок
     if (!this.container) {
       return;
     }

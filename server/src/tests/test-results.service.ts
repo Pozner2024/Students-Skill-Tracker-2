@@ -21,13 +21,56 @@ export class TestResultsService {
 
     const results = (user?.testResults as TestResult[]) || [];
 
-    results.sort((a, b) => {
+    // 🔹 Получаем все уникальные test_code для загрузки названий из БД
+    const testCodes = new Set<string>();
+    for (const result of results) {
+      if (result?.test_code && typeof result.test_code === 'string') {
+        testCodes.add(result.test_code);
+      }
+    }
+
+    // 🔹 Загружаем названия тестов из базы данных одним запросом
+    const testTitlesMap = new Map<string, string>();
+    if (testCodes.size > 0) {
+      const tests = await this.prisma.tests.findMany({
+        where: {
+          test_code: {
+            in: Array.from(testCodes),
+          },
+        },
+        select: {
+          test_code: true,
+          test_title: true,
+        },
+      });
+
+      // Группируем по test_code, оставляя первое вхождение
+      for (const test of tests) {
+        if (!testTitlesMap.has(test.test_code)) {
+          testTitlesMap.set(test.test_code, test.test_title);
+        }
+      }
+    }
+
+    // 🔹 Добавляем названия тестов к результатам
+    const resultsWithTitles = results.map((result) => {
+      const testCode =
+        result?.test_code && typeof result.test_code === 'string'
+          ? result.test_code
+          : null;
+      return {
+        ...result,
+        test_title: testCode ? (testTitlesMap.get(testCode) ?? null) : null,
+      };
+    });
+
+    resultsWithTitles.sort((a, b) => {
       const aTime = a?.completed_at ? new Date(a.completed_at).getTime() : 0;
       const bTime = b?.completed_at ? new Date(b.completed_at).getTime() : 0;
       return bTime - aTime;
     });
 
-    return results;
+    return resultsWithTitles;
   }
 
   async saveTestResult(userId: number, testResultData: SaveTestResultDto) {

@@ -84,7 +84,9 @@ export default class TopicsRenderer {
           }s;">
             <img src="${selectedPicture}" alt="Изображение темы" class="card-img-top rectangle-image">
             <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Тема: ${topicName}</h5>
+              <h5 class="card-title">
+                <a href="/topic?topicId=${topicId}" class="card-title-link">Тема: ${topicName}</a>
+              </h5>
               <div class="buttons-container mt-auto">
                 <a href="/test-page?variant=1&topicId=${topicId}" class="btn btn-primary mb-2 test-btn w-100">Выполнить тест. Вариант 1</a>
                 <a href="/test-page?variant=2&topicId=${topicId}" class="btn btn-primary mb-2 test-btn w-100">Выполнить тест. Вариант 2</a>

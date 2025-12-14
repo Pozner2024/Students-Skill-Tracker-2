@@ -1,35 +1,72 @@
 #menu {
   margin-top: 5px;
   margin-left: 0;
+  margin-bottom: 0;
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: #5b2d77;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), inset 0 8px 16px rgba(0, 0, 0, 0.8),
-    0 0 20px rgba(255, 255, 255, 0.9), 0 24px 40px rgba(4, 3, 5, 0.9),
-    0 -8px 14px rgba(0, 0, 0, 0.7);
+  background-color: var(--menu-bg);
+  border-bottom: 1px solid var(--menu-border);
+  box-shadow: 0 4px 12px var(--menu-shadow-1),
+    inset 0 2px 6px var(--menu-shadow-2), 0 12px 28px var(--menu-shadow-3);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  padding: 2px 0;
+  padding: 6px 0 8px;
+  min-height: 54px;
+  overflow: visible;
+}
+
+#header + #menu,
+.site-header + #menu {
+  margin-top: 5px;
 }
 
 .menu {
   margin-left: 17px;
 }
 
-/* Bootstrap navbar переопределения */
 .navbar {
+  padding: 0;
+  min-height: auto;
+}
+
+.navbar-nav .nav-link {
+  padding: 0.5rem 0;
+  line-height: 1.5;
+}
+
+#menu .navbar {
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  display: flex;
+  align-items: center;
   padding: 0;
 }
 
+#menu .container-fluid {
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 15px;
+}
+
+#menu .navbar-nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
 .navbar-toggler {
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: var(--menu-border-weak);
   margin-left: auto;
   order: 2;
   display: none;
 }
 
-/* Стили для логотипа в меню */
 .menu-logo-link {
   display: none;
   align-items: center;
@@ -38,12 +75,13 @@
   flex-shrink: 0;
   position: relative;
   z-index: 11;
+  height: 100%;
 }
 
 .menu-logo {
-  height: 60px;
+  max-height: 44px;
+  height: auto;
   width: auto;
-  width: 100%;
   object-fit: contain;
 }
 
@@ -53,9 +91,9 @@
   top: 10px;
   right: 15px;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--menu-border-weak);
   border-radius: 4px;
-  color: white;
+  color: var(--menu-text);
   font-size: 28px;
   line-height: 1;
   padding: 5px 10px;
@@ -75,28 +113,19 @@
 }
 
 .navbar-close-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+  background-color: var(--menu-link-bg-mobile);
+  border-color: var(--menu-border-mid);
 }
 
 .navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-.container-fluid {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-/* Базовые стили для navbar-collapse на десктопе */
 .navbar-collapse {
   order: 1;
   position: relative;
 }
 
-/* Bootstrap navbar стили переопределены для сохранения дизайна */
 .navbar-nav {
   align-items: center;
 }
@@ -106,19 +135,17 @@
   position: relative;
 }
 
-/* Разделители между пунктами меню на десктопе */
 .navbar-nav .nav-item:not(:last-child)::after {
   content: "|";
   position: absolute;
   right: -35px;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--menu-border-mid);
   font-size: 20px;
   pointer-events: none;
 }
 
-/* Убираем разделители на мобильных */
 @media (width < 992px) {
   .navbar-nav .nav-item:not(:last-child)::after {
     content: none;
@@ -127,35 +154,66 @@
 
 .menu-link {
   text-decoration: none;
-  color: #a6e89c;
+  color: var(--menu-link);
   font-size: 20px;
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .menu-link:hover {
   transform: scale(1.2);
-  color: white;
+  color: var(--menu-text);
 }
 
 .menu-link.active {
-  color: white;
+  color: var(--menu-text);
 }
 
-/* Показываем бургер-меню и логотип в меню только на маленьких экранах */
 @media (width < 991px) {
-  .navbar-toggler {
-    display: block;
+  #menu .container-fluid {
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+
+  #menu .navbar-toggler {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: 0;
+    order: 2;
+    position: static;
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
+    box-sizing: border-box;
+    line-height: 1;
+    vertical-align: middle;
+    border: 1px solid var(--menu-border-weak);
+    background: transparent;
   }
 
   .menu-logo-link {
     display: flex;
+    align-items: center;
+    margin-right: 0;
+    order: 1;
+    max-width: calc(100% - 60px);
+    flex-shrink: 1;
+    height: 100%;
   }
 
   .menu-logo {
-    height: 45px;
+    max-height: 35px;
+    height: auto;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
   }
 
-  /* Fullscreen overlay меню на мобильных */
   .navbar-collapse,
   .navbar-collapse.collapse,
   .navbar-collapse.collapsing,
@@ -168,27 +226,25 @@
     bottom: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(91, 45, 119, 0.98);
+    background: var(--menu-overlay-bg);
     backdrop-filter: blur(10px);
     z-index: 10000;
     padding: 80px 20px 40px;
     overflow-y: auto;
     transform: translateX(-100%);
     transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 0 20px var(--menu-overlay-shadow);
     display: block;
     visibility: visible;
     pointer-events: none;
   }
 
-  /* Когда меню открыто, разрешаем взаимодействие */
   .navbar-collapse.show,
   .navbar-collapse.showing,
   .navbar-collapse.collapsing {
     pointer-events: all;
   }
 
-  /* Отключаем стандартную анимацию высоты Bootstrap collapse */
   .navbar-collapse.collapsing {
     height: 100vh;
     transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -201,7 +257,6 @@
     height: 100vh;
   }
 
-  /* Backdrop затемнение фона */
   .navbar-collapse::before {
     content: "";
     position: fixed;
@@ -209,7 +264,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: var(--menu-backdrop);
     z-index: -1;
     opacity: 0;
     transition: opacity 0.15s ease;
@@ -222,7 +277,6 @@
     pointer-events: all;
   }
 
-  /* Улучшенные стили для пунктов меню на мобильных */
   .navbar-nav {
     flex-direction: column;
     width: 100%;
@@ -240,7 +294,6 @@
     transition: opacity 0.4s ease, transform 0.4s ease;
   }
 
-  /* Staggered animation для пунктов меню */
   .navbar-collapse.show .navbar-nav .nav-item,
   .navbar-collapse.showing .navbar-nav .nav-item {
     opacity: 1;
@@ -277,15 +330,14 @@
     transition-delay: 0.35s;
   }
 
-  /* Улучшенные стили для ссылок меню на мобильных */
   .menu-link {
     display: flex;
     padding: 12px 18px;
     font-size: 18px;
     font-weight: 500;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--menu-link-bg-mobile);
+    border: 1px solid var(--menu-link-border-mobile);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
     min-height: 48px;
@@ -296,25 +348,24 @@
   }
 
   .menu-link:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: var(--menu-link-hover-bg-mobile);
+    border-color: var(--menu-link-hover-border-mobile);
     transform: translateX(8px) scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px var(--menu-overlay-shadow);
   }
 
   .menu-link:active {
     transform: translateX(4px) scale(0.98);
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--menu-link-hover-bg-mobile);
   }
 
   .menu-link.active {
-    background: rgba(166, 232, 156, 0.2);
-    border-color: rgba(166, 232, 156, 0.4);
-    color: #a6e89c;
+    background: var(--menu-link-active-bg-mobile);
+    border-color: var(--menu-link-active-border-mobile);
+    color: var(--menu-link);
     font-weight: 600;
   }
 
-  /* Логотип в мобильном меню (только внутри navbar-collapse) */
   .navbar-collapse .menu-logo-link {
     display: flex;
     justify-content: center;
@@ -333,11 +384,10 @@
   }
 
   .menu-logo {
-    max-height: 80px;
+    max-height: 58px;
     height: auto;
   }
 
-  /* Улучшенное позиционирование крестика на мобильных */
   .navbar-close-btn {
     position: fixed;
     top: 16px;
@@ -345,10 +395,10 @@
     width: 50px;
     height: 50px;
     z-index: 10001;
-    background: rgba(91, 45, 119, 0.9);
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: var(--menu-close-bg);
+    border: 2px solid var(--menu-close-border);
     border-radius: 50%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 10px var(--menu-overlay-shadow);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -360,8 +410,8 @@
   }
 
   .navbar-close-btn:hover {
-    background: rgba(91, 45, 119, 1);
-    border-color: rgba(255, 255, 255, 0.8);
+    background: var(--menu-close-bg-hover);
+    border-color: var(--menu-border-mid);
     transform: scale(1.1);
   }
 

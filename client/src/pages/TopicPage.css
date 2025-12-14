@@ -1,9 +1,8 @@
-/* Стили для страницы "О проекте" */
-.about-page p {
+.topic-page p {
   text-indent: 50px;
 }
 
-.about-section-title {
+.topic-section-title {
   margin-top: 2rem;
   margin-bottom: 1rem;
   color: white;
@@ -11,25 +10,25 @@
   font-weight: 600;
 }
 
-.about-images {
+.topic-images {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.about-images img {
+.topic-images img {
   width: 30%;
   border-radius: 8px;
 }
 
 @media (width < 768px) {
-  .about-images {
+  .topic-images {
     flex-direction: column;
     gap: 15px;
     align-items: center;
   }
 
-  .about-images img {
+  .topic-images img {
     width: 100%;
     width: min(100%, 300px);
     height: auto;
@@ -38,7 +37,7 @@
 }
 
 @media (width < 480px) {
-  .about-images img {
+  .topic-images img {
     width: min(100%, 250px);
   }
 }

@@ -1,84 +1,77 @@
-/* Переопределение цветов Bootstrap для возврата исходной цветовой гаммы */
-
-/* Кнопки - возвращаем исходные цвета */
 .btn-primary {
-  background-color: #59b149;
-  border-color: #59b149;
+  background-color: var(--btn-primary-color);
+  border-color: var(--btn-primary-color);
 }
 
 .btn-primary:hover,
 .btn-primary:focus {
-  background-color: #4f2568;
-  border-color: #4f2568;
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
 }
 
 .btn-success {
-  background-color: #59b149;
-  border-color: #59b149;
+  background-color: var(--btn-primary-color);
+  border-color: var(--btn-primary-color);
 }
 
 .btn-success:hover,
 .btn-success:focus {
-  background-color: #4f2568;
-  border-color: #4f2568;
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
 }
 
 .btn-info {
-  background-color: #59b149;
-  border-color: #59b149;
+  background-color: var(--btn-primary-color);
+  border-color: var(--btn-primary-color);
 }
 
 .btn-info:hover,
 .btn-info:focus {
-  background-color: #4f2568;
-  border-color: #4f2568;
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
 }
 
-/* Алерты - адаптируем под цветовую схему, но сохраняем различимость */
 .alert-danger {
-  background-color: rgba(248, 215, 218, 0.9);
-  border-color: #f5c6cb;
-  color: #721c24;
+  background-color: var(--alert-danger-bg);
+  border-color: var(--alert-danger-border);
+  color: var(--alert-danger-text);
 }
 
 .alert-success {
-  background-color: rgba(212, 237, 218, 0.9);
-  border-color: #c3e6cb;
-  color: #155724;
+  background-color: var(--alert-success-bg);
+  border-color: var(--alert-success-border);
+  color: var(--alert-success-text);
 }
 
 .alert-warning {
-  background-color: rgba(255, 243, 205, 0.9);
-  border-color: #ffeaa7;
-  color: #856404;
+  background-color: var(--alert-warning-bg);
+  border-color: var(--alert-warning-border);
+  color: var(--alert-warning-text);
 }
 
 .alert-info {
-  background-color: rgba(209, 236, 241, 0.9);
-  border-color: #bee5eb;
-  color: #0c5460;
+  background-color: var(--alert-info-bg);
+  border-color: var(--alert-info-border);
+  color: var(--alert-info-text);
 }
 
-/* Формы - сохраняем исходные цвета */
 .form-control:focus {
-  border-color: #59b149;
-  box-shadow: 0 0 0 0.25rem rgba(89, 177, 73, 0.25);
+  border-color: var(--btn-primary-color);
+  box-shadow: 0 0 0 0.25rem var(--btn-primary-hover-shadow);
 }
 
-/* Navbar - сохраняем исходные цвета */
 .navbar-nav .nav-link {
-  color: #a6e89c;
+  color: var(--nav-link-color);
 }
 
 .navbar-nav .nav-link:hover {
-  color: white;
+  color: var(--nav-link-hover-color);
 }
 
 .navbar-nav .nav-link.active {
-  color: white;
+  color: var(--nav-link-active-color);
 }
 
-/* Bootstrap карточки - фиолетовый фон */
 .card {
   background-color: transparent;
 }
@@ -87,35 +80,31 @@
   background-color: transparent;
 }
 
-/* Bootstrap контейнеры - прозрачный фон */
 .container,
 .container-fluid {
   background-color: transparent;
 }
 
-/* Bootstrap таблицы - фиолетовый фон */
 .table {
   background-color: transparent;
-  color: white;
+  color: var(--table-text-color);
 }
 
 .table tbody tr {
   background-color: transparent;
-  color: white;
+  color: var(--table-text-color);
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) > td {
-  background-color: rgba(79, 37, 104, 0.3);
-  color: white;
+  background-color: var(--table-striped-bg);
+  color: var(--table-text-color);
 }
 
-/* Таблицы - белый текст */
 table {
-  color: white;
+  color: var(--table-text-color);
 }
 
 td,
 th {
-  color: white;
+  color: var(--table-text-color);
 }
-

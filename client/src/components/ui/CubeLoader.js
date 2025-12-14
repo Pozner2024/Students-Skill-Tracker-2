@@ -1,31 +1,37 @@
-export default class CubeLoader {
-  constructor() {
-    this.loaderContainer = null;
-  }
+// Модуль для управления индикатором загрузки (кубик)
+// Использует замыкание для хранения состояния контейнера
 
-  show() {
-    if (this.loaderContainer) return;
+function createCubeLoader() {
+  let loaderContainer = null;
 
-    // Создаем контейнер для лоадера
-    this.loaderContainer = document.createElement("div");
-    this.loaderContainer.className = "cube-loader-container"; // Основной контейнер для лоадера
+  return {
+    // Показывает индикатор загрузки
+    show() {
+      if (loaderContainer) return;
 
-    // Вставляем HTML разметку в контейнер с помощью строки
-    this.loaderContainer.innerHTML = `
-      <div class="content">
-        <div class="cube"></div>
-      </div>
-    `;
+      // Создаем контейнер для лоадера
+      loaderContainer = document.createElement("div");
+      loaderContainer.className = "cube-loader-container";
 
-    // Добавляем контейнер в body
-    document.body.appendChild(this.loaderContainer);
-  }
+      // Вставляем HTML разметку в контейнер
+      loaderContainer.innerHTML = `
+        <div class="content">
+          <div class="cube"></div>
+        </div>
+      `;
 
-  hide() {
-    if (this.loaderContainer) {
-      document.body.removeChild(this.loaderContainer);
-      this.loaderContainer = null;
-    }
-  }
+      // Добавляем контейнер в body
+      document.body.appendChild(loaderContainer);
+    },
+
+    // Скрывает индикатор загрузки
+    hide() {
+      if (loaderContainer) {
+        document.body.removeChild(loaderContainer);
+        loaderContainer = null;
+      }
+    },
+  };
 }
 
+export default createCubeLoader;

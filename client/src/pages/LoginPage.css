@@ -20,7 +20,7 @@
 }
 
 .main-container {
-  background-color: #4f2568;
+  background-color: var(--color-bg);
   width: min(100%, 1200px);
   margin: 0 auto;
   padding: 40px;
@@ -127,7 +127,7 @@
 }
 
 .submit-btn:hover {
-  background-color: #4f2568;
+  background-color: var(--color-bg);
 }
 
 /* Убираем синий цвет при клике на кнопки Bootstrap */
@@ -135,22 +135,22 @@
 .btn-primary:focus-visible,
 .btn-success:focus,
 .btn-success:focus-visible {
-  background-color: #59b149 !important;
-  border-color: #59b149 !important;
-  box-shadow: none !important;
-  outline: none !important;
+  background-color: #59b149;
+  border-color: #59b149;
+  box-shadow: none;
+  outline: none;
 }
 
 .btn-primary:active {
-  background-color: #4f2568 !important;
-  border-color: #4f2568 !important;
-  box-shadow: none !important;
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
+  box-shadow: none;
 }
 
 .btn-success:active {
-  background-color: #4f2568 !important;
-  border-color: #4f2568 !important;
-  box-shadow: none !important;
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
+  box-shadow: none;
 }
 
 .logo {
@@ -407,7 +407,7 @@
 
 /* Стили для индикатора силы пароля */
 .password-strength-indicator {
-  display: none;
+  display: flex;
   align-items: center;
   gap: 8px;
   margin-top: 8px;
@@ -415,6 +415,10 @@
   border-radius: 6px;
   font-size: 12px;
   transition: all 0.3s ease;
+}
+
+.password-strength-indicator.hidden {
+  display: none;
 }
 
 .password-strength-indicator.incomplete {

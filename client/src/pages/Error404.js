@@ -11,7 +11,6 @@ class Error404Page extends Page {
     });
   }
 
-  // Метод для очистки динамического контента
   cleanDynamicContent() {
     const root = document.getElementById("root");
     if (root) {
@@ -21,10 +20,9 @@ class Error404Page extends Page {
     }
   }
 
-  // Метод для рендеринга страницы
   renderPage() {
-    this.cleanDynamicContent(); // Очищаем динамическую часть
-    return this.render(); // Возвращаем HTML-код без прямого изменения DOM
+    this.cleanDynamicContent();
+    return this.render();
   }
 }
 

@@ -18,6 +18,7 @@ export interface TestResult {
   grade?: number | null;
   completed_at?: string | Date | null;
   test_code?: string | null;
+  test_title?: string | null; // Название теста из базы данных
   answers_details?: any[];
   score?: number | null;
   total_questions?: number | null;

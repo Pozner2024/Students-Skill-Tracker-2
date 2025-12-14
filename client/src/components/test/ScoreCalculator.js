@@ -249,7 +249,41 @@ class ScoreCalculator {
     ).length;
     return totalQuestions ? (answeredQuestionsCount / totalQuestions) * 100 : 0;
   }
+
+  // Получает оценку на основе набранных баллов
+  getGrade(totalScore, questionCount) {
+    const gradingScale = {
+      10: [
+        [1, 20, 1],
+        [21, 40, 2],
+        [41, 50, 3],
+        [51, 60, 4],
+        [61, 70, 5],
+        [71, 80, 6],
+        [81, 85, 7],
+        [86, 90, 8],
+        [91, 95, 9],
+        [96, 100, 10],
+      ],
+      15: [
+        [1, 20, 1],
+        [21, 40, 2],
+        [41, 50, 3],
+        [51, 60, 4],
+        [61, 70, 5],
+        [71, 80, 6],
+        [81, 85, 7],
+        [86, 90, 8],
+        [91, 95, 9],
+        [96, 100, 10],
+      ],
+    };
+    return (
+      gradingScale[questionCount]?.find(
+        ([min, max]) => totalScore >= min && totalScore <= max
+      )?.[2] || "Пройдите тест еще раз"
+    );
+  }
 }
 
 export default ScoreCalculator;
-

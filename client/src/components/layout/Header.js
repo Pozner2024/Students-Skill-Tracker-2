@@ -1,11 +1,15 @@
 import Section from "../../common/Section";
 import logo from "../../assets/logo_vgik.png";
-import CubeLoader from "../ui/CubeLoader";
+import createCubeLoader from "../ui/CubeLoader";
 
 export default class Header extends Section {
   constructor() {
     super({ id: "header", customClass: "site-header" });
-    this.cubeLoader = new CubeLoader(); // Создаем экземпляр CubeLoader
+    this.cubeLoader = createCubeLoader();
+    this.handleWindowLoad = this.handleWindowLoad.bind(this);
+    this.handleLogoClick = this.handleLogoClick.bind(this);
+    this.isLoadListenerAttached = false;
+    this.logoElement = null;
   }
 
   render() {
@@ -24,29 +28,46 @@ export default class Header extends Section {
   }
 
   afterRender() {
-    // Показываем лоадер сразу после рендеринга
+    this.removeListeners();
+
     this.cubeLoader.show();
 
-    // Ждем загрузку страницы и скрываем лоадер
-    window.addEventListener("load", () => {
-      this.cubeLoader.hide();
-    });
+    window.addEventListener("load", this.handleWindowLoad, { once: true });
+    this.isLoadListenerAttached = true;
 
-    const logoElement = document.querySelector(".logo-link");
+    this.logoElement = document.querySelector(".logo-link");
 
-    if (logoElement) {
-      logoElement.addEventListener("click", async (event) => {
-        event.preventDefault();
+    if (this.logoElement) {
+      this.logoElement.addEventListener("click", this.handleLogoClick);
+    }
+  }
 
-        // Используем роутер вместо полной перезагрузки страницы
-        const currentPath = window.location.pathname;
-        if (currentPath !== "/") {
-          window.history.pushState({}, "", "/");
-          // Импортируем роутер динамически, чтобы избежать циклических зависимостей
-          const Router = (await import("../../router/index.js")).default;
-          await Router("content");
-        }
-      });
+  handleWindowLoad() {
+    this.cubeLoader.hide();
+    this.isLoadListenerAttached = false;
+  }
+
+  async handleLogoClick(event) {
+    event.preventDefault();
+
+    const currentPath = window.location.pathname;
+    if (currentPath !== "/") {
+      window.history.pushState({}, "", "/");
+
+      const Router = (await import("../../router/index.js")).default;
+      await Router("content");
+    }
+  }
+
+  removeListeners() {
+    if (this.isLoadListenerAttached) {
+      window.removeEventListener("load", this.handleWindowLoad);
+      this.isLoadListenerAttached = false;
+    }
+
+    if (this.logoElement) {
+      this.logoElement.removeEventListener("click", this.handleLogoClick);
+      this.logoElement = null;
     }
   }
 }

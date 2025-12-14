@@ -1,4 +1,8 @@
 /* Стили для страницы контактов */
+.contacts {
+  overflow-x: hidden; /* предотвращает горизонтальный скролл и расширение меню */
+}
+
 .contacts p {
   font-size: 1.2em;
   color: white;
@@ -25,6 +29,11 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  max-width: 100%;
+}
+
+.contacts .table-responsive {
+  overflow-x: hidden;
 }
 
 .contact-table td {
@@ -33,6 +42,31 @@
   vertical-align: top;
   color: white;
   width: 50%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+@media (width < 768px) {
+  .contact-table,
+  .contact-table tbody,
+  .contact-table tr,
+  .contact-table td {
+    display: block;
+    width: 100% !important;
+  }
+
+  .contact-table tr {
+    border: 0;
+  }
+
+  .contact-table td {
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .contact-table .horizontal-line {
+    display: none;
+  }
 }
 
 /* Горизонтальная линия */
@@ -78,8 +112,7 @@
 }
 
 .contact-table.table thead th {
-  background-color: #5b2d77;
+  background-color: var(--color-heading-bg);
   color: white;
   border-color: white;
 }
-

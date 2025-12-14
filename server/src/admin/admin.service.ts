@@ -49,19 +49,57 @@ export class AdminService {
       testResults: Array.isArray(u.testResults) ? u.testResults : [],
     }));
 
+    // 🔹 Получаем все уникальные test_code из всех результатов для загрузки названий из БД
+    const allTestCodes = new Set<string>();
+    for (const u of processedUsers) {
+      const results = Array.isArray(u.testResults) ? u.testResults : [];
+      for (const r of results) {
+        const result = r as Record<string, unknown>;
+        const testCode =
+          typeof result.test_code === 'string' ? result.test_code : null;
+        if (testCode) {
+          allTestCodes.add(testCode);
+        }
+      }
+    }
+
+    // 🔹 Загружаем названия тестов из базы данных одним запросом
+    const testTitlesMap = new Map<string, string>();
+    if (allTestCodes.size > 0) {
+      const tests = await this.prisma.tests.findMany({
+        where: {
+          test_code: {
+            in: Array.from(allTestCodes),
+          },
+        },
+        select: {
+          test_code: true,
+          test_title: true,
+        },
+      });
+
+      // Группируем по test_code, оставляя первое вхождение (название одинаковое для всех вариантов)
+      for (const test of tests) {
+        if (!testTitlesMap.has(test.test_code)) {
+          testTitlesMap.set(test.test_code, test.test_title);
+        }
+      }
+    }
+
     // 🔹 Возвращаем все результаты тестов студента, отсортированные по дате (от новых к старым)
+    // Добавляем названия тестов из базы данных
     const getAllTestResults = (results: unknown[]): TestResult[] => {
       return results
         .map((r: unknown): TestResult => {
           const result = r as Record<string, unknown>;
+          const testCode =
+            typeof result.test_code === 'string' ? result.test_code : null;
           return {
             grade:
               (typeof result.grade === 'number' ? result.grade : null) ?? null,
             completed_at: (result.completed_at as string | Date | null) ?? null,
-            test_code:
-              (typeof result.test_code === 'string'
-                ? result.test_code
-                : null) ?? null,
+            test_code: testCode,
+            test_title: testCode ? testTitlesMap.get(testCode) ?? null : null, // Добавляем название из БД
             answers_details:
               (Array.isArray(result.answers_details)
                 ? result.answers_details

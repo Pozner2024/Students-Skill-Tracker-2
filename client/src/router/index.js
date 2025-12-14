@@ -1,8 +1,5 @@
-/**
- * Улучшенный роутер
- * Использует конфигурацию маршрутов и middleware
- */
-
+// Роутер приложения: управляет маршрутизацией, применяет middleware
+// для проверки авторизации и прав доступа, рендерит соответствующие компоненты страниц
 import authService from "../services/authService.js";
 import errorHandler from "../services/errorHandler.js";
 import {
@@ -13,16 +10,10 @@ import {
   specialRouteMiddleware,
 } from "./routerConfig.js";
 
-/**
- * Функция выхода пользователя
- */
 const logoutUser = () => {
   authService.logout();
 };
 
-/**
- * Обновление активной ссылки в меню
- */
 const setActiveLink = (path = "/") => {
   const links = document.querySelectorAll(".menu-link");
   links.forEach((link) => {
@@ -30,26 +21,18 @@ const setActiveLink = (path = "/") => {
   });
 };
 
-/**
- * Получение текущего пути из URL
- */
 const getCurrentPath = () => {
-  let path = window.location.pathname || "/";
+  const path = window.location.pathname || "/";
   return path.endsWith("/") && path !== "/" ? path.slice(0, -1) : path;
 };
 
-/**
- * Применение middleware для маршрута
- */
 const applyMiddleware = async (path, component, user = null) => {
-  // Проверка авторизации
   const isAuthenticated = authService.isAuthenticated();
   const authResult = await authMiddleware(path, isAuthenticated);
   if (authResult) {
     return authResult;
   }
 
-  // Проверка прав администратора
   if (user) {
     const adminResult = await adminRedirectMiddleware(path, user);
     if (adminResult) {
@@ -57,7 +40,6 @@ const applyMiddleware = async (path, component, user = null) => {
     }
   }
 
-  // Специальная обработка маршрутов
   const specialResult = specialRouteMiddleware(path, component);
   if (specialResult) {
     return specialResult;
@@ -66,13 +48,9 @@ const applyMiddleware = async (path, component, user = null) => {
   return null;
 };
 
-/**
- * Рендеринг компонента с обработкой ошибок
- */
 const renderComponent = async (component, root, initialPath) => {
   document.title = component.metaTitle || "Default Title";
 
-  // Специальная обработка для страницы логина
   if (
     component.renderPage &&
     typeof component.renderPage === "function" &&
@@ -82,13 +60,11 @@ const renderComponent = async (component, root, initialPath) => {
     return;
   }
 
-  // Специальная обработка для главной страницы
   if (component.constructor.name === "HomePage") {
     await component.renderPage();
     return;
   }
 
-  // Специальная обработка для TestPage
   if (component.constructor.name === "TestPage") {
     component.renderPage("Данные загружаются...", "Данные загружаются...");
     if (component.init && typeof component.init === "function") {
@@ -99,11 +75,9 @@ const renderComponent = async (component, root, initialPath) => {
     return;
   }
 
-  // Обычная обработка для остальных страниц
   try {
     const pageContent = await component.renderPage();
 
-    // Проверяем, не изменился ли маршрут во время рендеринга
     if (window.location.pathname !== initialPath) {
       return;
     }
@@ -117,10 +91,8 @@ const renderComponent = async (component, root, initialPath) => {
       );
     }
 
-    // Инициализация компонента
     if (component.init && typeof component.init === "function") {
       if (component.constructor.name === "AdminPage") {
-        // Асинхронная инициализация для AdminPage
         component.init().catch((error) => {
           errorHandler.handle(error, "AdminPage.init");
         });
@@ -152,9 +124,6 @@ const renderComponent = async (component, root, initialPath) => {
   }
 };
 
-/**
- * Основная функция роутера
- */
 const Router = async (container = "content") => {
   const root = document.getElementById(container);
   if (!root) {
@@ -163,22 +132,18 @@ const Router = async (container = "content") => {
 
   let path = getCurrentPath();
 
-  // Обработка выхода
   if (path === "/logout") {
     logoutUser();
     return;
   }
 
-  // Получаем конфигурацию маршрута
   const routeConfig = getRoute(path);
   let component = routeConfig.component;
 
-  // Устанавливаем metaTitle из конфигурации маршрута, если компонент его не имеет
   if (routeConfig.metaTitle && !component.metaTitle) {
     component.metaTitle = routeConfig.metaTitle;
   }
 
-  // Получаем данные пользователя для middleware
   let user = null;
   if (authService.isAuthenticated()) {
     try {
@@ -191,7 +156,6 @@ const Router = async (container = "content") => {
     }
   }
 
-  // Применяем middleware
   const middlewareResult = await applyMiddleware(path, component, user);
   if (middlewareResult) {
     if (middlewareResult.redirect) {
@@ -200,28 +164,22 @@ const Router = async (container = "content") => {
     }
     if (middlewareResult.component) {
       component = middlewareResult.component;
-      // Устанавливаем metaTitle для компонента из middleware, если нужно
       if (routeConfig.metaTitle && !component.metaTitle) {
         component.metaTitle = routeConfig.metaTitle;
       }
     }
   }
 
-  // Рендерим компонент
   const initialPath = window.location.pathname;
   await renderComponent(component, root, initialPath);
 
-  // Обновляем активные ссылки в меню
   setActiveLink(path);
 };
 
-// Инициализация роутера при загрузке страницы
-window.addEventListener("load", async () => await Router());
+window.addEventListener("load", Router);
 
-// Перерисовка контента при изменении истории
-window.addEventListener("popstate", async () => await Router());
+window.addEventListener("popstate", Router);
 
-// Функция для перенаправления после успешного входа
 export const loginAndRedirect = async () => {
   window.history.pushState({}, "", "/");
   await Router();

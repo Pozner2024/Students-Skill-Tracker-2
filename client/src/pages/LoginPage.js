@@ -1,4 +1,4 @@
-import CubeLoader from "../components/ui/CubeLoader";
+import createCubeLoader from "../components/ui/CubeLoader";
 import SuccessModal from "../components/modals/SuccessModal";
 import authService from "../services/authService";
 import errorHandler from "../services/errorHandler.js";
@@ -37,18 +37,18 @@ export function renderLoginPage() {
                 <label for="password" class="form-label">Пароль</label>
                 <div class="password-input-wrapper position-relative">
                   <input type="password" class="form-control" id="password" placeholder="******" required>
-                  <button type="button" id="password-toggle" class="btn btn-link password-toggle-btn position-absolute top-50 end-0 translate-middle-y" aria-label="Показать пароль" style="text-decoration: none; padding: 0.375rem 0.75rem;">
-                    <svg class="eye-icon eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                  <button type="button" id="password-toggle" class="btn btn-link password-toggle-btn position-absolute top-50 end-0 translate-middle-y" aria-label="Показать пароль">
+                    <svg class="eye-icon eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
                       <line x1="1" y1="1" x2="23" y2="23"/>
                     </svg>
-                    <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; display: none;">
+                    <svg class="eye-icon eye-open hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                       <circle cx="12" cy="12" r="3"/>
                     </svg>
                   </button>
                 </div>
-                <div class="password-strength-indicator mt-2" id="password-indicator" style="display: none;">
+                <div class="password-strength-indicator mt-2 hidden" id="password-indicator">
                   <span class="indicator-text">Ровно 6 символов:</span>
                   <div class="stars-container">
                     <span class="star">★</span>
@@ -78,7 +78,7 @@ export function renderLoginPage() {
   pageBackground.style.backgroundRepeat = "no-repeat";
 
   // Создаем экземпляр лоадера
-  const loader = new CubeLoader();
+  const loader = createCubeLoader();
 
   // Обработчики для кнопок
   document
@@ -194,14 +194,14 @@ function togglePasswordVisibility() {
   if (passwordInput.type === "password") {
     // Показываем пароль
     passwordInput.type = "text";
-    eyeClosed.style.display = "none";
-    eyeOpen.style.display = "block";
+    eyeClosed.classList.add("hidden");
+    eyeOpen.classList.remove("hidden");
     toggleBtn.setAttribute("aria-label", "Скрыть пароль");
   } else {
     // Скрываем пароль
     passwordInput.type = "password";
-    eyeClosed.style.display = "block";
-    eyeOpen.style.display = "none";
+    eyeClosed.classList.remove("hidden");
+    eyeOpen.classList.add("hidden");
     toggleBtn.setAttribute("aria-label", "Показать пароль");
   }
 }
@@ -231,7 +231,8 @@ function updatePasswordIndicator() {
 
   // Показываем индикатор только если пользователь начал вводить пароль
   if (passwordLength > 0) {
-    indicator.style.display = "flex";
+    indicator.classList.remove("hidden");
+    indicator.classList.add("show-flex");
 
     // Обновляем звездочки
     stars.forEach((star, index) => {
@@ -257,6 +258,7 @@ function updatePasswordIndicator() {
     }
   } else {
     // Скрываем индикатор если поле пустое
-    indicator.style.display = "none";
+    indicator.classList.add("hidden");
+    indicator.classList.remove("show-flex");
   }
 }

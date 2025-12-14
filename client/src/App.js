@@ -18,7 +18,7 @@ import "./pages/Contacts.css";
 import "./pages/About.css";
 import "./pages/Home.css";
 import "./pages/Admin.css";
-import "./common/animations.css";
+import "./pages/TopicPage.css";
 
 const App = (root) => {
   // Обозначаем id контейнера для отрисовки страниц

@@ -1,8 +1,10 @@
 import TestQuestion from "../components/test/TestQuestion";
 import Pagination from "../components/ui/Pagination";
-import CubeLoader from "../components/ui/CubeLoader"; // Импортируем CubeLoader
-import background from "../assets/background1.jpg"; // Импортируем фон
+import createCubeLoader from "../components/ui/CubeLoader";
+import background from "../assets/background1.jpg";
 
+// Страница прохождения теста: инициализирует компоненты вопросов и пагинации,
+// управляет навигацией между вопросами и обработкой ответов пользователя
 class TestPage {
   constructor({
     id = "test-page",
@@ -14,7 +16,7 @@ class TestPage {
     this.metaTitle = metaTitle;
     this.testQuestion = null;
     this.pagination = null;
-    this.loader = new CubeLoader(); // Создаем экземпляр лоадера
+    this.loader = createCubeLoader();
   }
 
   renderPageStructure(
@@ -37,7 +39,7 @@ class TestPage {
             <button id="nextButton" class="nav-button">Вперед</button>
             <button id="finishButton" class="nav-button finish-button">Завершить тест и показать результаты теста</button>
           </div>
-        </div> <!-- Закрывающий тег для test-page-styles -->
+        </div>
       </main>
     `;
   }
@@ -56,8 +58,6 @@ class TestPage {
     if (contentElement) {
       contentElement.innerHTML = this.renderPageStructure(title, variant);
 
-      // Устанавливаем фон через JavaScript. Пришлось вынести фон из CSS в JS, т.к. при деплое,
-      // в первом случае (через CSS) он не отображался
       const testPageStyles = contentElement.querySelector(".test-page-styles");
       if (testPageStyles) {
         testPageStyles.style.backgroundImage = `url(${background})`;
@@ -69,12 +69,11 @@ class TestPage {
   }
 
   async init() {
-    this.loader.show(); // Показываем лоадер перед загрузкой данных
+    this.loader.show();
 
     try {
       this.renderLoadingPage();
 
-      // Ждем, пока DOM будет готов
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       this.testQuestion = new TestQuestion("questions-panel");
@@ -85,10 +84,8 @@ class TestPage {
 
       this.renderPage(title, variant);
 
-      // Дополнительная проверка DOM готовности
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Проверяем, что navigator и testInstance инициализированы в TestQuestion перед его использованием
       if (this.testQuestion.navigator && this.testQuestion.testInstance) {
         const totalQuestions = this.testQuestion.getTotalQuestions();
 
@@ -106,7 +103,6 @@ class TestPage {
             this.testQuestion.navigator.currentQuestionIndex
           );
 
-          // Безопасная привязка событий
           const prevButton = document.getElementById("prevButton");
           const nextButton = document.getElementById("nextButton");
           const finishButton = document.getElementById("finishButton");
@@ -137,7 +133,6 @@ class TestPage {
         }
       }
     } catch (error) {
-      // Ошибка при инициализации теста
     } finally {
       this.loader.hide();
     }

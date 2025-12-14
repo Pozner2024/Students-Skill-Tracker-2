@@ -2,11 +2,10 @@
 // // управление ответами, оценку результатов и отображение прогресса.
 
 import TestLoader from "./TestLoader";
-import AnswerManager from "./AnswerManager";
-import QuestionRenderer from "./QuestionRenderer";
+import createAnswerManager from "./AnswerManager";
+import questionRenderer from "./QuestionRenderer";
 import QuestionNavigator from "./QuestionNavigator";
 import ScoreCalculator from "./ScoreCalculator";
-import ResultDisplay from "./ResultDisplay";
 import SkillProgressBar from "../ui/SkillProgressBar";
 import CloudImageLoader from "../ui/CloudImageLoader"; // Импортируем CloudImageLoader
 
@@ -15,11 +14,9 @@ class TestQuestion {
     this.containerId = containerId;
     this.testLoader = TestLoader.getInstance(); // Используем Singleton паттерн
     this.testInstance = null;
-    this.answerManager = new AnswerManager();
-    this.questionRenderer = new QuestionRenderer(this.answerManager);
+    this.answerManager = createAnswerManager();
     this.navigator = null;
     this.scoreCalculator = null;
-    this.resultDisplay = null;
     this.imageLoader = null; // Добавляем свойство для ImageLoader
     this.topicName = null; // Свойство для хранения названия темы
   }
@@ -87,9 +84,8 @@ class TestQuestion {
         return;
       }
 
-      // Инициализируем ScoreCalculator и ResultDisplay
+      // Инициализируем ScoreCalculator
       this.scoreCalculator = new ScoreCalculator(this.testInstance);
-      this.resultDisplay = new ResultDisplay(this.testInstance);
 
       // Инициализируем QuestionNavigator с проверками
       this.navigator = new QuestionNavigator(
@@ -160,14 +156,15 @@ class TestQuestion {
     // Рендерим HTML для текущего вопроса, включая изображение (если оно есть)
     container.innerHTML =
       `<h3>Вопрос ${index + 1} из ${questions.length}</h3>` +
-      this.questionRenderer.renderQuestionHTML(
+      questionRenderer.renderQuestionHTML(
         questions[index],
         index,
-        imagePath
-      ); // Передаем imagePath в renderQuestionHTML
+        imagePath,
+        this.answerManager
+      ); // Передаем imagePath и answerManager в renderQuestionHTML
 
     // Добавляем обработчики для ответов
-    this.questionRenderer.addAnswerHandlers(container, index);
+    questionRenderer.addAnswerHandlers(container, index, this.answerManager);
 
     // Добавляем CSS анимацию появления вопроса
     // Используем небольшую задержку для плавности
@@ -225,14 +222,11 @@ class TestQuestion {
       return;
     }
 
-    // Отображаем страницу с результатами
-    this.resultDisplay.displayResultsPage(totalScore);
-
     // Создаем и отображаем шкалу прогресса навыка
     const skillProgressBar = new SkillProgressBar(
       answeredPercentage,
       totalScore,
-      this.resultDisplay.getGrade(
+      this.scoreCalculator.getGrade(
         totalScore,
         this.testInstance.questions.length
       ),
@@ -252,7 +246,7 @@ class TestQuestion {
         maxPoints > 0 ? Math.round((totalScore / maxPoints) * 100) : 0;
 
       // Рассчитываем итоговую оценку (grade)
-      const grade = this.resultDisplay.getGrade(totalScore, totalQuestions);
+      const grade = this.scoreCalculator.getGrade(totalScore, totalQuestions);
 
       const testResultData = {
         testCode: testCode,
@@ -266,7 +260,9 @@ class TestQuestion {
       };
 
       // Импортируем authService динамически, чтобы избежать циклических зависимостей
-      const { default: authService } = await import("../../services/authService.js");
+      const { default: authService } = await import(
+        "../../services/authService.js"
+      );
 
       await authService.saveTestResult(testResultData);
     } catch (error) {
@@ -276,4 +272,3 @@ class TestQuestion {
 }
 
 export default TestQuestion;
-

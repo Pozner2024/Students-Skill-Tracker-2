@@ -1,8 +1,4 @@
-/**
- * Конфигурация маршрутов
- * Централизованное определение всех маршрутов приложения
- */
-
+// Конфигурация маршрутов приложения: определение всех маршрутов, middleware для проверки авторизации и прав доступа
 import Home from "../pages/Home.js";
 import About from "../pages/About.js";
 import Contacts from "../pages/Contacts.js";
@@ -11,19 +7,12 @@ import ProfilePage from "../pages/Profile.js";
 import AdminPage from "../pages/Admin.js";
 import Error404 from "../pages/Error404.js";
 import TestPage from "../pages/TestPage.js";
+import TopicPage from "../pages/TopicPage.js";
 import { renderLoginPage } from "../pages/LoginPage.js";
 
-/**
- * Middleware для проверки авторизации
- * @param {string} path - Путь маршрута
- * @param {boolean} isAuthenticated - Авторизован ли пользователь
- * @returns {object|null} Редирект или null
- */
 export const authMiddleware = async (path, isAuthenticated) => {
-  // Публичные маршруты (не требуют авторизации)
   const publicRoutes = ["/login", "/about", "/contacts"];
 
-  // Если пользователь не авторизован и пытается попасть на защищенный маршрут
   if (!isAuthenticated && !publicRoutes.includes(path)) {
     return {
       redirect: "/login",
@@ -31,7 +20,6 @@ export const authMiddleware = async (path, isAuthenticated) => {
     };
   }
 
-  // Если пользователь авторизован и пытается попасть на страницу логина
   if (isAuthenticated && path === "/login") {
     return {
       redirect: "/",
@@ -42,14 +30,7 @@ export const authMiddleware = async (path, isAuthenticated) => {
   return null;
 };
 
-/**
- * Middleware для проверки прав доступа (админ)
- * @param {string} path - Путь маршрута
- * @param {object} user - Данные пользователя
- * @returns {object|null} Редирект или null
- */
 export const adminRedirectMiddleware = async (path, user) => {
-  // Если пользователь админ и пытается попасть на /profile
   if (path === "/profile" && user?.role === "admin") {
     return {
       redirect: "/admin",
@@ -60,18 +41,10 @@ export const adminRedirectMiddleware = async (path, user) => {
   return null;
 };
 
-/**
- * Middleware для специальной обработки маршрутов
- * @param {string} path - Путь маршрута
- * @param {object} component - Компонент маршрута
- * @returns {object|null} Модифицированный компонент или null
- */
 export const specialRouteMiddleware = (path, component) => {
-  // Специальная обработка для TestPage
   if (component.constructor.name === "TestPage") {
     const urlParams = new URLSearchParams(window.location.search);
-    const hasTestParams =
-      urlParams.has("topicId") || urlParams.has("testCode");
+    const hasTestParams = urlParams.has("topicId") || urlParams.has("testCode");
 
     if (!hasTestParams) {
       return {
@@ -96,9 +69,6 @@ export const specialRouteMiddleware = (path, component) => {
   return null;
 };
 
-/**
- * Конфигурация маршрутов
- */
 export const routes = {
   "/": {
     component: Home,
@@ -137,6 +107,11 @@ export const routes = {
     metaTitle: "Тест",
     middleware: [specialRouteMiddleware],
   },
+  "/topic": {
+    component: TopicPage,
+    public: false,
+    metaTitle: "Информация о теме",
+  },
   "/login": {
     component: { renderPage: () => renderLoginPage() },
     public: true,
@@ -144,11 +119,6 @@ export const routes = {
   },
 };
 
-/**
- * Получить компонент для маршрута
- * @param {string} path - Путь маршрута
- * @returns {object} Конфигурация маршрута или 404
- */
 export const getRoute = (path) => {
   const route = routes[path];
   if (route) {
@@ -161,11 +131,9 @@ export const getRoute = (path) => {
     };
   }
 
-  // 404
   return {
     component: new Error404(),
     public: false,
     metaTitle: "Страница не найдена",
   };
 };
-

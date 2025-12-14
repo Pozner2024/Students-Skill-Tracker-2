@@ -1,32 +1,30 @@
-// Этот класс AnswerManager предназначен для управления ответами пользователя во время
-//  прохождения теста. Он предоставляет методы для сохранения, получения, удаления и
-//  извлечения всех ответов пользователя.
+// Модуль для управления ответами пользователя во время прохождения теста.
+// Использует фабричную функцию для создания изолированного хранилища ответов.
 
-class AnswerManager {
-  constructor() {
-    this.answers = {}; // Объект для хранения ответов пользователя
-  }
+function createAnswerManager() {
+  const answers = {}; // Объект для хранения ответов пользователя
 
-  // Метод для сохранения ответа на определенный вопрос
-  saveAnswer(questionIndex, answerValue) {
-    this.answers[questionIndex] = answerValue;
-  }
+  return {
+    // Сохраняет ответ на определенный вопрос
+    saveAnswer(questionIndex, answerValue) {
+      answers[questionIndex] = answerValue;
+    },
 
-  // Метод для получения ответа на определенный вопрос
-  getAnswer(questionIndex) {
-    return this.answers[questionIndex];
-  }
+    // Получает ответ на определенный вопрос
+    getAnswer(questionIndex) {
+      return answers[questionIndex];
+    },
 
-  // Метод для получения всех ответов пользователя
-  getAllAnswers() {
-    return this.answers;
-  }
+    // Получает все ответы пользователя
+    getAllAnswers() {
+      return { ...answers }; // Возвращаем копию для предотвращения мутаций
+    },
 
-  // Метод для очистки всех ответов пользователя
-  clearAnswers() {
-    this.answers = {};
-  }
+    // Очищает все ответы пользователя
+    clearAnswers() {
+      Object.keys(answers).forEach((key) => delete answers[key]);
+    },
+  };
 }
 
-export default AnswerManager;
-
+export default createAnswerManager;

@@ -11,8 +11,9 @@ function showBootstrapAlert(message, type = "info") {
 
   // Создаем контейнер для алерта
   const alertContainer = document.createElement("div");
-  alertContainer.className = "bootstrap-alert-container position-fixed top-0 start-50 translate-middle-x mt-3";
-  alertContainer.style.zIndex = "9999";
+  alertContainer.className =
+    "bootstrap-alert-container position-fixed top-0 start-50 translate-middle-x mt-3";
+  alertContainer.classList.add("bootstrap-alert-container");
 
   // Создаем алерт
   const alertDiv = document.createElement("div");
@@ -150,8 +151,8 @@ class ProfilePage extends Page {
                 user.fullName
               )}">${this.escapeHtml(user.fullName)}</span>
               <button class="edit-btn" data-field="fullName">Редактировать</button>
-              <button class="save-btn-field" data-field="fullName" style="display: none;">Сохранить</button>
-              <button class="cancel-btn-field" data-field="fullName" style="display: none;">Отмена</button>
+              <button class="save-btn-field hidden" data-field="fullName">Сохранить</button>
+              <button class="cancel-btn-field hidden" data-field="fullName">Отмена</button>
             </div>
           `
               : ""
@@ -165,8 +166,8 @@ class ProfilePage extends Page {
                 user.groupNumber
               )}">${this.escapeHtml(user.groupNumber)}</span>
               <button class="edit-btn" data-field="groupNumber">Редактировать</button>
-              <button class="save-btn-field" data-field="groupNumber" style="display: none;">Сохранить</button>
-              <button class="cancel-btn-field" data-field="groupNumber" style="display: none;">Отмена</button>
+              <button class="save-btn-field hidden" data-field="groupNumber">Сохранить</button>
+              <button class="cancel-btn-field hidden" data-field="groupNumber">Отмена</button>
             </div>
           `
               : ""
@@ -176,32 +177,21 @@ class ProfilePage extends Page {
     `;
   }
 
-  // Метод для получения названия теста по коду
-  getTestTitle(testCode) {
-    const testTitles = {
-      test1_1: "Организация снабжения (вариант 1)",
-      test1_2: "Организация снабжения (вариант 2)",
-      test2_1: "Подготовка сырья к производству (вариант 1)",
-      test2_2: "Подготовка сырья к производству (вариант 2)",
-      test3_1: "Полуфабрикаты для мучных кондитерских изделий (вариант 1)",
-      test3_2: "Полуфабрикаты для мучных кондитерских изделий (вариант 2)",
-      test4_1: "Дрожжевое тесто и изделия из него (вариант 1)",
-      test4_2: "Дрожжевое тесто и изделия из него (вариант 2)",
-      test5_1: "Бездрожжевое тесто и изделия из него (вариант 1)",
-      test5_2: "Бездрожжевое тесто и изделия из него (вариант 2)",
-      test6_1: "Отделочные полуфабрикаты для пирожных и тортов (вариант 1)",
-      test6_2: "Отделочные полуфабрикаты для пирожных и тортов (вариант 2)",
-      test7_1: "Приготовление пирожных (вариант 1)",
-      test7_2: "Приготовление пирожных (вариант 2)",
-      test8_1: "Приготовление тортов (вариант 1)",
-      test8_2: "Приготовление тортов (вариант 2)",
-      test9_1: "Приготовление десертов (вариант 1)",
-      test9_2: "Приготовление десертов (вариант 2)",
-      test10_1: "Приготовление национальных кондитерских изделий (вариант 1)",
-      test10_2: "Приготовление национальных кондитерских изделий (вариант 2)",
-    };
-
-    return testTitles[testCode] || testCode;
+  // Метод для получения названия теста
+  getTestTitle(test) {
+    // Используем название из данных (из базы данных), если оно есть
+    if (test && test.test_title) {
+      return test.test_title;
+    }
+    // Fallback на test_code, если название отсутствует
+    if (test && test.test_code) {
+      return test.test_code;
+    }
+    // Если передан только testCode (строка) для обратной совместимости
+    if (typeof test === "string") {
+      return test;
+    }
+    return "";
   }
 
   // Метод для отображения секции загрузки файлов
@@ -227,7 +217,7 @@ class ProfilePage extends Page {
         </div>
       `;
     } catch (error) {
-          return `
+      return `
         <div class="files-section">
           <h3>Мои файлы</h3>
           <div class="alert alert-danger" role="alert">Ошибка загрузки списка файлов: ${error.message}</div>
@@ -253,11 +243,17 @@ class ProfilePage extends Page {
         <div class="file-info">
           <span class="file-name">${this.escapeHtml(file.fileName)}</span>
           <span class="file-size">${this.formatFileSize(file.size)}</span>
-          <span class="file-date">${new Date(file.lastModified).toLocaleDateString("ru-RU")}</span>
+          <span class="file-date">${new Date(
+            file.lastModified
+          ).toLocaleDateString("ru-RU")}</span>
         </div>
         <div class="file-actions">
-          <a href="#" class="file-download" data-key="${this.escapeHtml(file.key)}" title="Скачать">⬇️</a>
-          <button type="button" class="file-delete" data-key="${this.escapeHtml(file.key)}" title="Удалить">🗑️</button>
+          <a href="#" class="file-download" data-key="${this.escapeHtml(
+            file.key
+          )}" title="Скачать">⬇️</a>
+          <button type="button" class="file-delete" data-key="${this.escapeHtml(
+            file.key
+          )}" title="Удалить">🗑️</button>
         </div>
       </div>
     `
@@ -277,7 +273,7 @@ class ProfilePage extends Page {
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
   }
 
   // Метод для обработки загрузки файлов
@@ -291,7 +287,8 @@ class ProfilePage extends Page {
 
       // Показываем индикатор загрузки
       const uploadBtn = document.querySelector(".upload-btn");
-      const originalText = uploadBtn?.querySelector(".upload-text")?.textContent;
+      const originalText =
+        uploadBtn?.querySelector(".upload-text")?.textContent;
       if (uploadBtn) {
         uploadBtn.disabled = true;
         const uploadText = uploadBtn.querySelector(".upload-text");
@@ -306,7 +303,7 @@ class ProfilePage extends Page {
         if (result.success) {
           // Показываем уведомление без alert
           this.showSuccessMessage("Файл успешно загружен!");
-          
+
           // Обновляем список файлов без перезагрузки страницы
           await this.refreshFilesList();
         } else {
@@ -334,15 +331,15 @@ class ProfilePage extends Page {
     try {
       const filesResult = await authService.getUserFiles();
       const files = filesResult.success ? filesResult.files : [];
-      
+
       // Находим контейнер со списком файлов
       const filesListContainer = document.querySelector(".files-list");
       const filesSection = document.querySelector(".files-section");
-      
+
       if (filesListContainer && filesSection) {
         // Обновляем только список файлов
         filesListContainer.outerHTML = this.renderFilesList(files);
-        
+
         // Обработчики уже работают через делегирование на #profile,
         // поэтому не нужно их переинициализировать
       }
@@ -361,7 +358,8 @@ class ProfilePage extends Page {
 
     // Создаем новое сообщение с Bootstrap alert
     const messageDiv = document.createElement("div");
-    messageDiv.className = "upload-message alert alert-success alert-dismissible fade show";
+    messageDiv.className =
+      "upload-message alert alert-success alert-dismissible fade show";
     messageDiv.setAttribute("role", "alert");
     messageDiv.innerHTML = `
       ${message}
@@ -398,7 +396,8 @@ class ProfilePage extends Page {
 
     // Создаем новое сообщение с Bootstrap alert
     const messageDiv = document.createElement("div");
-    messageDiv.className = "upload-message alert alert-danger alert-dismissible fade show";
+    messageDiv.className =
+      "upload-message alert alert-danger alert-dismissible fade show";
     messageDiv.setAttribute("role", "alert");
     messageDiv.innerHTML = `
       ${message}
@@ -449,19 +448,24 @@ class ProfilePage extends Page {
 
     // Используем делегирование событий на стабильном контейнере
     profileContainer.addEventListener("click", async (e) => {
-      console.log("Click event in profile container:", e.target, e.target.classList);
+      console.log(
+        "Click event in profile container:",
+        e.target,
+        e.target.classList
+      );
       // Обработка скачивания файла
       const downloadLink = e.target.closest(".file-download");
       if (downloadLink) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         const key = downloadLink.dataset.key;
         if (!key) return;
 
-        const fileItem = downloadLink.closest('.file-item');
-        const fileNameElement = fileItem?.querySelector('.file-name');
-        const fileName = fileNameElement?.textContent || key.split('/').pop() || 'download';
+        const fileItem = downloadLink.closest(".file-item");
+        const fileNameElement = fileItem?.querySelector(".file-name");
+        const fileName =
+          fileNameElement?.textContent || key.split("/").pop() || "download";
 
         const originalText = downloadLink.textContent;
         downloadLink.textContent = "⏳";
@@ -472,25 +476,25 @@ class ProfilePage extends Page {
             try {
               // Получаем файл через fetch как blob
               const response = await fetch(result.url, {
-                method: 'GET',
-                mode: 'cors',
+                method: "GET",
+                mode: "cors",
               });
-              
+
               if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
               }
-              
+
               const blob = await response.blob();
-              
+
               // Создаем blob URL и скачиваем файл
               const blobUrl = window.URL.createObjectURL(blob);
-              const link = document.createElement('a');
+              const link = document.createElement("a");
               link.href = blobUrl;
               link.download = fileName;
-              link.style.display = 'none';
+              link.classList.add("hidden");
               document.body.appendChild(link);
               link.click();
-              
+
               // Удаляем ссылку и освобождаем blob URL после небольшой задержки
               setTimeout(() => {
                 document.body.removeChild(link);
@@ -498,21 +502,29 @@ class ProfilePage extends Page {
               }, 100);
             } catch (fetchError) {
               // Если fetch не работает, пробуем напрямую через ссылку
-              console.warn('Fetch failed, trying direct link:', fetchError);
-              const link = document.createElement('a');
+              console.warn("Fetch failed, trying direct link:", fetchError);
+              const link = document.createElement("a");
               link.href = result.url;
               link.download = fileName;
-              link.style.display = 'none';
+              link.classList.add("hidden");
               document.body.appendChild(link);
               link.click();
               setTimeout(() => document.body.removeChild(link), 100);
             }
           } else {
-            showBootstrapAlert("Ошибка при получении ссылки на файл: " + (result.error || 'Неизвестная ошибка'), "danger");
+            showBootstrapAlert(
+              "Ошибка при получении ссылки на файл: " +
+                (result.error || "Неизвестная ошибка"),
+              "danger"
+            );
           }
         } catch (error) {
-          console.error('Download error:', error);
-          showBootstrapAlert("Ошибка при скачивании файла: " + (error.message || 'Неизвестная ошибка'), "danger");
+          console.error("Download error:", error);
+          showBootstrapAlert(
+            "Ошибка при скачивании файла: " +
+              (error.message || "Неизвестная ошибка"),
+            "danger"
+          );
         } finally {
           downloadLink.textContent = originalText;
         }
@@ -524,7 +536,7 @@ class ProfilePage extends Page {
       if (deleteBtn) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         const key = deleteBtn.dataset.key;
         if (!key) {
           console.error("File key not found in delete button");
@@ -548,17 +560,23 @@ class ProfilePage extends Page {
           if (result.success) {
             // Показываем уведомление без alert
             self.showSuccessMessage("Файл успешно удален!");
-            
+
             // Обновляем список файлов без перезагрузки страницы
             await self.refreshFilesList();
           } else {
-            self.showErrorMessage("Ошибка при удалении файла: " + (result.error || "Неизвестная ошибка"));
+            self.showErrorMessage(
+              "Ошибка при удалении файла: " +
+                (result.error || "Неизвестная ошибка")
+            );
             deleteBtn.disabled = false;
             deleteBtn.textContent = originalText;
           }
         } catch (error) {
           console.error("Error deleting file:", error);
-          self.showErrorMessage("Ошибка при удалении файла: " + (error.message || "Неизвестная ошибка"));
+          self.showErrorMessage(
+            "Ошибка при удалении файла: " +
+              (error.message || "Неизвестная ошибка")
+          );
           deleteBtn.disabled = false;
           deleteBtn.textContent = originalText;
         }
@@ -596,7 +614,7 @@ class ProfilePage extends Page {
       <div class="test-result-item">
         <div class="result-header">
           <span class="test-title">Вы прошли тест: ${this.getTestTitle(
-            result.test_code
+            result
           )}</span>
           <span class="test-date">${new Date(
             result.completed_at
@@ -648,10 +666,16 @@ class ProfilePage extends Page {
               window.location.reload();
             }, 1500);
           } else {
-            showBootstrapAlert("Ошибка при сохранении: " + result.error, "danger");
+            showBootstrapAlert(
+              "Ошибка при сохранении: " + result.error,
+              "danger"
+            );
           }
         } catch (error) {
-          showBootstrapAlert("Ошибка при сохранении: " + error.message, "danger");
+          showBootstrapAlert(
+            "Ошибка при сохранении: " + error.message,
+            "danger"
+          );
         } finally {
           // Восстанавливаем кнопку только если не было успешного сохранения
           if (saveBtn) {
@@ -677,7 +701,9 @@ class ProfilePage extends Page {
       `;
     } catch (error) {
       console.error("Ошибка при рендеринге профиля:", error);
-      const errorMessage = error.message || "Не удалось загрузить данные профиля. Пожалуйста, обновите страницу.";
+      const errorMessage =
+        error.message ||
+        "Не удалось загрузить данные профиля. Пожалуйста, обновите страницу.";
       return `
         <main id="${this.id}" class="container my-4 profile">
           <h1>${this.title}</h1>
@@ -732,9 +758,11 @@ class ProfilePage extends Page {
           // Активируем редактирование
           editableField.contentEditable = "true";
           editableField.classList.add("editing");
-          editBtn.style.display = "none";
-          saveBtn.style.display = "inline-block";
-          cancelBtn.style.display = "inline-block";
+          editBtn.classList.add("hidden");
+          saveBtn.classList.remove("hidden");
+          saveBtn.classList.add("show-inline-block");
+          cancelBtn.classList.remove("hidden");
+          cancelBtn.classList.add("show-inline-block");
           editableField.focus();
 
           // Выделяем весь текст для удобства редактирования
@@ -771,9 +799,12 @@ class ProfilePage extends Page {
             // Значение не изменилось, просто отменяем редактирование
             editableField.contentEditable = "false";
             editableField.classList.remove("editing");
-            saveBtn.style.display = "none";
-            cancelBtn.style.display = "none";
-            editBtn.style.display = "inline-block";
+            saveBtn.classList.add("hidden");
+            saveBtn.classList.remove("show-inline-block");
+            cancelBtn.classList.add("hidden");
+            cancelBtn.classList.remove("show-inline-block");
+            editBtn.classList.remove("hidden");
+            editBtn.classList.add("show-inline-block");
             return;
           }
 
@@ -826,16 +857,25 @@ class ProfilePage extends Page {
               editableField.dataset.original = newValue;
               editableField.contentEditable = "false";
               editableField.classList.remove("editing");
-              saveBtn.style.display = "none";
-              cancelBtn.style.display = "none";
-              editBtn.style.display = "inline-block";
+              saveBtn.classList.add("hidden");
+              saveBtn.classList.remove("show-inline-block");
+              cancelBtn.classList.add("hidden");
+              cancelBtn.classList.remove("show-inline-block");
+              editBtn.classList.remove("hidden");
+              editBtn.classList.add("show-inline-block");
               showBootstrapAlert("Данные успешно сохранены!", "success");
             } else {
-              showBootstrapAlert("Ошибка при сохранении: " + result.error, "danger");
+              showBootstrapAlert(
+                "Ошибка при сохранении: " + result.error,
+                "danger"
+              );
               editableField.textContent = originalValue;
             }
           } catch (error) {
-            showBootstrapAlert("Ошибка при сохранении: " + error.message, "danger");
+            showBootstrapAlert(
+              "Ошибка при сохранении: " + error.message,
+              "danger"
+            );
             editableField.textContent = originalValue;
           } finally {
             saveBtn.textContent = originalText;
@@ -866,9 +906,12 @@ class ProfilePage extends Page {
           editableField.textContent = editableField.dataset.original;
           editableField.contentEditable = "false";
           editableField.classList.remove("editing");
-          saveBtn.style.display = "none";
-          cancelBtn.style.display = "none";
-          editBtn.style.display = "inline-block";
+          saveBtn.classList.add("hidden");
+          saveBtn.classList.remove("show-inline-block");
+          cancelBtn.classList.add("hidden");
+          cancelBtn.classList.remove("show-inline-block");
+          editBtn.classList.remove("hidden");
+          editBtn.classList.add("show-inline-block");
         }
       }
     });

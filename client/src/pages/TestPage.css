@@ -101,9 +101,9 @@
 
 /* Подсветка посещенной кнопки */
 .page-button.visited {
-  background-color: #4f2568;
+  background-color: var(--color-bg);
   color: #fff;
-  border-color: #4f2568;
+  border-color: var(--color-bg);
 }
 
 /* Навигационная панель */
@@ -133,7 +133,7 @@
 
 /* Эффект при наведении на кнопки навигации */
 .nav-button:hover {
-  background-color: #4f2568; /* Фиолетовый цвет при наведении */
+  background-color: var(--color-bg); /* Фиолетовый цвет при наведении */
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4),
     inset 0px -3px 6px rgba(255, 255, 255, 0.3); /* Увеличенная тень */
   transform: scale(1.07); /* Легкое увеличение */
@@ -340,7 +340,7 @@ input[type="radio"]:checked::before {
   margin: 4px 0;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
-  background-color: #4f2568; /* Фиолетовый цвет в стиле проекта */
+  background-color: var(--color-bg); /* Фиолетовый цвет в стиле проекта */
   font-size: 20px; /* Увеличенный шрифт */
   color: white;
   cursor: move;
@@ -420,6 +420,21 @@ input[type="radio"]:checked::before {
   border-color: #59b149;
   box-shadow: 0 0 5px rgba(89, 177, 73, 0.5);
   outline: none;
+}
+
+/* Стили для отображения полного текста выбранного option на мобильных устройствах */
+.matching-option-full-text {
+  margin-top: 5px;
+  padding: 5px 8px;
+  background-color: rgba(89, 177, 73, 0.2);
+  border: 1px solid rgba(89, 177, 73, 0.4);
+  border-radius: 4px;
+  font-size: 14px;
+  color: #a6e89c;
+  display: none;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 /* Общие стили контейнера страницы */
@@ -535,6 +550,24 @@ input[type="radio"]:checked::before {
   }
 }
 
+/* Анимация появления вопроса (используется в TestQuestion.js) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
 /* Стили для сообщения о выборе теста */
 .test-message {
   text-align: center;
@@ -568,7 +601,7 @@ input[type="radio"]:checked::before {
 }
 
 .back-to-home-btn:hover {
-  background: linear-gradient(135deg, #4f2568 0%, #3d1d52 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, #3d1d52 100%);
   transform: translateY(-3px);
   box-shadow: 0 12px 24px rgba(79, 37, 104, 0.4);
   text-decoration: none;

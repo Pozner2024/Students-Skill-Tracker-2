@@ -10,10 +10,17 @@ export default class BasicModal {
     this.id = id;
     this.customClass = customClass;
     this.buttonText = buttonText;
-    this.buttonAction = buttonAction || this.closeModal.bind(this); // Действие по умолчанию — закрыть окно
+    this.buttonAction = buttonAction || this.closeModal.bind(this);
+
+    this.modalElement = null;
+    this.modalBody = null;
+    this.closeButton = null;
+    this.actionButton = null;
+
+    this.boundClose = this.closeModal.bind(this);
+    this.boundOverlayClick = this.handleOverlayClick.bind(this);
   }
 
-  // Метод для рендеринга модального окна
   render() {
     return `
       <div id="${this.id}" class="${this.customClass}">
@@ -26,58 +33,104 @@ export default class BasicModal {
     `;
   }
 
-  // Метод для отображения модального окна с контентом
   showModal(content) {
-    // Проверяем, есть ли уже модальное окно в DOM
-    if (!document.getElementById(this.id)) {
-      document.body.insertAdjacentHTML("beforeend", this.render());
-    }
+    // Проверяем, существует ли модальное окно в DOM
+    let existingModal = document.getElementById(this.id);
 
-    // Устанавливаем фон через JavaScript. Пришлось вынести фон из CSS в JS, т.к. при деплое,
-    // в первом случае (через CSS) он не отображался
-    const modalContent = document.querySelector(`#${this.id} .modal-content`);
-    if (modalContent) {
-      modalContent.style.backgroundImage = `url(${background})`;
-      modalContent.style.backgroundSize = "cover";
-      modalContent.style.backgroundPosition = "center";
-      modalContent.style.backgroundRepeat = "no-repeat";
-    }
-
-    // Заполняем контейнер модального окна динамическим контентом
-    document.querySelector(`#${this.id} .modal-body`).innerHTML = content;
-
-    // Делаем модальное окно видимым
-    document.getElementById(this.id).style.display = "flex";
-
-    // Блокируем прокрутку страницы
-    document.body.style.overflow = "hidden";
-
-    // Добавляем обработчик для кнопки закрытия крестика
-    document
-      .getElementById(`${this.id}-closeModal`)
-      .addEventListener("click", () => {
-        this.closeModal();
-      });
-
-    // Добавляем обработчик для кнопки действия (например, "Закрыть")
-    document
-      .getElementById(`${this.id}-actionButton`)
-      .addEventListener("click", this.buttonAction);
-
-    // Закрытие при клике вне модального окна
-    document.getElementById(this.id).addEventListener("click", (event) => {
-      if (event.target === document.getElementById(this.id)) {
-        this.closeModal();
+    // Если модальное окно не существует в DOM или ссылка потеряна, создаем его
+    if (!existingModal || !this.modalElement) {
+      // Если элемент существует в DOM, но ссылка потеряна, обновляем ссылку
+      if (existingModal) {
+        this.modalElement = existingModal;
+      } else {
+        // Создаем новое модальное окно
+        document.body.insertAdjacentHTML("beforeend", this.render());
+        this.modalElement = document.getElementById(this.id);
       }
-    });
+
+      // Инициализируем элементы модального окна
+      this.modalBody = this.modalElement?.querySelector(".modal-body") || null;
+      this.closeButton = this.modalElement?.querySelector(
+        `#${this.id}-closeModal`
+      );
+      this.actionButton = this.modalElement?.querySelector(
+        `#${this.id}-actionButton`
+      );
+
+      // Устанавливаем фон через JavaScript. Пришлось вынести фон из CSS в JS, т.к. при деплое,
+      // в первом случае (через CSS) он не отображался
+      const modalContent = this.modalElement?.querySelector(".modal-content");
+      if (modalContent) {
+        modalContent.style.backgroundImage = `url(${background})`;
+        modalContent.style.backgroundSize = "cover";
+        modalContent.style.backgroundPosition = "center";
+        modalContent.style.backgroundRepeat = "no-repeat";
+      }
+
+      if (this.closeButton) {
+        this.closeButton.onclick = this.boundClose;
+      }
+
+      if (this.actionButton) {
+        this.actionButton.onclick = this.buttonAction;
+      }
+
+      if (this.modalElement) {
+        this.modalElement.onclick = (event) => {
+          if (event.target === this.modalElement) {
+            this.boundOverlayClick(event);
+          }
+        };
+      }
+    } else {
+      this.modalElement = existingModal;
+      this.modalBody = this.modalElement?.querySelector(".modal-body") || null;
+      this.closeButton = this.modalElement?.querySelector(
+        `#${this.id}-closeModal`
+      );
+      this.actionButton = this.modalElement?.querySelector(
+        `#${this.id}-actionButton`
+      );
+
+      if (this.closeButton) {
+        this.closeButton.onclick = this.boundClose;
+      }
+
+      if (this.actionButton) {
+        this.actionButton.onclick = this.buttonAction;
+      }
+
+      if (this.modalElement) {
+        this.modalElement.onclick = (event) => {
+          if (event.target === this.modalElement) {
+            this.boundOverlayClick(event);
+          }
+        };
+      }
+    }
+
+    if (this.modalBody) {
+      this.modalBody.innerHTML = content;
+    }
+
+    if (this.modalElement) {
+      this.modalElement.style.display = "flex";
+    }
+
+    document.body.style.overflow = "hidden";
   }
 
-  // Метод для закрытия модального окна
   closeModal() {
     const modal = document.getElementById(this.id);
     if (modal) {
-      modal.style.display = "none"; // Скрываем модальное окно
-      document.body.style.overflow = "auto"; // Восстанавливаем прокрутку страницы
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+  }
+
+  handleOverlayClick(event) {
+    if (event.target === this.modalElement) {
+      this.closeModal();
     }
   }
 }

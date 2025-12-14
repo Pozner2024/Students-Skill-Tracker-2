@@ -39,14 +39,11 @@ class AuthService {
   // Регистрация пользователя
   async register(email, password) {
     try {
-      const data = await apiClient.publicRequest(
-        this.endpoints.REGISTER,
-        {
-          method: "POST",
-          body: { email, password },
-          context: "AuthService.register",
-        }
-      );
+      const data = await apiClient.publicRequest(this.endpoints.REGISTER, {
+        method: "POST",
+        body: { email, password },
+        context: "AuthService.register",
+      });
 
       // НЕ сохраняем токен - пользователь должен войти отдельно
       // this.setToken(data.access_token);
@@ -67,14 +64,11 @@ class AuthService {
   // Вход в систему
   async login(email, password) {
     try {
-      const data = await apiClient.publicRequest(
-        this.endpoints.LOGIN,
-        {
-          method: "POST",
-          body: { email, password },
-          context: "AuthService.login",
-        }
-      );
+      const data = await apiClient.publicRequest(this.endpoints.LOGIN, {
+        method: "POST",
+        body: { email, password },
+        context: "AuthService.login",
+      });
 
       // Сохраняем токен
       this.setToken(data.access_token);
@@ -138,13 +132,10 @@ class AuthService {
         };
       }
 
-      const data = await apiClient.get(
-        API_CONFIG.ENDPOINTS.USERS.PROFILE,
-        {
-          context: "AuthService.getCurrentUser",
-          handleErrors: false, // Обрабатываем ошибки вручную для возврата success: false
-        }
-      );
+      const data = await apiClient.get(API_CONFIG.ENDPOINTS.USERS.PROFILE, {
+        context: "AuthService.getCurrentUser",
+        handleErrors: false,
+      });
 
       return {
         success: true,
@@ -203,13 +194,10 @@ class AuthService {
         };
       }
 
-      const data = await apiClient.get(
-        API_CONFIG.ENDPOINTS.TEST_RESULTS.GET,
-        {
-          context: "AuthService.getTestResults",
-          handleErrors: false,
-        }
-      );
+      const data = await apiClient.get(API_CONFIG.ENDPOINTS.TEST_RESULTS.GET, {
+        context: "AuthService.getTestResults",
+        handleErrors: false,
+      });
 
       return {
         success: true,
@@ -257,7 +245,6 @@ class AuthService {
     }
   }
 
-  // Загрузка файла
   async uploadFile(file) {
     try {
       const token = this.getToken();
@@ -305,13 +292,10 @@ class AuthService {
         };
       }
 
-      const data = await apiClient.get(
-        API_CONFIG.ENDPOINTS.UPLOAD.FILES,
-        {
-          context: "AuthService.getUserFiles",
-          handleErrors: false,
-        }
-      );
+      const data = await apiClient.get(API_CONFIG.ENDPOINTS.UPLOAD.FILES, {
+        context: "AuthService.getUserFiles",
+        handleErrors: false,
+      });
 
       return {
         success: true,
@@ -404,13 +388,10 @@ class AuthService {
         };
       }
 
-      const data = await apiClient.get(
-        `/admin/students/${studentId}/files`,
-        {
-          context: "AuthService.getStudentFiles",
-          handleErrors: false,
-        }
-      );
+      const data = await apiClient.get(`/admin/students/${studentId}/files`, {
+        context: "AuthService.getStudentFiles",
+        handleErrors: false,
+      });
 
       return {
         success: true,
@@ -525,4 +506,3 @@ class AuthService {
 const authService = new AuthService();
 
 export default authService;
-
