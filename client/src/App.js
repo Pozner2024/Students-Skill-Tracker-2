@@ -12,7 +12,7 @@ import "./pages/TestPage.css";
 import "./components/ui/CubeLoader.css";
 import "./components/ui/SkillProgressBar.css";
 import "./pages/LoginPage.css";
-import "./pages/Profile.css";
+import "./pages/Profile/Profile.css";
 import "./pages/Criteria.css";
 import "./pages/Contacts.css";
 import "./pages/About.css";

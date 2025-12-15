@@ -3,7 +3,7 @@ import Home from "../pages/Home.js";
 import About from "../pages/About.js";
 import Contacts from "../pages/Contacts.js";
 import CriteriaPage from "../pages/Criteria.js";
-import ProfilePage from "../pages/Profile.js";
+import ProfilePage from "../pages/Profile/ProfilePage.js";
 import AdminPage from "../pages/Admin.js";
 import Error404 from "../pages/Error404.js";
 import TestPage from "../pages/TestPage.js";

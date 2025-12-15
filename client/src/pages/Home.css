@@ -1,9 +1,7 @@
-/* Стили для главной страницы */
 .topics-container {
   margin-top: -30px;
 }
 
-/* Стили для карточек тем */
 .rectangle {
   background-color: #058548;
   opacity: 0;
@@ -19,8 +17,8 @@
 .rectangle-image {
   width: 100%;
   width: 100%;
-  height: 250px; /* Фиксированная высота для одинакового размера всех картинок */
-  object-fit: cover; /* Обрезаем изображение, сохраняя пропорции, чтобы заполнить контейнер */
+  height: 250px;
+  object-fit: cover;
   border-radius: 8px;
   margin-bottom: 15px;
   display: block;
@@ -57,7 +55,6 @@
   transform: scale(1.05);
 }
 
-/* Кастомные стили для кнопок в карточках тем */
 .rectangle .btn-primary {
   background-color: #59b149;
   border-color: #59b149;
@@ -104,7 +101,6 @@
   transition: all 0.3s ease;
 }
 
-/* Hover-анимация карточек тем */
 .card-hover-effect {
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 0.4s ease, filter 0.4s ease;
@@ -113,26 +109,23 @@
 
 .card-hover-effect:hover {
   transform: translateY(-15px) scale(1.05) rotateY(2deg);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(89, 177, 73, 0.6), 0 0 50px rgba(89, 177, 73, 0.3),
-    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(89, 177, 73, 0.6),
+    0 0 50px rgba(89, 177, 73, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
   filter: brightness(1.1) contrast(1.05);
 }
 
-/* Уменьшаем отступ сверху для контейнера на мобильных устройствах */
 @media (width < 768px) {
   #home.container.my-4 {
-    margin-top: 0.5rem; /* Уменьшаем отступ с 1.5rem до 0.5rem */
+    margin-top: 0.5rem;
   }
 }
 
 @media (width < 576px) {
   #home.container.my-4 {
-    margin-top: 0.25rem; /* Еще больше уменьшаем для маленьких экранов */
+    margin-top: 0.25rem;
   }
 }
 
-/* Анимация появления карточек на странице тем (Bounce) */
 @keyframes cardBounce {
   0% {
     opacity: 0;

@@ -10,7 +10,6 @@ export default tseslint.config(
       'eslint.config.mjs',
       'restore-test-images.js',
       'restore-topics-questions.js',
-      'create-admin-user.js',
       'fill-tests.js',
       'fill-topics.js',
     ],

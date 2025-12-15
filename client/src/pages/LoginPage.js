@@ -3,10 +3,9 @@ import SuccessModal from "../components/modals/SuccessModal";
 import authService from "../services/authService";
 import errorHandler from "../services/errorHandler.js";
 import logo from "../assets/logo_vgik.png";
-import background from "../assets/background.jpg"; // Импортируем фон
-import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Импортируем Bootstrap JS для доступа к Alert API
+import background from "../assets/background.jpg";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
-// Функция для рендеринга страницы логина
 export function renderLoginPage() {
   const root = document.getElementById("root");
   document.title = "StudentSkillTracker";
@@ -16,7 +15,6 @@ export function renderLoginPage() {
     return;
   }
 
-  // Вставляем HTML для формы входа/регистрации
   root.innerHTML = `
     <div class="page-background">
       <div class="main-container">
@@ -69,37 +67,30 @@ export function renderLoginPage() {
     </div>
   `;
 
-  // Устанавливаем фон через JavaScript. Пришлось вынести фон из CSS в JS, т.к. при деплое,
-  // в первом случае (через CSS) он не отображался
   const pageBackground = document.querySelector(".page-background");
-  pageBackground.style.backgroundImage = `url(${background})`; // Устанавливаем фон
+  pageBackground.style.backgroundImage = `url(${background})`;
   pageBackground.style.backgroundSize = "cover";
   pageBackground.style.backgroundPosition = "center";
   pageBackground.style.backgroundRepeat = "no-repeat";
 
-  // Создаем экземпляр лоадера
   const loader = createCubeLoader();
 
-  // Обработчики для кнопок
   document
     .getElementById("login-btn")
-    .addEventListener("click", () => handleLogin(loader)); // Передаем loader
+    .addEventListener("click", () => handleLogin(loader));
   document
     .getElementById("register-btn")
-    .addEventListener("click", () => handleRegister(loader)); // Передаем loader
+    .addEventListener("click", () => handleRegister(loader));
 
-  // Обработчик для переключателя видимости пароля
   document
     .getElementById("password-toggle")
     .addEventListener("click", togglePasswordVisibility);
 
-  // Обработчик для обновления индикатора пароля
   document
     .getElementById("password")
     .addEventListener("input", updatePasswordIndicator);
 }
 
-// Функция для показа Bootstrap alert (использует errorHandler)
 function showBootstrapAlert(message, type = "info") {
   const alertTypes = {
     info: "info",
@@ -114,7 +105,6 @@ function showBootstrapAlert(message, type = "info") {
   });
 }
 
-// Функция для обработки логина
 async function handleLogin(loader) {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
@@ -125,11 +115,11 @@ async function handleLogin(loader) {
     return;
   }
 
-  loader.show(); // Показываем лоадер во время выполнения запроса
+  loader.show();
 
   try {
     const result = await authService.login(email, password);
-    loader.hide(); // Скрываем лоадер после завершения запроса
+    loader.hide();
 
     if (result.success) {
       window.location.href = "/";
@@ -137,12 +127,11 @@ async function handleLogin(loader) {
       errorHandler.handle(result, "LoginPage.handleLogin");
     }
   } catch (error) {
-    loader.hide(); // Скрываем лоадер в случае ошибки
+    loader.hide();
     errorHandler.handle(error, "LoginPage.handleLogin");
   }
 }
 
-// Функция для регистрации пользователя
 async function handleRegister(loader) {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
@@ -153,18 +142,16 @@ async function handleRegister(loader) {
     return;
   }
 
-  loader.show(); // Показываем лоадер во время выполнения запроса
+  loader.show();
 
   try {
     const result = await authService.register(email, password);
-    loader.hide(); // Скрываем лоадер после завершения
+    loader.hide();
 
     if (result.success) {
-      // Очищаем форму после успешной регистрации
       document.getElementById("email").value = "";
       document.getElementById("password").value = "";
 
-      // Показываем красивое модальное окно успеха
       const successModal = new SuccessModal({
         id: "registrationSuccessModal",
         title: "Регистрация успешна!",
@@ -173,18 +160,15 @@ async function handleRegister(loader) {
       });
 
       successModal.showModal();
-
-      // НЕ перенаправляем на главную страницу - пользователь должен войти
     } else {
       errorHandler.handle(result, "LoginPage.handleRegister");
     }
   } catch (error) {
-    loader.hide(); // Скрываем лоадер в случае ошибки
+    loader.hide();
     errorHandler.handle(error, "LoginPage.handleRegister");
   }
 }
 
-// Функция для переключения видимости пароля
 function togglePasswordVisibility() {
   const passwordInput = document.getElementById("password");
   const toggleBtn = document.getElementById("password-toggle");
@@ -192,13 +176,11 @@ function togglePasswordVisibility() {
   const eyeOpen = toggleBtn.querySelector(".eye-open");
 
   if (passwordInput.type === "password") {
-    // Показываем пароль
     passwordInput.type = "text";
     eyeClosed.classList.add("hidden");
     eyeOpen.classList.remove("hidden");
     toggleBtn.setAttribute("aria-label", "Скрыть пароль");
   } else {
-    // Скрываем пароль
     passwordInput.type = "password";
     eyeClosed.classList.remove("hidden");
     eyeOpen.classList.add("hidden");
@@ -206,7 +188,6 @@ function togglePasswordVisibility() {
   }
 }
 
-// Функция для обновления индикатора пароля
 function updatePasswordIndicator() {
   const passwordInput = document.getElementById("password");
   const indicator = document.getElementById("password-indicator");
@@ -215,26 +196,18 @@ function updatePasswordIndicator() {
 
   const passwordLength = passwordInput.value.length;
   const minLength = 6;
-  const maxLength = 6; // Максимальная длина пароля
+  const maxLength = 6;
 
-  // Проверяем, не превышает ли пароль максимальную длину
   if (passwordLength > maxLength) {
-    // Обрезаем пароль до максимальной длины
     passwordInput.value = passwordInput.value.substring(0, maxLength);
-
-    // Показываем сообщение об ошибке
     showBootstrapAlert("Пароль должен содержать ровно 6 символов", "warning");
-
-    // Возвращаемся к функции с обрезанным паролем
     return updatePasswordIndicator();
   }
 
-  // Показываем индикатор только если пользователь начал вводить пароль
   if (passwordLength > 0) {
     indicator.classList.remove("hidden");
     indicator.classList.add("show-flex");
 
-    // Обновляем звездочки
     stars.forEach((star, index) => {
       if (index < passwordLength) {
         star.classList.add("filled");
@@ -245,7 +218,6 @@ function updatePasswordIndicator() {
       }
     });
 
-    // Обновляем текст
     if (passwordLength < minLength) {
       const remaining = minLength - passwordLength;
       indicatorText.textContent = `Осталось ${remaining} символов:`;
@@ -257,7 +229,6 @@ function updatePasswordIndicator() {
       indicator.classList.add("complete");
     }
   } else {
-    // Скрываем индикатор если поле пустое
     indicator.classList.add("hidden");
     indicator.classList.remove("show-flex");
   }
