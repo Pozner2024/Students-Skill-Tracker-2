@@ -36,6 +36,7 @@ export class TopicsService {
           description: topic.project_description,
         },
         questions: topic.questions.map((q) => q.text),
+        content: topic.content,
       }));
     } catch (error) {
       this.logger.error('Ошибка при запросе к БД:', error);
@@ -84,6 +85,28 @@ export class TopicsService {
         description: topic.project_description,
       },
       questions: topic.questions.map((q) => q.text),
+      content: topic.content,
     };
+  }
+
+  async updateTopicContent(
+    id: number,
+    content: any,
+  ): Promise<{ success: boolean; message: string }> {
+    try {
+      await this.prisma.topic.update({
+        where: { id },
+        data: { content },
+      });
+
+      this.logger.log(`Обновлено поле content для темы с id: ${id}`);
+      return {
+        success: true,
+        message: 'Содержание темы успешно обновлено',
+      };
+    } catch (error) {
+      this.logger.error('Ошибка при обновлении content:', error);
+      throw error;
+    }
   }
 }

@@ -1,0 +1,95 @@
+version: "3.8"
+
+# Students Skill Tracker - Docker Compose
+
+# Использование:
+#   1. Создайте .env файл в корне проекта (см. пример ниже)
+#   2. Запустите только базу данных: docker-compose up postgres
+#   3. Или запустите всё: docker-compose up
+#   4. Остановка: docker-compose down
+#   5. Остановка с удалением данных: docker-compose down -v
+#
+
+services:
+  # PostgreSQL база данных
+  postgres:
+    image: postgres:16-alpine
+    container_name: students-skill-tracker-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-students_skill_tracker}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Инициализация базы данных из init.sql
+      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      # Постоянное хранилище данных
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  # NestJS серверное приложение
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: students-skill-tracker-server
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-students_skill_tracker}
+      PORT: ${SERVER_PORT:-5000}
+      NODE_ENV: ${NODE_ENV:-development}
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:9000,http://127.0.0.1:9000}
+    ports:
+      - "${SERVER_PORT:-5000}:5000"
+    volumes:
+      # Монтируем код для разработки (можно убрать в production)
+      - ./server:/app
+      - /app/node_modules
+      # Монтируем upload директорию для загрузки файлов
+      - server_uploads:/app/upload
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+    # Раскомментируйте для разработки с hot-reload
+    # command: npm run start:dev
+
+  # Клиентское приложение (опционально)
+  # Раскомментируйте, если хотите запускать клиент в Docker
+  # client:
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile
+  #   container_name: students-skill-tracker-client
+  #   restart: unless-stopped
+  #   environment:
+  #     API_BASE_URL: http://server:5000
+  #   ports:
+  #     - "${CLIENT_PORT:-9000}:9000"
+  #   volumes:
+  #     - ./client:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     - server
+  #   networks:
+  #     - app-network
+
+volumes:
+  postgres_data:
+    driver: local
+  server_uploads:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

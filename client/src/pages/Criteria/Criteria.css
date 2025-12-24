@@ -1,0 +1,195 @@
+.criteria-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-bottom: 20px;
+  font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.criteria-table th,
+.criteria-table td {
+  border: 1px solid black;
+  padding: 10px;
+  text-align: center;
+}
+
+.criteria-table th:first-child,
+.criteria-table td:first-child {
+  width: 20%;
+}
+
+.criteria-table th:not(:first-child):not(.grade-column),
+.criteria-table td:not(:first-child):not(.grade-column) {
+  width: auto;
+}
+
+.criteria-table .grade-column {
+  width: 15%;
+  min-width: 80px;
+  white-space: nowrap;
+}
+
+.small-table {
+  width: 50%;
+  margin-left: 0;
+}
+
+.criteria-table th {
+  background-color: white;
+  color: black;
+}
+
+.criteria-container h1 {
+  font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: black;
+  background-color: white;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 15px;
+  height: auto;
+  display: block;
+}
+
+.criteria-container h2 {
+  font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  color: black;
+  background-color: white;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.criteria-container .table-responsive {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.criteria-container .table-responsive table {
+  margin: 0 auto;
+}
+.small-table {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.criteria-table.table thead th {
+  background-color: white;
+  color: black;
+  border-color: black;
+}
+
+.criteria-table.table td {
+  color: white;
+  background-color: rgba(79, 37, 104, 0.3);
+  border-color: white;
+}
+
+.criteria-table.table tbody tr:hover {
+  background-color: rgba(79, 37, 104, 0.5);
+}
+
+.criteria-container .alert-info {
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
+  color: white;
+  border: none;
+}
+
+@media (width < 480px) {
+  main#criteria.container h1,
+  #criteria.container h1 {
+    font-size: 18px;
+    height: auto;
+    min-height: 35px;
+    padding: 5px 3px;
+    line-height: 1.3;
+  }
+
+  .criteria-container h1 {
+    font-size: 18px;
+    padding: 8px 5px;
+    margin-bottom: 10px;
+  }
+
+  .criteria-container h2 {
+    font-size: 14px;
+    padding: 8px 5px;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .criteria-table th,
+  .criteria-table td {
+    padding: 3px 1px;
+    font-size: 10px;
+  }
+
+  .criteria-table th:first-child,
+  .criteria-table td:first-child {
+    width: 30%;
+    font-size: 9px;
+    padding: 3px 2px;
+    word-break: break-word;
+  }
+
+  .criteria-table th:not(:first-child):not(.grade-column),
+  .criteria-table td:not(:first-child):not(.grade-column) {
+    font-size: 9px;
+    padding: 3px 1px;
+    min-width: 20px;
+  }
+
+  .criteria-table .grade-column {
+    width: 20%;
+    min-width: 70px;
+    font-size: 11px;
+  }
+
+  .small-table {
+    width: 100%;
+  }
+
+  .criteria-container .table-responsive {
+    margin-bottom: 15px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .criteria-table:not(.small-table) {
+    min-width: 350px;
+    font-size: 10px;
+  }
+
+  .criteria-table:not(.small-table) th:not(:first-child),
+  .criteria-table:not(.small-table) td:not(:first-child):not(.grade-column) {
+    font-size: 9px;
+    padding: 3px 1px;
+    min-width: 20px;
+  }
+
+  .criteria-container .table-responsive {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    width: 100%;
+    display: block;
+    width: 100%;
+  }
+
+  .criteria-table:not(.small-table) {
+    border-spacing: 0;
+    width: auto;
+  }
+
+  .criteria-container .alert-info {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .criteria-container .alert-info p {
+    font-size: 11px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+}
+

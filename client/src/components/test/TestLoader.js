@@ -7,13 +7,11 @@ import apiClient from "../../services/apiClient.js";
 
 class TestLoader {
   constructor() {
-    // URL API сервера - можно настроить через переменные окружения
     this.apiBaseUrl = API_CONFIG.BASE_URL;
-    this.testTitle = ""; // Свойство для хранения названия теста
-    this.isInitialized = false; // Флаг для предотвращения повторной инициализации
+    this.testTitle = "";
+    this.isInitialized = false;
   }
 
-  // Паттерн Singleton для предотвращения создания множественных экземпляров
   static getInstance() {
     if (!TestLoader.instance) {
       TestLoader.instance = new TestLoader();
@@ -21,7 +19,6 @@ class TestLoader {
     return TestLoader.instance;
   }
 
-  // Метод для сброса состояния (полезно при перезагрузке данных)
   resetState() {
     this.isInitialized = false;
     this.dataReceived = false;
@@ -30,59 +27,29 @@ class TestLoader {
   getParamsFromURL() {
     const params = new URLSearchParams(window.location.search);
 
-    // Поддержка старого формата (topicId) для обратной совместимости
-    const topicId = params.get("topicId");
     const testCode = params.get("testCode");
     const title = params.get("title");
 
     this.testTitle = title || "Тест";
     const variant = parseInt(params.get("variant")) || 1;
 
-    // Если есть topicId, используем старую логику
-    if (topicId) {
-      const result = {
-        topicId: parseInt(topicId),
-        variant,
-        useOldFormat: true,
-      };
-      return result;
-    }
-
-    // Если есть testCode, используем новую логику
     if (testCode) {
-      const result = { testCode, variant, useOldFormat: false };
-      return result;
+      return { testCode, variant };
     }
 
-    // По умолчанию используем старый формат
-    const defaultResult = { topicId: 1, variant, useOldFormat: true };
-    return defaultResult;
-  }
-
-  async fetchTestData(params) {
-    const { topicId, testCode, variant, useOldFormat } = params;
-
-    if (useOldFormat) {
-      // Старая логика для обратной совместимости
-      return await this.fetchOldFormatData(topicId, variant);
-    } else {
-      // Новая логика для работы с БД
-      return await this.fetchNewFormatData(testCode, variant);
-    }
-  }
-
-  async fetchOldFormatData(topicId, variant) {
-    // Здесь можно оставить старую логику или заглушку
-    // Пока что возвращаем null, чтобы не ломать существующие страницы
     return null;
   }
 
-  async fetchNewFormatData(testCode, variant) {
+  async fetchTestData(params) {
+    if (!params || !params.testCode) {
+      return null;
+    }
+
+    const { testCode, variant } = params;
     if (!testCode || isNaN(variant)) {
       return null;
     }
 
-    // Логируем только один раз при первом запросе
     if (!this.isInitialized) {
       this.isInitialized = true;
     }
@@ -95,18 +62,16 @@ class TestLoader {
             testCode: testCode,
             variant: variant,
           },
-          includeAuth: false, // Публичный endpoint
-          context: "TestLoader.fetchNewFormatData",
+          includeAuth: false,
+          context: "TestLoader.fetchTestData",
         }
       );
 
-      // Логируем успешное получение данных только один раз
       if (!this.dataReceived) {
         this.dataReceived = true;
       }
 
       if (testData) {
-        // Парсим JSON поле questions
         let questions = [];
         try {
           if (typeof testData.questions === "string") {
@@ -115,7 +80,6 @@ class TestLoader {
             questions = testData.questions;
           }
 
-          // Если questions содержит объект с массивом questions
           if (questions.questions && Array.isArray(questions.questions)) {
             questions = questions.questions;
           }
@@ -123,12 +87,11 @@ class TestLoader {
           return null;
         }
 
-        // Возвращаем данные в оригинальном формате без преобразования
         const formattedData = {
-          testCode, // сохраняем код теста для последующего сохранения результата
+          testCode,
           testTitle: testData.testTitle,
           variant: testData.variant,
-          questions: questions, // Оставляем вопросы в оригинальном формате
+          questions: questions,
         };
 
         return {
@@ -139,7 +102,6 @@ class TestLoader {
         return null;
       }
     } catch (error) {
-      // Возвращаем объект с пустыми данными вместо null для предотвращения ошибок
       return {
         data: {
           testTitle: "Тест",

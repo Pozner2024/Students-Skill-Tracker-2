@@ -1,6 +1,7 @@
 //Главный модуль приложения (AppModule)
 //Объединяет все модули, контроллеры и сервисы приложения NestJS.
-//- Подключает ConfigModule для работы с переменными окружения (.env).
+//- Подключает ConfigModule для работы с переменными окружения.
+//  Переменные загружаются через встроенный флаг Node.js --env-file (Node.js 20.6+).
 //- Делает PrismaService глобальным для удобного доступа к базе данных.
 // Является точкой входа для сборки и запуска всего приложения.
 
@@ -22,6 +23,9 @@ import { UploadModule } from './upload/upload.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      // Отключаем автоматическую загрузку .env через dotenv,
+      // так как переменные загружаются через --env-file флаг Node.js
+      ignoreEnvFile: true,
     }),
     TestsModule,
     ImagesModule,

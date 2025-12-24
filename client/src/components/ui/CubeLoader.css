@@ -1,8 +1,6 @@
 :root {
   --color: #fff; /* Цвет для куба */
 }
-
-/* Подложка на весь экран */
 .cube-loader-container {
   position: fixed;
   top: 0;
@@ -16,12 +14,9 @@
   z-index: 9999;
 }
 
-/* Ограничиваем стили preserve-3d только к элементам внутри контейнера лоадера */
 .cube-loader-container * {
   transform-style: preserve-3d;
 }
-
-/* Контейнер для куба, не затрагивает стили body */
 .cube-loader-container .content {
   width: 50vmin;
   height: 50vmin;
@@ -32,7 +27,6 @@
   justify-content: center;
 }
 
-/* Основной куб */
 .cube-loader-container .cube {
   background: var(--color);
   width: 20vmin;
@@ -143,4 +137,3 @@
     height: calc(100% - 2vmin);
   }
 }
-

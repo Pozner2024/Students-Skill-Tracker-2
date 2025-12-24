@@ -45,13 +45,13 @@ class ProfilePage extends Page {
                 ? `
               <form id="profile-form" class="profile-form">
                 <div class="row g-3">
-                  <div class="col-md-6">
+                  <div class="col-md-8 col-lg-8">
                     <label for="fullName" class="form-label">Фамилия и Имя:</label>
                     <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Введите ваши фамилию и имя" value="${
                       result.user.fullName || ""
                     }">
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-4 col-lg-4">
                     <label for="groupNumber" class="form-label">Номер группы:</label>
                     <input type="text" class="form-control" id="groupNumber" name="groupNumber" placeholder="Введите номер группы" value="${
                       result.user.groupNumber || ""

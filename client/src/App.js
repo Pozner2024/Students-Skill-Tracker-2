@@ -6,42 +6,37 @@ import Footer from "./components/layout/Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./normalize.css";
-import "./App.css"; /* Импортирует все модули стилей */
+import "./App.css";
 import "./common/Modal.css";
-import "./pages/TestPage.css";
+import "./pages/TestPage/TestPage.css";
 import "./components/ui/CubeLoader.css";
 import "./components/ui/SkillProgressBar.css";
-import "./pages/LoginPage.css";
-import "./pages/Profile/Profile.css";
-import "./pages/Criteria.css";
-import "./pages/Contacts.css";
-import "./pages/About.css";
-import "./pages/Home.css";
-import "./pages/Admin.css";
-import "./pages/TopicPage.css";
+import "./pages/LoginPage/LoginPage.css";
+import "./pages/Profile/ProfilePage.css";
+import "./pages/Criteria/Criteria.css";
+import "./pages/Contacts/Contacts.css";
+import "./pages/About/About.css";
+import "./pages/Home/Home.css";
+import "./pages/Admin/Admin.css";
+import "./pages/TopicPage/TopicPage.css";
 
 const App = (root) => {
-  // Обозначаем id контейнера для отрисовки страниц
   const containerId = "content";
 
-  // Создаем экземпляры компонентов Header, Menu, Footer
   const headerComponent = new Header();
   const menuComponent = new Menu();
   const footerComponent = new Footer();
 
-  // Отрисовываем статические компоненты (Header, Menu, Footer) и контейнер для страниц
   root.insertAdjacentHTML(
     "beforeend",
     `
-    ${headerComponent.render()}   <!-- Отображаем Header -->
-    ${menuComponent.render()}     <!-- Отображаем Menu -->
-    <section id="${containerId}" class="content"></section>
-    ${footerComponent.render()}   <!-- Отображаем Footer -->
+    ${headerComponent.render()}   
+    ${menuComponent.render()}    
+    <section id="${containerId}"></section>
+    ${footerComponent.render()}  
     `
   );
 
-  // Вызываем afterRender для компонентов после вставки в DOM
-  // Используем setTimeout для гарантии, что DOM готов
   setTimeout(() => {
     if (
       headerComponent.afterRender &&
@@ -57,34 +52,24 @@ const App = (root) => {
     }
   }, 0);
 
-  // Инициализируем роутер при первой загрузке
   Router(containerId);
 
-  // Обработка навигации через popstate (переход по ссылкам назад/вперед)
   window.addEventListener("popstate", () => Router(containerId));
 
-  // Перехватываем все клики по ссылкам меню для работы с роутером
   document.body.addEventListener("click", (event) => {
-    // Проверяем, что клик произошел на ссылке меню или внутри неё
     const menuLink = event.target.closest(".menu-link");
     if (menuLink) {
-      event.preventDefault(); // Отменяем переход по ссылке
-
-      // Закрываем меню при клике на ссылку (на мобильных устройствах)
-      // Используем небольшую задержку для гарантии, что Bootstrap обработал клик
+      event.preventDefault();
       setTimeout(() => {
         menuComponent.closeMenu();
       }, 10);
 
-      // Обновляем URL через history.pushState
       const href = menuLink.getAttribute("href");
 
-      window.history.pushState({}, "", href); // Обновляем URL без перезагрузки страницы
-
-      // Обновляем контент страницы, вызывая роутер с контейнером
+      window.history.pushState({}, "", href);
       Router(containerId);
     }
   });
-}; // Закрываем функцию App
+};
 
 export default App;

@@ -9,4 +9,5 @@ export interface TopicDto {
     description: string;
   };
   questions: string[];
+  content?: any; 
 }

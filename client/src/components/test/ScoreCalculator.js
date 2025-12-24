@@ -32,12 +32,10 @@ class ScoreCalculator {
   }
 
   toCanonicalToken(value) {
-    // For numbers: exact numeric equality is required (use dot as decimal separator)
     if (this.isNumericLike(value)) {
       const num = Number(String(value).replace(",", "."));
       return `##NUM:${Number.isFinite(num) ? num : "NaN"}`;
     }
-    // For words: normalized string
     return `##STR:${this.normalizeString(String(value))}`;
   }
 
@@ -146,7 +144,6 @@ class ScoreCalculator {
             const hasNumeric = question.correct_answers.some((v) =>
               this.isNumericLike(v)
             );
-            // If there are numeric answers, require exact numeric matches; no fuzzy fallback
             if (hasNumeric) {
               isCorrect = this.compareCanonicalArrays(
                 userAnswer,
@@ -154,7 +151,6 @@ class ScoreCalculator {
                 question.allow_any_order
               );
             } else {
-              // Words: keep previous behavior (exact normalized match or fuzzy Jaccard)
               isCorrect =
                 this.compareArrays(
                   userAnswer,
@@ -201,7 +197,6 @@ class ScoreCalculator {
           break;
 
         case "ordering":
-          // Используем `correctOrder`, загруженный из Firebase
           if (
             Array.isArray(userAnswer) &&
             Array.isArray(question.correctOrder)
@@ -250,7 +245,6 @@ class ScoreCalculator {
     return totalQuestions ? (answeredQuestionsCount / totalQuestions) * 100 : 0;
   }
 
-  // Получает оценку на основе набранных баллов
   getGrade(totalScore, questionCount) {
     const gradingScale = {
       10: [

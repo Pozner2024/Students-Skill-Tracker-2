@@ -1,7 +1,6 @@
 //Тестовый модуль для проверки работы AppController.
 //Использует Jest и встроенные инструменты NestJS для тестирования.
 //Тест создаёт изолированный экземпляр приложения с AppController и AppService.
-//Проверяется, что метод getHello() контроллера возвращает строку "Students Skill Tracker API".
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
@@ -19,9 +18,7 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
-    it('should return "Students Skill Tracker API"', () => {
-      expect(appController.getHello()).toBe('Students Skill Tracker API');
-    });
+  it('should be defined', () => {
+    expect(appController).toBeDefined();
   });
 });

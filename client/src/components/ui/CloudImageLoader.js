@@ -85,8 +85,18 @@ class CloudImageLoader {
   }
 
   async getImagePath(questionNumber) {
+    // Если загрузка еще не началась, запускаем её
     if (!this.loaded && !this.loading) {
       await this.loadImages();
+    }
+    // Если загрузка уже идет, ждем её завершения
+    else if (this.loading) {
+      // Ждем завершения загрузки (максимум 10 секунд)
+      const maxWait = 10000;
+      const startTime = Date.now();
+      while (this.loading && (Date.now() - startTime) < maxWait) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
     }
 
     const imageUrl =

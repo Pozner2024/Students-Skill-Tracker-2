@@ -68,8 +68,28 @@
   --alert-info-text: #0c5460;
 
   /* Цвета таблиц */
-  --table-striped-bg: rgba(79, 37, 104, 0.3);
+  --table-striped-bg: var(--test-bg-3);
   --table-text-color: var(--color-white);
+
+  /* Цвета для тестов */
+  --test-bg-rgb: 79, 37, 104;
+  --test-bg: rgba(var(--test-bg-rgb), 1);
+  --test-bg-95: rgba(var(--test-bg-rgb), 0.95);
+  --test-bg-85: rgba(var(--test-bg-rgb), 0.85);
+  --test-bg-75: rgba(var(--test-bg-rgb), 0.75);
+  --test-bg-6: rgba(var(--test-bg-rgb), 0.6);
+  --test-bg-5: rgba(var(--test-bg-rgb), 0.5);
+  --test-bg-3: rgba(var(--test-bg-rgb), 0.3);
+  --test-green: #59b149;
+  --test-green-rgb: 89, 177, 73;
+  --test-green-rgba-2: rgba(var(--test-green-rgb), 0.2);
+  --test-green-rgba-3: rgba(var(--test-green-rgb), 0.3);
+  --test-green-rgba-4: rgba(var(--test-green-rgb), 0.4);
+  --test-green-rgba-5: rgba(var(--test-green-rgb), 0.5);
+  --test-white-3: rgba(255, 255, 255, 0.3);
+  --test-red: #dc3545;
+  --test-red-dark: #7d0612;
+  --test-red-active: #ae0404;
 
   /* Цвета модальных окон */
   --modal-overlay-bg: rgba(0, 0, 0, 0.7);
@@ -194,10 +214,63 @@ a {
   font-weight: 500;
   color: var(--color-link);
   text-decoration: inherit;
+  cursor: default;
 }
 
 a:hover {
   color: var(--color-link-hover);
+}
+
+button {
+  cursor: default;
+}
+
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  cursor: default;
+}
+
+/* Глобальное переопределение cursor: pointer для всех интерактивных элементов */
+a,
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"],
+[onclick],
+label[for],
+.btn,
+.nav-link,
+.menu-link,
+.file-download,
+.file-delete,
+.edit-btn,
+.save-btn-field,
+.cancel-btn-field,
+.upload-btn,
+.password-toggle-btn,
+.navbar-toggler,
+.navbar-close-btn,
+.close-button,
+.action-button,
+.back-to-home-btn,
+.page-button,
+.nav-button,
+.finish-button,
+.card-title-link,
+.project-info-btn,
+.control-question-btn,
+.test-btn {
+  cursor: default;
+}
+
+/* Дополнительные специфичные правила для кнопок Bootstrap */
+.btn-success,
+.btn-info,
+.btn-primary,
+button.btn {
+  cursor: default;
 }
 
 main {

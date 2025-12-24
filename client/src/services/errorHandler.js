@@ -3,7 +3,7 @@
  * Обеспечивает единообразную обработку ошибок во всем приложении
  */
 
-import authService from "./authService.js";
+import authCore from "./authCore.js";
 
 class ErrorHandler {
   constructor() {
@@ -147,7 +147,7 @@ class ErrorHandler {
 
   handleAuthError() {
     console.warn("Ошибка авторизации. Перенаправление на страницу входа.");
-    authService.logout();
+    authCore.logout();
   }
 
   showNotification(message, type = this.alertTypes.ERROR, options = {}) {

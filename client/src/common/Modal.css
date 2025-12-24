@@ -14,7 +14,7 @@
   padding: 20px;
   border-radius: 8px;
   width: min(100%, 70%);
-  width: auto;
+  max-width: 600px;
   max-height: 90%;
   overflow-y: auto;
   box-shadow: 0 4px 8px var(--modal-shadow);
@@ -27,17 +27,16 @@
   border-radius: 8px;
   color: var(--color-white);
   margin: 10px 0;
+  backdrop-filter: blur(2px);
 }
 
 .close-button {
   position: absolute;
-  top: 8px;
   right: 15px;
   background-color: var(--modal-close-button-bg);
   border: none;
   font-size: 20px;
   font-weight: bold;
-  cursor: pointer;
   color: var(--color-white);
   width: 28px;
   height: 28px;
@@ -54,15 +53,23 @@
   margin: 0;
   text-align: center;
   box-sizing: border-box;
+  cursor: default;
 }
 
 .close-button:hover {
   background-color: var(--modal-close-button-hover-bg);
   color: var(--modal-close-button-hover-color);
+  cursor: default;
 }
 
 .modal-body {
   margin-bottom: 20px;
+}
+
+.project-modal .modal-content,
+.question-modal .modal-content {
+  max-width: 800px;
+  width: min(100%, 800px);
 }
 
 .action-button {
@@ -74,22 +81,23 @@
   border: none;
   border-radius: 5px;
   font-size: 16px;
-  cursor: pointer;
   text-align: center;
   transition: background-color 0.3s;
+  cursor: default;
 }
 
 .action-button:hover {
   background-color: var(--modal-action-button-hover-bg);
   color: var(--modal-action-button-hover-color);
+  cursor: default;
 }
 
 .action-button:active {
   background-color: var(--modal-action-button-active-bg);
   color: var(--color-white);
+  cursor: default;
 }
 
-/* Стили для модального окна успеха */
 .success-modal-content {
   text-align: center;
   min-width: 400px;
@@ -124,6 +132,7 @@
   background-color: var(--modal-success-bg-light);
   border: 2px solid var(--modal-success-border);
   margin: 20px 0;
+  backdrop-filter: blur(2px);
 }
 
 .success-message {
@@ -140,10 +149,12 @@
   padding: 12px 30px;
   margin-top: 20px;
   box-shadow: 0 4px 8px var(--modal-shadow-light);
+  cursor: default;
 }
 
 .success-action-button:hover {
   background-color: var(--modal-success-button-hover-bg);
   transform: translateY(-2px);
   box-shadow: 0 6px 12px var(--modal-shadow);
+  cursor: default;
 }

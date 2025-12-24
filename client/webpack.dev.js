@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
-const CopyWebpackPlugin = require("copy-webpack-plugin"); // Импортируем CopyWebpackPlugin
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -52,24 +52,23 @@ module.exports = {
     setupMiddlewares: (middlewares, devServer) => {
       const publicPath = path.join(__dirname, "public");
       const express = require("express");
-      
-      // Обрабатываем статические файлы ПЕРЕД всеми остальными middleware
-      // Используем devServer.app.use для добавления middleware в самое начало
+
       devServer.app.use((req, res, next) => {
-        // Явно обрабатываем запросы к фавиконкам и другим статическим файлам
-        const faviconPattern = /^\/(favicon\.ico|apple-touch-icon\.png|favicon-\d+x\d+\.png|android-chrome-\d+x\d+\.png|site\.webmanifest)$/;
+        const faviconPattern =
+          /^\/(favicon\.ico|apple-touch-icon\.png|favicon-\d+x\d+\.png|android-chrome-\d+x\d+\.png|site\.webmanifest)$/;
         if (faviconPattern.test(req.path)) {
           const filePath = path.join(publicPath, req.path);
           if (fs.existsSync(filePath)) {
             const ext = path.extname(filePath);
             const contentTypeMap = {
-              '.ico': 'image/x-icon',
-              '.png': 'image/png',
-              '.webmanifest': 'application/manifest+json',
+              ".ico": "image/x-icon",
+              ".png": "image/png",
+              ".webmanifest": "application/manifest+json",
             };
-            const contentType = contentTypeMap[ext] || 'application/octet-stream';
-            res.setHeader('Content-Type', contentType);
-            res.setHeader('Cache-Control', 'no-cache'); // Не кешируем в dev режиме
+            const contentType =
+              contentTypeMap[ext] || "application/octet-stream";
+            res.setHeader("Content-Type", contentType);
+            res.setHeader("Cache-Control", "no-cache");
             return res.sendFile(filePath);
           }
         }
@@ -101,9 +100,9 @@ module.exports = {
       template: "./src/index.html",
     }),
     new Dotenv({
-      systemvars: true, // Включаем доступ к системным переменным окружения
-      path: "./.env", // Путь к файлу .env
-      safe: false, // Не требовать .env.example
+      systemvars: true,
+      path: "./.env",
+      safe: false,
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -116,11 +115,11 @@ module.exports = {
           to: path.resolve(__dirname, "dist"),
           toType: "dir",
           globOptions: {
-            ignore: ["**/about.txt"], // Игнорируем ненужные файлы
+            ignore: ["**/about.txt"],
           },
-          noErrorOnMissing: true, // Не выдавать ошибку, если папка не существует
+          noErrorOnMissing: true,
         },
       ],
-    }), // Добавляем плагин CopyWebpackPlugin для копирования файла _redirects и статических файлов из public
+    }),
   ],
 };

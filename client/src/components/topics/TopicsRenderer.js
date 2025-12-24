@@ -24,7 +24,7 @@ const pictures = [pic1, pic2, pic3, pic4, pic5, pic6, pic7, pic8, pic9, pic10];
 
 export default class TopicsRenderer {
   constructor() {
-    this.topics = []; // Темы загружаются из API
+    this.topics = [];
   }
 
   async loadTopics() {
@@ -58,7 +58,6 @@ export default class TopicsRenderer {
       !Array.isArray(this.topics) ||
       this.topics.length === 0
     ) {
-      // Если тем нет, возвращаем пустой контейнер
       return "";
     }
 
@@ -68,15 +67,11 @@ export default class TopicsRenderer {
       const projectDescription =
         topic?.project?.description || "Описание проекта отсутствует";
 
-      // Используем topic.id вместо index + 1 для правильной идентификации темы
       const topicId = topic?.id || index + 1;
 
-      // Выбираем картинку по порядку карточек:
-      // первая карточка — pic1, вторая — pic2 и т.д. (по индексу)
       const pictureIndex = index % pictures.length;
       const selectedPicture = pictures[pictureIndex];
 
-      // Формируем HTML для прямоугольников с ссылками на тесты
       rectanglesHTML += `
         <div class="col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
           <div class="card h-100 rectangle card-hover-effect card-appear" style="animation-delay: ${
@@ -88,8 +83,8 @@ export default class TopicsRenderer {
                 <a href="/topic?topicId=${topicId}" class="card-title-link">Тема: ${topicName}</a>
               </h5>
               <div class="buttons-container mt-auto">
-                <a href="/test-page?variant=1&topicId=${topicId}" class="btn btn-primary mb-2 test-btn w-100">Выполнить тест. Вариант 1</a>
-                <a href="/test-page?variant=2&topicId=${topicId}" class="btn btn-primary mb-2 test-btn w-100">Выполнить тест. Вариант 2</a>
+                <a href="/test-page?variant=1&testCode=test${topicId}_1&title=${encodeURIComponent(topicName)}" class="btn btn-primary mb-2 test-btn w-100">Выполнить тест. Вариант 1</a>
+                <a href="/test-page?variant=2&testCode=test${topicId}_2&title=${encodeURIComponent(topicName)}" class="btn btn-primary mb-2 test-btn w-100">Выполнить тест. Вариант 2</a>
                 <button class="btn btn-success mb-2 project-info-btn w-100" data-project-index="${index}">Узнать тему проекта</button>
                 <button class="btn btn-info control-question-btn w-100" data-question-index="${index}">Контрольные вопросы</button>
               </div>
@@ -101,4 +96,3 @@ export default class TopicsRenderer {
     return rectanglesHTML;
   }
 }
-

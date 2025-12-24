@@ -5,7 +5,9 @@
 import {
   Controller,
   Get,
+  Put,
   Param,
+  Body,
   ParseIntPipe,
   HttpException,
   HttpStatus,
@@ -126,5 +128,24 @@ export class TopicsController {
       success: true,
       topic,
     };
+  }
+
+  @Put(':id/content')
+  async updateTopicContent(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: { content: any },
+  ): Promise<{ success: boolean; message: string }> {
+    try {
+      return await this.topicsService.updateTopicContent(id, body.content);
+    } catch (error) {
+      this.logger.error('Ошибка при обновлении content:', error);
+      throw new HttpException(
+        {
+          message: 'Ошибка при обновлении содержания темы',
+          error: error instanceof Error ? error.message : String(error),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

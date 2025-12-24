@@ -7,8 +7,7 @@ export default class Footer extends Section {
 
   render() {
     return `<section id="${this.id}" class="${this.id} ${this.customClass}">
-              <footer class="text-center py-3">© 2025 All looks good and you are the best! </footer>
+              <footer class="text-center py-3">© 2026 </footer>
             </section>`;
   }
 }
-

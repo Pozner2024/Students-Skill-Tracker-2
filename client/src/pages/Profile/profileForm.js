@@ -10,6 +10,15 @@ export function handleProfileForm() {
 
       const fullName = document.getElementById("fullName").value.trim();
       const groupNumber = document.getElementById("groupNumber").value.trim();
+      const groupPattern = /^(?:\d-\d{2}|\d{2}-\d{2})$/;
+
+      if (groupNumber && !groupPattern.test(groupNumber)) {
+        showBootstrapAlert(
+          "Номер группы должен быть в формате X-XX или XX-XX",
+          "warning"
+        );
+        return;
+      }
 
       const saveBtn = document.getElementById("save-btn");
       const originalText = saveBtn.textContent;

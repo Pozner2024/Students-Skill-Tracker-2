@@ -112,6 +112,7 @@ export function handleEditableFields() {
       if (editableField) {
         const newValue = editableField.textContent.trim();
         const originalValue = editableField.dataset.original;
+        const groupPattern = /^(?:\d-\d{2}|\d{2}-\d{2})$/;
 
         if (newValue === originalValue) {
           editableField.contentEditable = "false";
@@ -131,6 +132,18 @@ export function handleEditableFields() {
             "warning"
           );
           editableField.textContent = originalValue;
+          return;
+        }
+
+        if (
+          field === "groupNumber" &&
+          newValue &&
+          !groupPattern.test(newValue)
+        ) {
+          showBootstrapAlert(
+            "Номер группы должен быть в формате X-XX или XX-XX",
+            "warning"
+          );
           return;
         }
 

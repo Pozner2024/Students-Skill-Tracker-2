@@ -95,7 +95,6 @@ class SkillProgressBar {
       totalAnimationTime += 1000;
     });
 
-    // Проверяем, что userGrade больше 5 перед запуском конфетти
     if (this.userGrade > 5) {
       setTimeout(() => this.runConfetti(), totalAnimationTime + 1000);
     }
@@ -120,4 +119,3 @@ class SkillProgressBar {
 }
 
 export default SkillProgressBar;
-

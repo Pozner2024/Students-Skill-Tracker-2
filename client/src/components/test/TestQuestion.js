@@ -7,40 +7,29 @@ import questionRenderer from "./QuestionRenderer";
 import QuestionNavigator from "./QuestionNavigator";
 import ScoreCalculator from "./ScoreCalculator";
 import SkillProgressBar from "../ui/SkillProgressBar";
-import CloudImageLoader from "../ui/CloudImageLoader"; // Импортируем CloudImageLoader
+import CloudImageLoader from "../ui/CloudImageLoader";
 
 class TestQuestion {
   constructor(containerId) {
     this.containerId = containerId;
-    this.testLoader = TestLoader.getInstance(); // Используем Singleton паттерн
+    this.testLoader = TestLoader.getInstance();
     this.testInstance = null;
     this.answerManager = createAnswerManager();
     this.navigator = null;
     this.scoreCalculator = null;
-    this.imageLoader = null; // Добавляем свойство для ImageLoader
-    this.topicName = null; // Свойство для хранения названия темы
+    this.imageLoader = null;
+    this.topicName = null;
   }
 
   async initialize() {
     try {
-      // Извлекаем параметры из URL
       const params = this.testLoader.getParamsFromURL();
-      const testResult = await this.testLoader.fetchTestData(params);
+      
+      // Загружаем данные теста и инициализируем загрузчик изображений параллельно
+      const { testCode, variant } = params || {};
 
-      if (!testResult || !Array.isArray(testResult.data.questions)) {
-        return;
-      }
-
-      this.topicName = testResult.topicName;
-      this.testInstance = testResult.data;
-
-      // Инициализируем ImageLoader после получения topicId и variant
-      const { topicId, testCode, variant } = params;
-
-      // Извлекаем topicId из testCode если он не определен напрямую
-      let actualTopicId = topicId;
-      if (!actualTopicId && testCode) {
-        // testCode имеет формат "test1_1", извлекаем номер темы
+      let actualTopicId = null;
+      if (testCode) {
         const match = testCode.match(/test(\d+)_/);
         if (match) {
           actualTopicId = parseInt(match[1], 10);
@@ -50,7 +39,6 @@ class TestQuestion {
         }
       }
 
-      // Fallback: если topicId все еще не определен, используем значение по умолчанию
       if (!actualTopicId) {
         console.warn(
           `TestQuestion: topicId не определен, используем значение по умолчанию 1`
@@ -58,51 +46,43 @@ class TestQuestion {
         actualTopicId = 1;
       }
 
-      console.log(
-        `TestQuestion: Инициализация CloudImageLoader с topicId=${actualTopicId}, variant=${variant}`
-      );
+      // Инициализируем загрузчик изображений (но не загружаем сразу)
       this.imageLoader = new CloudImageLoader(actualTopicId, variant);
 
-      // Предварительно загружаем все изображения для темы
-      // Показываем индикатор загрузки
-      const contentContainer = document.getElementById("content");
-      if (contentContainer) {
-        contentContainer.innerHTML =
-          '<div class="loading-indicator">Загрузка изображений...</div>';
+      // Загружаем данные теста (блокирующая операция)
+      const testResult = await this.testLoader.fetchTestData(params);
+
+      if (!testResult || !Array.isArray(testResult.data.questions)) {
+        return;
       }
 
-      await this.imageLoader.loadImages();
+      this.topicName = testResult.topicName;
+      this.testInstance = testResult.data;
 
-      // Проверяем, сколько изображений загружено
-      const imagesCount = this.imageLoader.getLoadedImagesCount();
-      console.log(
-        `TestQuestion: Загружено ${imagesCount} изображений для темы ${actualTopicId}, вариант ${variant}`
-      );
+      // Начинаем загрузку изображений в фоне (не блокируем инициализацию)
+      this.imageLoader.loadImages().catch((error) => {
+        console.warn("TestQuestion: Ошибка при загрузке изображений:", error);
+      });
 
-      // Проверка на корректную загрузку testInstance и questions
       if (!this.testInstance || !Array.isArray(this.testInstance.questions)) {
         return;
       }
 
-      // Инициализируем ScoreCalculator
       this.scoreCalculator = new ScoreCalculator(this.testInstance);
 
-      // Инициализируем QuestionNavigator с проверками
       this.navigator = new QuestionNavigator(
         this.testInstance.questions.length,
         (index) => this.renderCurrentQuestion(index),
         () => this.submitAllAnswers()
       );
 
-      // Проверяем, что navigator инициализирован
       if (!this.navigator) {
         return;
       }
 
-      // Рендерим первый вопрос
       this.renderCurrentQuestion(this.navigator.currentQuestionIndex);
     } catch (error) {
-      // Ошибка при инициализации TestQuestion
+      console.error("TestQuestion: Ошибка при инициализации:", error);
     }
   }
 
@@ -116,7 +96,6 @@ class TestQuestion {
       return;
     }
 
-    // Проверяем, что testInstance и questions существуют
     if (!this.testInstance || !this.testInstance.questions) {
       return;
     }
@@ -126,16 +105,14 @@ class TestQuestion {
       return;
     }
 
-    // Проверяем, что вопрос существует
     const question = questions[index];
     if (!question) {
       return;
     }
 
-    // Получаем изображение для текущего вопроса по его номеру
     let imagePath = null;
     if (this.imageLoader) {
-      const questionNumber = index + 1; // Номер вопроса соответствует индексу + 1
+      const questionNumber = index + 1;
       imagePath = await this.imageLoader.getImagePath(questionNumber);
       if (imagePath) {
         console.log(
@@ -153,7 +130,6 @@ class TestQuestion {
       );
     }
 
-    // Рендерим HTML для текущего вопроса, включая изображение (если оно есть)
     container.innerHTML =
       `<h3>Вопрос ${index + 1} из ${questions.length}</h3>` +
       questionRenderer.renderQuestionHTML(
@@ -161,28 +137,21 @@ class TestQuestion {
         index,
         imagePath,
         this.answerManager
-      ); // Передаем imagePath и answerManager в renderQuestionHTML
+      );
 
-    // Добавляем обработчики для ответов
     questionRenderer.addAnswerHandlers(container, index, this.answerManager);
 
-    // Добавляем CSS анимацию появления вопроса
-    // Используем небольшую задержку для плавности
     setTimeout(() => {
       const questionElement = container.querySelector(".question");
       if (questionElement) {
-        // Удаляем класс, если он был (для повторной анимации)
         questionElement.classList.remove("fade-in-up");
-        // Принудительно перерисовываем для сброса анимации
-        void questionElement.offsetHeight; // trigger reflow
-        // Добавляем класс для CSS анимации
+        void questionElement.offsetHeight;
         requestAnimationFrame(() => {
           questionElement.classList.add("fade-in-up");
         });
       }
     }, 50);
 
-    // Обновляем навигацию
     this.navigator.updatePagination();
   }
 
@@ -208,21 +177,17 @@ class TestQuestion {
       return;
     }
 
-    // Рассчитываем общий балл и процент завершенных ответов
     const totalScore = this.scoreCalculator.calculateTotalScore(userAnswers);
     const answeredPercentage =
       this.scoreCalculator.getAnsweredPercentage(userAnswers);
 
-    // Сохраняем результат теста в базу данных
     await this.saveTestResult(totalScore, answeredPercentage);
 
-    // Находим контейнер для отображения результата
     const contentContainer = document.getElementById("content");
     if (!contentContainer) {
       return;
     }
 
-    // Создаем и отображаем шкалу прогресса навыка
     const skillProgressBar = new SkillProgressBar(
       answeredPercentage,
       totalScore,
@@ -237,7 +202,6 @@ class TestQuestion {
 
   async saveTestResult(totalScore, answeredPercentage) {
     try {
-      // Получаем информацию о тесте
       const testCode = this.testInstance.testCode || "unknown";
       const variant = this.testInstance.variant || 1;
       const totalQuestions = this.testInstance.questions.length;
@@ -245,7 +209,6 @@ class TestQuestion {
       const percentage =
         maxPoints > 0 ? Math.round((totalScore / maxPoints) * 100) : 0;
 
-      // Рассчитываем итоговую оценку (grade)
       const grade = this.scoreCalculator.getGrade(totalScore, totalQuestions);
 
       const testResultData = {
@@ -259,15 +222,12 @@ class TestQuestion {
         answersDetails: this.scoreCalculator?.lastDetails || [],
       };
 
-      // Импортируем authService динамически, чтобы избежать циклических зависимостей
       const { default: authService } = await import(
         "../../services/authService.js"
       );
 
       await authService.saveTestResult(testResultData);
-    } catch (error) {
-      // Ошибка при сохранении результата теста
-    }
+    } catch (error) {}
   }
 }
 

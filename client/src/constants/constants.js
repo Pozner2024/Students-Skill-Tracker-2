@@ -1,5 +1,3 @@
-export const USERS_API_URL = "https://jsonplaceholder.typicode.com/users";
-
 export const MENU_ITEMS = [
   { title: "Главная", url: "/" },
   { title: "Оценочные критерии", url: "/criteria" },

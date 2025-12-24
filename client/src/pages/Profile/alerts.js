@@ -1,4 +1,8 @@
-// Alert helpers separated from page logic
+/**
+ * Модуль для отображения уведомлений (алертов) на странице профиля
+ * Использует Bootstrap Alert компоненты для создания всплывающих сообщений
+ */
+
 export function showBootstrapAlert(message, type = "info") {
   const existingAlert = document.querySelector(".bootstrap-alert-container");
   if (existingAlert) {
@@ -99,4 +103,3 @@ export function showErrorMessage(message) {
     }, 5000);
   }
 }
-

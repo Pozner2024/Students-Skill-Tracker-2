@@ -2,7 +2,6 @@
 // (например, выбор из нескольких вариантов, заполнение пропусков, сортировка
 // и сопоставление) и для привязки обработчиков ответов.
 
-// Форматирует единицы измерения, не давая им отрываться от числа
 function formatUnits(text) {
   if (!text) return text;
   return text.replace(/(\d)\s*(%|°\s*[CС]|см\b)/gi, (match, digit, unit) => {
@@ -16,11 +15,9 @@ function formatUnits(text) {
   });
 }
 
-// Рендерит вопрос с множественным выбором
 function renderMultipleChoice(question, index, answerManager) {
   const savedAnswer = answerManager.getAnswer(index);
 
-  // Проверяем, что question.options существует и является массивом
   if (!question.options || !Array.isArray(question.options)) {
     return "<p>Ошибка: варианты ответов не найдены</p>";
   }
@@ -40,20 +37,14 @@ function renderMultipleChoice(question, index, answerManager) {
     .join("");
 }
 
-// Рендерит вопрос с заполнением пропусков
 function renderFillInTheBlank(question, index, answerManager) {
   const savedAnswers = answerManager.getAnswer(index) || [];
   let answerIndex = 0;
 
-  // Проверяем, что question.question существует
   if (!question.question) {
     return "<p>Ошибка: текст вопроса не найден</p>";
   }
 
-  // Заменяем все "___" (с optional номером "1) ", "2) " и т.д.,
-  // а также со знаками препинания и единицами измерения после)
-  // так, чтобы номер, поле ввода и запятая/двоеточие/единица измерения
-  // всегда держались вместе и не переносились
   const formattedQuestion = formatUnits(question.question);
   let questionHTML = formattedQuestion.replace(
     /(\d+\)\s*)?___\s*([,;:.]|%|°\s*[CС]|см\b)?/g,
@@ -66,9 +57,7 @@ function renderFillInTheBlank(question, index, answerManager) {
 
       return `
       <span class="question-part">
-        ${
-          prefix ? `${prefix} ` : ""
-        } <!-- Добавляем цифру только если она есть -->
+        ${prefix ? `${prefix} ` : ""}
         <input
           type="text"
           name="answer_${index}_${answerIndex - 1}"
@@ -89,9 +78,7 @@ function renderFillInTheBlank(question, index, answerManager) {
   return `<p>${questionHTML}</p>`;
 }
 
-// Рендерит вопрос с сортировкой
 function renderOrdering(question, index, answerManager) {
-  // Проверяем, что question.sequence существует
   if (!question.sequence || !Array.isArray(question.sequence)) {
     return "<p>Ошибка: последовательность для сортировки не найдена</p>";
   }
@@ -114,11 +101,9 @@ function renderOrdering(question, index, answerManager) {
   `;
 }
 
-// Рендерит вопрос с сопоставлением
 function renderMatching(question, index, answerManager) {
   const savedAnswer = answerManager.getAnswer(index) || {};
 
-  // Проверяем, что question.right_column и question.left_column существуют
   if (
     !question.right_column ||
     !Array.isArray(question.right_column) ||
@@ -160,28 +145,23 @@ function renderMatching(question, index, answerManager) {
   `;
 }
 
-// Рендерит HTML для вопроса
 function renderQuestionHTML(question, index, imagePath, answerManager) {
-  // Проверяем, что question существует
   if (!question) {
     return "<p>Ошибка: вопрос не найден</p>";
   }
 
   let questionHTML = "";
 
-  // Добавляем описание вопроса, если оно существует
   if (question.questionDescription) {
     const formattedDescription = formatUnits(question.questionDescription);
     questionHTML += `<p>${formattedDescription}</p>`;
   }
 
-  // Добавляем основной текст вопроса (для типов, кроме "fill in the blank")
   if (question.type !== "fill_in_the_blank") {
     const formattedQuestion = formatUnits(question.question);
     questionHTML += `<p>${formattedQuestion}</p>`;
   }
 
-  // Добавляем изображение, если путь существует
   let imageHTML = "";
   if (imagePath && imagePath.trim() !== "") {
     imageHTML = `
@@ -192,7 +172,6 @@ function renderQuestionHTML(question, index, imagePath, answerManager) {
     `;
   }
 
-  // Рендеринг в зависимости от типа вопроса
   switch (question.type) {
     case "multiple_choice":
       questionHTML += renderMultipleChoice(question, index, answerManager);
@@ -210,7 +189,6 @@ function renderQuestionHTML(question, index, imagePath, answerManager) {
       questionHTML += "<p>Неизвестный тип вопроса</p>";
   }
 
-  // Определяем классы для контейнера вопроса
   const additionalClass =
     question.type === "matching"
       ? "matching-only"
@@ -220,7 +198,7 @@ function renderQuestionHTML(question, index, imagePath, answerManager) {
 
   return `
     <div class="question ${additionalClass}">
-      ${imageHTML}  <!-- Вставляем изображение справа от вопроса -->
+      ${imageHTML}
       <div class="question-text">
         ${questionHTML}
       </div>
@@ -228,7 +206,6 @@ function renderQuestionHTML(question, index, imagePath, answerManager) {
   `;
 }
 
-// Вспомогательная функция для нахождения элемента, перед которым будет вставлен перемещаемый элемент
 function getDragAfterElement(container, y) {
   const draggableElements = [
     ...container.querySelectorAll(".draggable-item:not(.dragging)"),
@@ -248,9 +225,7 @@ function getDragAfterElement(container, y) {
   ).element;
 }
 
-// Добавляет обработчики событий для ответов
 function addAnswerHandlers(container, questionIndex, answerManager) {
-  // Обработчики для multiple_choice вопросов
   container
     .querySelectorAll(`input[name="answer_${questionIndex}"]`)
     .forEach((input) => {
@@ -259,7 +234,6 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
       });
     });
 
-  // Обработчики для fill_in_the_blank вопросов
   container
     .querySelectorAll(`input[type="text"][name^="answer_${questionIndex}"]`)
     .forEach((input, blankIndex) => {
@@ -273,19 +247,16 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
       });
     });
 
-  // Обработчики для matching вопросов
   const isMobile = window.innerWidth < 768 || "ontouchstart" in window;
   container
     .querySelectorAll(`select[name^="answer_${questionIndex}_"]`)
     .forEach((select) => {
-      // Для мобильных устройств добавляем элемент для отображения полного текста выбранного option
       let fullTextDisplay = null;
       if (isMobile) {
         fullTextDisplay = document.createElement("div");
         fullTextDisplay.className = "matching-option-full-text";
         select.parentElement.appendChild(fullTextDisplay);
 
-        // Показываем полный текст, если уже есть выбранный вариант
         const selectedOption = select.options[select.selectedIndex];
         if (selectedOption && selectedOption.value) {
           fullTextDisplay.textContent = selectedOption.textContent;
@@ -305,7 +276,6 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
           hasMatches ? savedMatches : null
         );
 
-        // На мобильных устройствах показываем полный текст выбранного option
         if (isMobile && fullTextDisplay) {
           const selectedOption =
             event.target.options[event.target.selectedIndex];
@@ -319,13 +289,11 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
       });
     });
 
-  // Обработчики для ordering вопросов с делегированием
   const orderingList = container.querySelector(`#ordering_${questionIndex}`);
 
   if (orderingList) {
     let draggedItem = null;
 
-    // Обработчик для dragstart
     orderingList.addEventListener("dragstart", (event) => {
       if (event.target.classList.contains("draggable-item")) {
         draggedItem = event.target;
@@ -335,7 +303,6 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
       }
     });
 
-    // Обработчик для dragover
     orderingList.addEventListener("dragover", (event) => {
       event.preventDefault();
       const afterElement = getDragAfterElement(orderingList, event.clientY);
@@ -346,14 +313,12 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
       }
     });
 
-    // Обработчик для drop
     orderingList.addEventListener("drop", (event) => {
       event.preventDefault();
       if (draggedItem) {
         draggedItem.classList.remove("dragging");
         draggedItem = null;
 
-        // Обновление порядка и сохранение результата
         const newOrder = Array.from(orderingList.children).map((item) =>
           item.textContent.trim()
         );
@@ -364,7 +329,6 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
   }
 }
 
-// Экспортируем функции как объект для удобства использования
 export default {
   renderQuestionHTML,
   addAnswerHandlers,

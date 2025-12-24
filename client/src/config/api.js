@@ -20,6 +20,7 @@ export const API_CONFIG = {
       SAVE: "/test-results",
     },
     TOPICS: "/topics",
+    TOPIC_CONTENT: "/topics",
     UPLOAD: {
       UPLOAD: "/upload",
       FILES: "/upload/files",

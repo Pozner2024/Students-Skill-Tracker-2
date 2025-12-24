@@ -17,7 +17,6 @@ export default class SuccessModal {
     this.buttonAction = buttonAction || this.closeModal.bind(this);
   }
 
-  // Метод для рендеринга модального окна
   render() {
     return `
       <div id="${this.id}" class="${this.customClass}">
@@ -34,14 +33,11 @@ export default class SuccessModal {
     `;
   }
 
-  // Метод для отображения модального окна
   showModal() {
-    // Проверяем, есть ли уже модальное окно в DOM
     if (!document.getElementById(this.id)) {
       document.body.insertAdjacentHTML("beforeend", this.render());
     }
 
-    // Устанавливаем фон через JavaScript
     const modalContent = document.querySelector(`#${this.id} .modal-content`);
     if (modalContent) {
       modalContent.style.backgroundImage = `url(${background})`;
@@ -50,25 +46,20 @@ export default class SuccessModal {
       modalContent.style.backgroundRepeat = "no-repeat";
     }
 
-    // Делаем модальное окно видимым
     document.getElementById(this.id).style.display = "flex";
 
-    // Блокируем прокрутку страницы
     document.body.style.overflow = "hidden";
 
-    // Добавляем обработчик для кнопки закрытия крестика
     document
       .getElementById(`${this.id}-closeModal`)
       .addEventListener("click", () => {
         this.closeModal();
       });
 
-    // Добавляем обработчик для кнопки действия
     document
       .getElementById(`${this.id}-actionButton`)
       .addEventListener("click", this.buttonAction);
 
-    // Закрытие при клике вне модального окна
     document.getElementById(this.id).addEventListener("click", (event) => {
       if (event.target === document.getElementById(this.id)) {
         this.closeModal();
@@ -76,13 +67,11 @@ export default class SuccessModal {
     });
   }
 
-  // Метод для закрытия модального окна
   closeModal() {
     const modal = document.getElementById(this.id);
     if (modal) {
       modal.style.display = "none";
       document.body.style.overflow = "auto";
-      // Удаляем модальное окно из DOM
       modal.remove();
     }
   }

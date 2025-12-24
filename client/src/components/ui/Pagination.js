@@ -7,25 +7,25 @@ import BasicPagination from "../../common/BasicPagination";
 class Pagination extends BasicPagination {
   constructor(totalPages, containerId) {
     super(totalPages, containerId);
-    this.visitedButtons = new Set(); // Отслеживание посещённых кнопок
+    this.visitedButtons = new Set();
   }
 
   changePage(pageIndex) {
     super.changePage(pageIndex);
-    this.markAsVisited(pageIndex); // Помечаем текущую страницу как посещённую
-    this.updateVisitedButtons(); // Обновляем стили для посещённых кнопок
+    this.markAsVisited(pageIndex);
+    this.updateVisitedButtons();
   }
 
   updateVisitedButtons() {
     Array.from(document.querySelectorAll(".page-button")).forEach(
       (button, index) => {
         if (this.visitedButtons.has(index)) {
-          button.classList.add("visited"); // Добавляем класс для посещённой кнопки
+          button.classList.add("visited");
         } else {
           button.classList.remove("visited");
         }
         if (index === this.currentPage) {
-          button.classList.add("active"); // Активная кнопка
+          button.classList.add("active");
         } else {
           button.classList.remove("active");
         }
@@ -34,10 +34,9 @@ class Pagination extends BasicPagination {
   }
 
   markAsVisited(index) {
-    this.visitedButtons.add(index); // Добавляем индекс в посещённые
-    this.updateVisitedButtons(); // Обновляем стили кнопок
+    this.visitedButtons.add(index);
+    this.updateVisitedButtons();
   }
 }
 
 export default Pagination;
-

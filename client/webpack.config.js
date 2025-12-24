@@ -1,9 +1,9 @@
 const Dotenv = require("dotenv-webpack");
 const path = require("path");
-const CopyWebpackPlugin = require("copy-webpack-plugin"); // Импортируем CopyWebpackPlugin
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  mode: "development", // или "production"
+  mode: "development",
   entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -12,8 +12,8 @@ module.exports = {
   },
   plugins: [
     new Dotenv({
-      path: path.resolve(__dirname, ".env"), // Указываем путь к файлу .env
-      systemvars: true, // Добавляем systemvars: true, чтобы загружать системные переменные окружения
+      path: path.resolve(__dirname, ".env"),
+      systemvars: true,
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -22,7 +22,7 @@ module.exports = {
           to: path.resolve(__dirname, "dist"),
         },
       ],
-    }), // Добавляем плагин для копирования файла _redirects
+    }),
   ],
-  devtool: false, // Отключаем карты исходного кода
+  devtool: false,
 };

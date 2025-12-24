@@ -7,7 +7,6 @@ import Pagination from "../ui/Pagination";
 
 class QuestionNavigator {
   constructor(totalQuestions, onNavigate, onFinish) {
-    // Проверяем, что totalQuestions корректно передан и является числом
     if (typeof totalQuestions !== "number" || totalQuestions <= 0) {
       return;
     }
@@ -15,18 +14,13 @@ class QuestionNavigator {
     this.totalQuestions = totalQuestions;
     this.currentQuestionIndex = 0;
 
-    // Проверяем, что Pagination инициализирован правильно
     try {
       this.pagination = new Pagination(totalQuestions, "indicator-panel");
-    } catch (error) {
-      // Failed to initialize Pagination
-    }
+    } catch (error) {}
 
-    // Проверка, что onNavigate и onFinish — функции
     this.onNavigate = typeof onNavigate === "function" ? onNavigate : () => {};
     this.onFinish = typeof onFinish === "function" ? onFinish : () => {};
 
-    // Обработка клика на кнопки пагинации
     if (this.pagination) {
       this.pagination.onPageChange = (pageIndex) => {
         if (pageIndex !== this.currentQuestionIndex) {
@@ -35,7 +29,6 @@ class QuestionNavigator {
       };
     }
 
-    // Обработка клика на кнопку "Завершить тест"
     const finishButton = document.getElementById("finishButton");
     if (finishButton) {
       finishButton.onclick = () => {
@@ -44,7 +37,6 @@ class QuestionNavigator {
     }
   }
 
-  // Метод для получения общего количества вопросов
   getTotalQuestions() {
     return this.totalQuestions;
   }
@@ -90,4 +82,3 @@ class QuestionNavigator {
 }
 
 export default QuestionNavigator;
-

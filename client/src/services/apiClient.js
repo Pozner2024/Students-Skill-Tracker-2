@@ -5,7 +5,7 @@
  */
 
 import { API_CONFIG } from "../config/api.js";
-import authService from "./authService.js";
+import authCore from "./authCore.js";
 import errorHandler from "./errorHandler.js";
 
 class ApiClient {
@@ -20,7 +20,7 @@ class ApiClient {
     const headers = { ...this.defaultHeaders };
 
     if (includeAuth) {
-      const token = authService.getToken();
+      const token = authCore.getToken();
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
@@ -88,6 +88,7 @@ class ApiClient {
       includeAuth = true,
       handleErrors = true,
       context = endpoint,
+      timeout = 30000, // 30 секунд по умолчанию
     } = options;
 
     try {
@@ -100,13 +101,27 @@ class ApiClient {
 
       const headers = this.getHeaders(customHeaders, includeAuth);
 
-      const response = await fetch(url, {
-        method,
-        headers,
-        body: requestBody,
-      });
+      // Создаем контроллер для таймаута
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-      return await this.handleResponse(response, context, handleErrors);
+      try {
+        const response = await fetch(url, {
+          method,
+          headers,
+          body: requestBody,
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+        return await this.handleResponse(response, context, handleErrors);
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        if (fetchError.name === "AbortError") {
+          throw new Error(`Превышено время ожидания ответа (${timeout}ms)`);
+        }
+        throw fetchError;
+      }
     } catch (error) {
       if (handleErrors) {
         errorHandler.handle(error, context);

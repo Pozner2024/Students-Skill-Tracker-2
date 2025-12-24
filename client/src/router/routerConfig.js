@@ -1,14 +1,14 @@
 // Конфигурация маршрутов приложения: определение всех маршрутов, middleware для проверки авторизации и прав доступа
-import Home from "../pages/Home.js";
-import About from "../pages/About.js";
-import Contacts from "../pages/Contacts.js";
-import CriteriaPage from "../pages/Criteria.js";
+import Home from "../pages/Home/Home.js";
+import About from "../pages/About/About.js";
+import Contacts from "../pages/Contacts/Contacts.js";
+import CriteriaPage from "../pages/Criteria/Criteria.js";
 import ProfilePage from "../pages/Profile/ProfilePage.js";
-import AdminPage from "../pages/Admin.js";
-import Error404 from "../pages/Error404.js";
-import TestPage from "../pages/TestPage.js";
-import TopicPage from "../pages/TopicPage.js";
-import { renderLoginPage } from "../pages/LoginPage.js";
+import AdminPage from "../pages/Admin/Admin.js";
+import Error404 from "../pages/Error404/Error404.js";
+import TestPage from "../pages/TestPage/TestPage.js";
+import TopicPage from "../pages/TopicPage/TopicPage.js";
+import { renderLoginPage } from "../pages/LoginPage/LoginPage.js";
 
 export const authMiddleware = async (path, isAuthenticated) => {
   const publicRoutes = ["/login", "/about", "/contacts"];
