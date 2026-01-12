@@ -16,7 +16,7 @@ class ApiClient {
     };
   }
 
-  getHeaders(customHeaders = {}, includeAuth = true) {
+  getHeaders(customHeaders = {}, includeAuth = true, body = null) {
     const headers = { ...this.defaultHeaders };
 
     if (includeAuth) {
@@ -26,7 +26,8 @@ class ApiClient {
       }
     }
 
-    if (customHeaders.body instanceof FormData) {
+    // Если тело запроса - FormData, удаляем Content-Type, чтобы браузер установил multipart/form-data
+    if (body instanceof FormData) {
       delete headers["Content-Type"];
     }
 
@@ -53,29 +54,81 @@ class ApiClient {
 
       let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
       try {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          const errorData = await response.json();
-          errorMessage = errorData.message || errorMessage;
+        const contentType = response.headers.get("content-type") || "";
+        // Клонируем response для чтения, чтобы не "потреблять" тело
+        const clonedResponse = response.clone();
+        
+        // Сначала читаем как текст, чтобы проверить содержимое
+        const responseText = await clonedResponse.text();
+        
+        // Проверяем, не является ли это multipart данными (даже если Content-Type не указывает на это)
+        if (responseText && (responseText.startsWith("------") || responseText.includes("multipart/form-data"))) {
+          errorMessage = `Ошибка сервера: получен неверный формат ответа (multipart вместо JSON). Проверьте настройки сервера.`;
+        } else if (contentType.includes("multipart/")) {
+          errorMessage = `Ошибка сервера: получен неверный формат ответа (multipart вместо JSON)`;
+        } else if (contentType.includes("application/json")) {
+          try {
+            const errorData = JSON.parse(responseText);
+            errorMessage = errorData.message || errorData.error || errorMessage;
+          } catch (jsonError) {
+            // Если не удалось распарсить как JSON
+            errorMessage = responseText.substring(0, 200) || errorMessage;
+          }
+        } else if (contentType.includes("text/")) {
+          errorMessage = responseText.substring(0, 200) || errorMessage;
         } else {
-          const errorText = await response.text();
-          if (errorText) {
-            errorMessage = errorText;
+          // Если Content-Type не указан или неизвестен, пробуем распарсить как JSON
+          try {
+            const errorData = JSON.parse(responseText);
+            errorMessage = errorData.message || errorData.error || errorMessage;
+          } catch (parseError) {
+            // Если не JSON, используем текст
+            errorMessage = responseText.substring(0, 200) || errorMessage;
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        // Если не удалось прочитать ответ, используем дефолтное сообщение
+      }
 
       throw new Error(errorMessage);
     }
 
-    const contentType = response.headers.get("content-type");
+    const contentType = response.headers.get("content-type") || "";
 
-    if (contentType && contentType.includes("application/json")) {
-      return await response.json();
-    } else if (contentType && contentType.includes("text/")) {
-      return await response.text();
+    // Для успешных ответов сначала читаем как текст, чтобы проверить содержимое
+    // Это позволяет обнаружить multipart даже если Content-Type не установлен правильно
+    let responseText;
+    try {
+      responseText = await response.text();
+    } catch (e) {
+      throw new Error("Не удалось прочитать ответ сервера");
+    }
+    
+    // Проверяем, не является ли это multipart данными (даже если Content-Type не указывает на это)
+    // Проверяем по началу строки (boundary multipart начинается с -----)
+    if (responseText && typeof responseText === 'string' && (responseText.trim().startsWith("------") || responseText.includes("multipart/form-data"))) {
+      throw new Error(`Сервер вернул неожиданный формат ответа. Ожидался JSON, получен multipart. Проверьте настройки сервера.`);
+    }
+    
+    // Теперь проверяем Content-Type
+    if (contentType.includes("multipart/")) {
+      throw new Error(`Сервер вернул неожиданный формат ответа. Ожидался JSON, получен multipart.`);
+    } else if (contentType.includes("application/json") || !contentType) {
+      // Если Content-Type JSON или не указан, пробуем распарсить как JSON
+      try {
+        return JSON.parse(responseText);
+      } catch (e) {
+        // Если не удалось распарсить, проверяем, не multipart ли это
+        if (responseText && typeof responseText === 'string' && responseText.trim().startsWith("------")) {
+          throw new Error(`Сервер вернул multipart данные вместо JSON.`);
+        }
+        throw new Error(`Неверный формат ответа сервера: ${responseText.substring(0, 100)}`);
+      }
+    } else if (contentType.includes("text/")) {
+      return responseText;
     } else {
-      return await response.blob();
+      // Для других типов возвращаем текст
+      return responseText;
     }
   }
 
@@ -99,7 +152,8 @@ class ApiClient {
         requestBody = JSON.stringify(body);
       }
 
-      const headers = this.getHeaders(customHeaders, includeAuth);
+      // Передаем body в getHeaders, чтобы правильно обработать FormData
+      const headers = this.getHeaders(customHeaders, includeAuth, body);
 
       // Создаем контроллер для таймаута
       const controller = new AbortController();

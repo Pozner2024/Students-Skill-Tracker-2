@@ -1,11 +1,10 @@
 import Section from "../../common/Section";
 import logo from "../../assets/logo_vgik.png";
-import createCubeLoader from "../ui/CubeLoader";
+import "../ui/CubeLoader";
 
 export default class Header extends Section {
   constructor() {
     super({ id: "header", customClass: "site-header" });
-    this.cubeLoader = createCubeLoader();
     this.handleWindowLoad = this.handleWindowLoad.bind(this);
     this.handleLogoClick = this.handleLogoClick.bind(this);
     this.isLoadListenerAttached = false;
@@ -20,7 +19,11 @@ export default class Header extends Section {
             <a href="/" class="logo-link text-decoration-none flex-shrink-0">
               <img src="${logo}" alt="Логотип" class="logo img-fluid" id="logo" />
             </a>
-            <h1 class="mb-0 text-end flex-grow-1 ms-3">Кондитер-Pro. Система контроля и оценки компетенций обучающихся по учебному предмету "Специальная технология"</h1>
+            <h1 class="text-end flex-grow-1 ms-3">
+              <span class="header-title-line header-title-main">Кондитер-Pro</span>
+              <span class="header-title-line">Контроль и оценка компетенций обучающихся</span>
+              <span class="header-title-line">по учебному предмету "Специальная технология"</span>
+            </h1>
           </div>
         </div>
       </section>
@@ -30,10 +33,16 @@ export default class Header extends Section {
   afterRender() {
     this.removeListeners();
 
-    this.cubeLoader.show();
-
-    window.addEventListener("load", this.handleWindowLoad, { once: true });
-    this.isLoadListenerAttached = true;
+    // Показываем лоадер только при первой загрузке страницы
+    // При навигации по SPA страница уже загружена, поэтому событие load не произойдет
+    if (document.readyState === 'loading') {
+      window.loader.show();
+      window.addEventListener("load", this.handleWindowLoad, { once: true });
+      this.isLoadListenerAttached = true;
+    } else {
+      // Страница уже загружена, лоадер не показываем
+      // Каждая страница сама управляет своим лоадером
+    }
 
     this.logoElement = document.querySelector(".logo-link");
 
@@ -43,7 +52,7 @@ export default class Header extends Section {
   }
 
   handleWindowLoad() {
-    this.cubeLoader.hide();
+    window.loader.hide();
     this.isLoadListenerAttached = false;
   }
 

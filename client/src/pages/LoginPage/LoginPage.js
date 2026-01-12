@@ -1,4 +1,4 @@
-import createCubeLoader from "../../components/ui/CubeLoader";
+import "../../components/ui/CubeLoader";
 import SuccessModal from "../../components/modals/SuccessModal";
 import authService from "../../services/authService";
 import errorHandler from "../../services/errorHandler.js";
@@ -20,7 +20,7 @@ export function renderLoginPage() {
       <div class="main-container">
         <div class="text-section">
           <img src="${logo}" alt="Логотип УО ВГИК" class="logo">
-          <h1>Кондитер-Pro. Система контроля и оценки компетенций обучающихся по учебному предмету "Специальная технология".</h1>
+          <h1>Кондитер-Pro. Контроль и оценка компетенций обучающихся по учебному предмету "Специальная технология".</h1>
           <p>Специальность: "Обслуживание и изготовление продукции в общественном питании". Квалификация: "Кондитер 4 разряда".</p>
         </div>
         <div class="login-wrapper">
@@ -73,14 +73,12 @@ export function renderLoginPage() {
   pageBackground.style.backgroundPosition = "center";
   pageBackground.style.backgroundRepeat = "no-repeat";
 
-  const loader = createCubeLoader();
-
   document
     .getElementById("login-btn")
-    .addEventListener("click", () => handleLogin(loader));
+    .addEventListener("click", handleLogin);
   document
     .getElementById("register-btn")
-    .addEventListener("click", () => handleRegister(loader));
+    .addEventListener("click", handleRegister);
 
   document
     .getElementById("password-toggle")
@@ -105,7 +103,7 @@ function showBootstrapAlert(message, type = "info") {
   });
 }
 
-async function handleLogin(loader) {
+async function handleLogin() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
@@ -115,11 +113,11 @@ async function handleLogin(loader) {
     return;
   }
 
-  loader.show();
+  window.loader.show();
 
   try {
     const result = await authService.login(email, password);
-    loader.hide();
+    window.loader.hide();
 
     if (result.success) {
       window.location.href = "/";
@@ -127,12 +125,12 @@ async function handleLogin(loader) {
       errorHandler.handle(result, "LoginPage.handleLogin");
     }
   } catch (error) {
-    loader.hide();
+    window.loader.hide();
     errorHandler.handle(error, "LoginPage.handleLogin");
   }
 }
 
-async function handleRegister(loader) {
+async function handleRegister() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
@@ -142,11 +140,11 @@ async function handleRegister(loader) {
     return;
   }
 
-  loader.show();
+  window.loader.show();
 
   try {
     const result = await authService.register(email, password);
-    loader.hide();
+    window.loader.hide();
 
     if (result.success) {
       document.getElementById("email").value = "";
@@ -164,7 +162,7 @@ async function handleRegister(loader) {
       errorHandler.handle(result, "LoginPage.handleRegister");
     }
   } catch (error) {
-    loader.hide();
+    window.loader.hide();
     errorHandler.handle(error, "LoginPage.handleRegister");
   }
 }
@@ -233,4 +231,3 @@ function updatePasswordIndicator() {
     indicator.classList.remove("show-flex");
   }
 }
-

@@ -136,6 +136,15 @@ export class TopicsController {
     @Body() body: { content: any },
   ): Promise<{ success: boolean; message: string }> {
     try {
+      this.logger.log(`[updateTopicContent] Получен запрос для topic id: ${id}`);
+      this.logger.log(`[updateTopicContent] Тип content: ${typeof body.content}`);
+      this.logger.log(`[updateTopicContent] Является строкой: ${typeof body.content === 'string'}`);
+      this.logger.log(`[updateTopicContent] Является объектом: ${typeof body.content === 'object' && body.content !== null}`);
+      if (typeof body.content === 'string') {
+        this.logger.log(`[updateTopicContent] Первые 200 символов content: ${body.content.substring(0, 200)}`);
+      } else {
+        this.logger.log(`[updateTopicContent] Content (JSON): ${JSON.stringify(body.content).substring(0, 300)}`);
+      }
       return await this.topicsService.updateTopicContent(id, body.content);
     } catch (error) {
       this.logger.error('Ошибка при обновлении content:', error);

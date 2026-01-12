@@ -4,7 +4,7 @@
 }
 
 .about-section-title {
-  margin-top: 2rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
   color: white;
   font-size: 1.5rem;
@@ -38,6 +38,10 @@
 }
 
 @media (width < 480px) {
+  .about-section-title {
+    font-size: 1.2rem;
+  }
+
   .about-images img {
     width: min(100%, 250px);
   }

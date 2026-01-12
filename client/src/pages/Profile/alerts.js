@@ -27,13 +27,17 @@ export function showBootstrapAlert(message, type = "info") {
 
   setTimeout(() => {
     if (alertContainer.parentNode) {
-      const bsAlert = new bootstrap.Alert(alertDiv);
-      bsAlert.close();
-      setTimeout(() => {
-        if (alertContainer.parentNode) {
-          alertContainer.remove();
-        }
-      }, 300);
+      if (window.bootstrap && window.bootstrap.Alert) {
+        const bsAlert = new window.bootstrap.Alert(alertDiv);
+        bsAlert.close();
+        setTimeout(() => {
+          if (alertContainer.parentNode) {
+            alertContainer.remove();
+          }
+        }, 300);
+      } else {
+        alertContainer.remove();
+      }
     }
   }, 5000);
 }
@@ -64,8 +68,12 @@ export function showSuccessMessage(message) {
 
     setTimeout(() => {
       if (messageDiv.parentNode) {
-        const bsAlert = new bootstrap.Alert(messageDiv);
-        bsAlert.close();
+        if (window.bootstrap && window.bootstrap.Alert) {
+          const bsAlert = new window.bootstrap.Alert(messageDiv);
+          bsAlert.close();
+        } else {
+          messageDiv.remove();
+        }
       }
     }, 3000);
   }
@@ -97,8 +105,12 @@ export function showErrorMessage(message) {
 
     setTimeout(() => {
       if (messageDiv.parentNode) {
-        const bsAlert = new bootstrap.Alert(messageDiv);
-        bsAlert.close();
+        if (window.bootstrap && window.bootstrap.Alert) {
+          const bsAlert = new window.bootstrap.Alert(messageDiv);
+          bsAlert.close();
+        } else {
+          messageDiv.remove();
+        }
       }
     }, 5000);
   }

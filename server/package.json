@@ -19,6 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/jest/bin/jest.js --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "create:admin": "node --env-file=.env scripts/create-admin.js",
+    "db:dump": "node --env-file=.env scripts/dump-db.js",
+    "db:dump:node": "node --env-file=.env scripts/dump-db-node.js",
     "prisma:studio": "prisma studio"
   },
   "dependencies": {

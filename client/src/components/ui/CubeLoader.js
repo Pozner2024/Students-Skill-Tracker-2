@@ -1,32 +1,19 @@
 // Модуль для управления индикатором загрузки (кубик)
-// Использует замыкание для хранения состояния контейнера
+// Использует БЭМ-подход с классом активности
 
-function createCubeLoader() {
-  let loaderContainer = null;
+const loaderActiveClass = 'cube-loader-container_active';
 
-  return {
-    show() {
-      if (loaderContainer) return;
-
-      loaderContainer = document.createElement("div");
-      loaderContainer.className = "cube-loader-container";
-
-      loaderContainer.innerHTML = `
-        <div class="content">
-          <div class="cube"></div>
-        </div>
-      `;
-
-      document.body.appendChild(loaderContainer);
-    },
-
-    hide() {
-      if (loaderContainer) {
-        document.body.removeChild(loaderContainer);
-        loaderContainer = null;
-      }
-    },
-  };
+function loaderOn() {
+  const loader = document.querySelector('.cube-loader-container');
+  loader?.classList.add(loaderActiveClass);
 }
 
-export default createCubeLoader;
+function loaderOff() {
+  const loader = document.querySelector('.cube-loader-container');
+  loader?.classList.remove(loaderActiveClass);
+}
+
+window.loader = {
+  show: loaderOn,
+  hide: loaderOff
+};

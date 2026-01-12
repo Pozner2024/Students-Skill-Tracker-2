@@ -7,7 +7,7 @@
 //- задаётся порт, на котором запускается сервер (по умолчанию 5000).
 
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, ConsoleLogger } from '@nestjs/common';
+import { ValidationPipe, ConsoleLogger, BadRequestException } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { corsConfig } from './config/cors.config';
@@ -28,17 +28,58 @@ async function bootstrap() {
     logger: new CustomLogger(),
   });
 
+  // Устанавливаем кодировку UTF-8 для всех JSON ответов
+  app.use((req: any, res: any, next: any) => {
+    // Устанавливаем charset для JSON ответов
+    const originalJson = res.json;
+    res.json = function (body: any) {
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      return originalJson.call(this, body);
+    };
+    next();
+  });
+
   // Валидация
+  // Отключаем валидацию для multipart/form-data запросов (загрузка файлов)
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      // Пропускаем валидацию для multipart запросов
+      skipMissingProperties: false,
+      // Не валидируем, если Content-Type содержит multipart
+      disableErrorMessages: false,
     }),
   );
 
   // Глобальный фильтр ошибок
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Обработка ошибок Multer до того, как они попадут в фильтр
+  // Это гарантирует, что ошибки Multer всегда возвращаются как JSON
+  app.use((err: any, req: any, res: any, next: any) => {
+    // Проверяем, является ли это ошибкой Multer
+    // Multer ошибки имеют код, начинающийся с 'LIMIT_' или имя 'MulterError'
+    if (err && (err.code?.startsWith('LIMIT_') || err.name === 'MulterError')) {
+      // Убеждаемся, что заголовки еще не отправлены
+      if (!res.headersSent) {
+        // Очищаем любые установленные заголовки
+        res.removeHeader('Content-Type');
+        // Устанавливаем правильный Content-Type
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      }
+      
+      // Преобразуем ошибку Multer в HttpException
+      const httpException = new BadRequestException(
+        err.message || 'Ошибка при загрузке файла',
+      );
+      
+      // Передаем в глобальный фильтр
+      return next(httpException);
+    }
+    next(err);
+  });
 
   // Разрешаем CORS
   app.enableCors({

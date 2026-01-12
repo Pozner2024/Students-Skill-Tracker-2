@@ -8,7 +8,12 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./normalize.css";
 import "./App.css";
 import "./common/Modal.css";
-import "./pages/TestPage/TestPage.css";
+import "./pages/TestPage/layout.css";
+import "./pages/TestPage/navigation.css";
+import "./pages/TestPage/question.css";
+import "./pages/TestPage/forms.css";
+import "./pages/TestPage/matching.css";
+import "./pages/TestPage/ordering.css";
 import "./components/ui/CubeLoader.css";
 import "./components/ui/SkillProgressBar.css";
 import "./pages/LoginPage/LoginPage.css";
@@ -34,6 +39,11 @@ const App = (root) => {
     ${menuComponent.render()}    
     <section id="${containerId}"></section>
     ${footerComponent.render()}  
+    <div class="cube-loader-container">
+      <div class="content">
+        <div class="cube"></div>
+      </div>
+    </div>
     `
   );
 

@@ -159,12 +159,11 @@ h6 {
 /* Кастомные стили для заголовков на страницах */
 main.container h1 {
   color: var(--color-white);
-  background-color: var(--color-heading-bg);
+
   padding: 2px;
   height: 40px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: left;
 }
 
 p {

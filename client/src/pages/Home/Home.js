@@ -1,6 +1,7 @@
 // Главная страница приложения, отображающая каталог доступных тем для тестирования
 import Page from "../../common/Page.js";
 import Topics from "../../components/topics/Topics.js";
+import "../../components/ui/CubeLoader";
 
 class HomePage extends Page {
   constructor() {
@@ -26,9 +27,11 @@ class HomePage extends Page {
   async renderPage() {
     const contentElement = document.getElementById("content");
     if (!contentElement) {
+      window.loader.hide();
       return "";
     }
 
+    window.loader.show();
     try {
       await this.topicsComponent.loadTopics();
 
@@ -54,6 +57,8 @@ class HomePage extends Page {
         error.message ||
         "Не удалось загрузить тесты. Пожалуйста, обновите страницу.";
       this.renderErrorView(contentElement, errorMessage);
+    } finally {
+      window.loader.hide();
     }
 
     return "";
@@ -102,4 +107,3 @@ class HomePage extends Page {
 }
 
 export default HomePage;
-

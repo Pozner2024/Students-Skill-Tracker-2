@@ -64,9 +64,7 @@ export function renderContent(topic) {
   if (!topic) {
     console.warn("[renderContent] Топик не передан");
     return `
-      <div class="topic-page">
-        <p class="error-note">Тема не найдена.</p>
-      </div>
+      <p class="error-note">Тема не найдена.</p>
     `;
   }
 
@@ -74,6 +72,51 @@ export function renderContent(topic) {
   console.log("[renderContent] topic.content:", topic.content);
   console.log("[renderContent] Тип topic.content:", typeof topic.content);
 
+  // Если content - это массив секций, рендерим их с заголовками
+  if (Array.isArray(topic.content) && topic.content.length > 0) {
+    console.log(
+      "[renderContent] Content - массив секций, рендерим с заголовками"
+    );
+    const sectionsHtml = topic.content
+      .map((section) => {
+        if (typeof section === "object" && section !== null) {
+          const title = section.title || "";
+          const contentHtml = section.contentHtml || section.html || "";
+
+          if (contentHtml && contentHtml.trim().length > 0) {
+            const sanitizedHtml = sanitizeHtml(contentHtml.trim());
+            if (title) {
+              // Для заголовка используем только текст, убираем HTML
+              const titleText =
+                typeof title === "string"
+                  ? title.replace(/<[^>]*>/g, "").trim()
+                  : String(title);
+              return `
+                <div class="topic-section">
+                  <h3 class="topic-section-title">${titleText}</h3>
+                  <div class="topic-section-content">${sanitizedHtml}</div>
+                </div>
+              `;
+            } else {
+              return `
+                <div class="topic-section">
+                  <div class="topic-section-content">${sanitizedHtml}</div>
+                </div>
+              `;
+            }
+          }
+        }
+        return null;
+      })
+      .filter((html) => html !== null)
+      .join("");
+
+    if (sectionsHtml && sectionsHtml.trim().length > 0) {
+      return `<div class="topic-content">${sectionsHtml}</div>`;
+    }
+  }
+
+  // Обычная обработка (для других форматов)
   const textContent = extractTextFromContent(topic.content);
 
   console.log("[renderContent] Извлеченный текст:", textContent);
@@ -86,9 +129,7 @@ export function renderContent(topic) {
       JSON.stringify(topic.content, null, 2)
     );
     return `
-      <div class="topic-page">
-        <p class="placeholder-note">Содержание темы пока не добавлено.</p>
-      </div>
+      <p class="placeholder-note">Содержание темы пока не добавлено.</p>
     `;
   }
 
@@ -96,8 +137,6 @@ export function renderContent(topic) {
   const formattedText = sanitizeHtml(textContent);
 
   return `
-    <div class="topic-page">
-      <div class="topic-content">${formattedText}</div>
-    </div>
+    <div class="topic-content">${formattedText}</div>
   `;
 }

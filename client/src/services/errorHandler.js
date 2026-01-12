@@ -277,11 +277,38 @@ class ErrorHandler {
     let errorData = {};
 
     try {
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        errorData = await response.json();
+      const contentType = response.headers.get("content-type") || "";
+      // Клонируем response для чтения
+      const clonedResponse = response.clone();
+      
+      if (contentType.includes("application/json")) {
+        try {
+          errorData = await clonedResponse.json();
+        } catch (jsonError) {
+          // Если не удалось распарсить как JSON, пробуем как текст
+          const text = await clonedResponse.text();
+          // Проверяем, не является ли это multipart данными
+          if (text && !text.startsWith("------") && !text.includes("multipart/form-data")) {
+            try {
+              errorData = JSON.parse(text);
+            } catch (parseError) {
+              errorData = { message: text.substring(0, 200) };
+            }
+          } else {
+            errorData = { message: `HTTP ${response.status}: ${response.statusText}` };
+          }
+        }
+      } else if (contentType.includes("multipart/")) {
+        // Для multipart не пытаемся парсить
+        errorData = { message: `HTTP ${response.status}: ${response.statusText}` };
       } else {
-        errorData = { message: await response.text() };
+        const text = await clonedResponse.text();
+        // Проверяем, не является ли это multipart данными
+        if (text && !text.startsWith("------") && !text.includes("multipart/form-data")) {
+          errorData = { message: text.substring(0, 200) };
+        } else {
+          errorData = { message: `HTTP ${response.status}: ${response.statusText}` };
+        }
       }
     } catch (e) {
       errorData = {

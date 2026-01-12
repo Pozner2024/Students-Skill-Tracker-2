@@ -1,6 +1,6 @@
 import TestQuestion from "../../components/test/TestQuestion";
 import Pagination from "../../components/ui/Pagination";
-import createCubeLoader from "../../components/ui/CubeLoader";
+import "../../components/ui/CubeLoader";
 import background from "../../assets/background1.jpg";
 
 class TestPage {
@@ -14,7 +14,6 @@ class TestPage {
     this.metaTitle = metaTitle;
     this.testQuestion = null;
     this.pagination = null;
-    this.loader = createCubeLoader();
   }
 
   renderPageStructure(
@@ -27,15 +26,13 @@ class TestPage {
       <main id="${this.id}" class="container my-4">
         <div class="test-page-styles">
           <div class="test-info">
-            <h2>${title}</h2>
-            <p>Вариант: ${variant}</p>
+            <h2>${title}: <span class="variant-text">Вариант ${variant}</span></h2>
           </div>
-          <div id="indicator-panel" class="indicator-panel"></div>
+          <div id="indicator-panel" class="indicator-panel">
+            <button id="finishButton" class="nav-button finish-button">Результаты</button>
+          </div>
           <div id="questions-panel" class="questions-panel"></div>
           <div class="navigation-panel">
-            <button id="prevButton" class="nav-button">Назад</button>
-            <button id="nextButton" class="nav-button">Вперед</button>
-            <button id="finishButton" class="nav-button finish-button">Завершить тест и показать результаты теста</button>
           </div>
         </div>
       </main>
@@ -51,10 +48,14 @@ class TestPage {
 
   renderPage(title, variant) {
     const contentElement = document.getElementById("content");
-    this.metaTitle = title;
+    const normalizedTitle = (title || "").replace(/^Тема:?\s*/i, "");
+    this.metaTitle = `${normalizedTitle}: Вариант ${variant}`;
     document.title = this.metaTitle;
     if (contentElement) {
-      contentElement.innerHTML = this.renderPageStructure(title, variant);
+      contentElement.innerHTML = this.renderPageStructure(
+        normalizedTitle,
+        variant
+      );
 
       const testPageStyles = contentElement.querySelector(".test-page-styles");
       if (testPageStyles) {
@@ -67,12 +68,12 @@ class TestPage {
   }
 
   async init() {
-    this.loader.show();
+    window.loader.show();
 
     // Таймаут для всего процесса инициализации (60 секунд)
     const initTimeout = setTimeout(() => {
       console.error("TestPage: Превышено время инициализации");
-      this.loader.hide();
+      window.loader.hide();
     }, 60000);
 
     try {
@@ -94,11 +95,31 @@ class TestPage {
         const totalQuestions = this.testQuestion.getTotalQuestions();
 
         if (totalQuestions > 0) {
+          // Сохраняем кнопку "Результаты" перед созданием пагинации
+          const indicatorPanel = document.getElementById("indicator-panel");
+          const finishButton = indicatorPanel
+            ? indicatorPanel.querySelector("#finishButton")
+            : null;
+
           this.pagination = new Pagination(totalQuestions, "indicator-panel");
+
+          // Восстанавливаем кнопку "Результаты" после создания пагинации
+          if (finishButton && indicatorPanel) {
+            const finishButtonElement = document.createElement("button");
+            finishButtonElement.id = "finishButton";
+            finishButtonElement.className = "nav-button finish-button";
+            finishButtonElement.textContent = "Результаты";
+            indicatorPanel.appendChild(finishButtonElement);
+          }
 
           this.pagination.onPageChange = (pageIndex) => {
             this.testQuestion.navigator.navigateToQuestion(pageIndex, true);
           };
+
+          // Устанавливаем callback для обновления pagination
+          this.testQuestion.setPaginationUpdateCallback((index) => {
+            this.pagination.changePage(index);
+          });
 
           this.testQuestion.renderCurrentQuestion(
             this.testQuestion.navigator.currentQuestionIndex
@@ -107,30 +128,9 @@ class TestPage {
             this.testQuestion.navigator.currentQuestionIndex
           );
 
-          const prevButton = document.getElementById("prevButton");
-          const nextButton = document.getElementById("nextButton");
-          const finishButton = document.getElementById("finishButton");
-
-          if (prevButton) {
-            prevButton.onclick = () => {
-              this.testQuestion.showPreviousQuestion();
-              this.pagination.changePage(
-                this.testQuestion.navigator.currentQuestionIndex
-              );
-            };
-          }
-
-          if (nextButton) {
-            nextButton.onclick = () => {
-              this.testQuestion.showNextQuestion();
-              this.pagination.changePage(
-                this.testQuestion.navigator.currentQuestionIndex
-              );
-            };
-          }
-
-          if (finishButton) {
-            finishButton.onclick = () => {
+          const restoredFinishButton = document.getElementById("finishButton");
+          if (restoredFinishButton) {
+            restoredFinishButton.onclick = () => {
               this.testQuestion.submitAllAnswers();
             };
           }
@@ -140,7 +140,7 @@ class TestPage {
       console.error("TestPage: Ошибка при инициализации:", error);
     } finally {
       clearTimeout(initTimeout);
-      this.loader.hide();
+      window.loader.hide();
     }
   }
 }

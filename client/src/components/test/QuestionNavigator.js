@@ -47,8 +47,9 @@ class QuestionNavigator {
       index < this.totalQuestions &&
       index !== this.currentQuestionIndex
     ) {
+      const previousIndex = this.currentQuestionIndex;
       this.currentQuestionIndex = index;
-      this.onNavigate(this.currentQuestionIndex);
+      this.onNavigate(this.currentQuestionIndex, previousIndex);
 
       if (!fromPagination) {
         this.updatePagination();

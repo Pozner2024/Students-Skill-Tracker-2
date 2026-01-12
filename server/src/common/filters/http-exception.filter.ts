@@ -27,6 +27,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let message = 'Внутренняя ошибка сервера';
     let details: unknown = undefined;
 
+    // Убеждаемся, что ответ всегда будет JSON, даже если запрос был multipart
+    // Это важно для обработки ошибок Multer
+    if (!response.headersSent) {
+      // Удаляем любые существующие заголовки Content-Type
+      response.removeHeader('Content-Type');
+      // Устанавливаем правильный Content-Type
+      response.setHeader('Content-Type', 'application/json; charset=utf-8');
+    }
+
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const response = exception.getResponse();

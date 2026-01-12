@@ -1,0 +1,455 @@
+/* Стили для вопросов */
+.question {
+  min-height: 384px;
+  height: auto;
+  padding: 0 15px 15px 15px;
+  border-radius: 0 4px 4px 4px;
+  background-color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: center;
+  color: black;
+  position: absolute;
+  top: 28px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  gap: 10px;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  will-change: transform, opacity;
+  transition: transform 0.8s cubic-bezier(0.25, 0.9, 0.25, 1),
+    opacity 0.6s ease-out;
+}
+
+/* стартовые позиции */
+.question.from-bottom {
+  transform: translateY(100vh);
+  opacity: 0;
+}
+
+.question.from-top {
+  transform: translateY(-100vh);
+  opacity: 0;
+}
+
+/* уходящие */
+.question.to-top {
+  transform: translateY(-100vh);
+  opacity: 0;
+  transition: transform 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.95s ease-out;
+}
+
+.question.to-bottom {
+  transform: translateY(100vh);
+  opacity: 0;
+  transition: transform 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.95s ease-out;
+}
+
+/* активный */
+.question.center {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.question.general-question {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 20px 20px 20px;
+  place-items: unset;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  gap: 20px;
+}
+
+.question-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex: 1;
+  margin-top: -20px;
+  padding-top: 0;
+  padding-left: 40px;
+  padding-right: 60px;
+  align-content: flex-start;
+  margin-bottom: 0;
+}
+
+@supports selector(:has(*)) {
+  .question:has(.question-image) {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0 20px 20px 20px;
+    place-items: unset;
+    gap: 20px;
+  }
+
+  .question:has(.question-image) .question-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+  }
+}
+
+.question:not(:has(.question-image)) .question-content {
+  flex-direction: column;
+}
+
+.question:not(:has(.question-image)) .question-text {
+  width: 100%;
+}
+
+.question-part {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+}
+
+.question p {
+  font-size: 28px;
+  margin: 0;
+  line-height: 1.5;
+  text-align: center;
+  color: black;
+}
+
+.question label {
+  font-size: 24px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  display: block;
+  color: black;
+}
+
+.question-text label {
+  padding-left: 40px;
+  margin-bottom: 8px;
+}
+
+.general-question .question-text p {
+  margin: 0 20px 20px 20px;
+  padding: 0 10px;
+  text-align: left;
+}
+
+.question.matching-only,
+.question.ordering-only {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: center;
+  gap: 5px;
+  padding-top: 0;
+}
+
+.question.matching-only .question-text,
+.question.ordering-only .question-text {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.question.matching-only .question-content,
+.question.ordering-only .question-content {
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.question.ordering-only {
+  margin: 0 auto;
+}
+
+.question.matching-only ul,
+.question.ordering-only ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 0;
+  width: auto;
+  text-align: center;
+}
+
+.question-text {
+  flex: 1;
+  width: min(100%, 60%);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.question-text p {
+  margin-top: 0;
+}
+
+.question-image {
+  width: min(100%, 374px);
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 0;
+  padding-top: 0;
+  align-items: flex-start;
+  display: flex;
+}
+
+.question-image:empty {
+  display: none;
+}
+
+.question-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.question-image img[alt]:not([src]),
+.question-image img:not([src]) {
+  display: none;
+}
+
+@media (width < 992px) {
+  .question {
+    min-height: auto;
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+
+  .question-content {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .question-text {
+    width: 100%;
+  }
+
+  .question-image {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .question p {
+    font-size: 24px;
+  }
+
+  .question label {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .question-text label {
+    margin-bottom: 14px;
+  }
+
+  .general-question .question-text p {
+    margin: 15px;
+    padding: 0 5px;
+    text-align: center;
+  }
+
+  .question-text {
+    width: min(100%, 70%);
+    text-align: center;
+  }
+
+  .question-image {
+    width: min(100%, 280px);
+  }
+
+  .general-question .question-text {
+    width: min(100%, 65%);
+  }
+}
+
+@media (width < 768px) {
+  .question {
+    min-height: auto;
+    padding: 0px;
+    margin-bottom: 5px;
+    flex-direction: column;
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .question.matching-only,
+  .question.ordering-only {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    padding: 10px 2px;
+    box-sizing: border-box;
+  }
+
+  .question.general-question {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .question-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+    margin-top: 0;
+  }
+
+  .question:has(.question-image) .question-content {
+    flex-direction: column;
+  }
+
+  .question-text {
+    width: 100%;
+    max-width: 100%;
+    order: 1;
+    overflow: visible;
+    min-width: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .general-question .question-text {
+    width: 100%;
+    text-align: center;
+    align-items: center;
+  }
+
+  .question-image {
+    width: 100%;
+    order: 2;
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+    padding-right: 0;
+    margin-right: 0;
+  }
+
+  .question-image img {
+    width: min(100%, 300px);
+    height: auto;
+    margin: 0;
+    padding-left: 5px;
+  }
+
+  .question p {
+    font-size: 22px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .question label {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 4px;
+    margin-top: -2px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .question-text label {
+    margin-bottom: 8px;
+  }
+
+  .question label:first-child {
+    margin-top: 0;
+  }
+
+  .general-question .question-text p {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .question-text p {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    text-align: center;
+    width: 100%;
+    align-self: center;
+  }
+}
+
+@media (width < 480px) {
+  .question {
+    padding: 8px;
+    margin-bottom: 12px;
+  }
+
+  .question p {
+    font-size: 18px;
+  }
+
+  .question label {
+    font-size: 16px;
+    margin-bottom: 0px;
+    margin-top: -3px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .question-text label {
+    margin-bottom: 8px;
+  }
+
+  .question label:first-child {
+    margin-top: 0;
+  }
+}
+
+@media (width < 360px) {
+  .question p {
+    font-size: 18px;
+  }
+
+  .question label {
+    font-size: 15px;
+    margin-bottom: 0px;
+    margin-top: -4px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .question-text label {
+    margin-bottom: 6px;
+  }
+
+  .question label:first-child {
+    margin-top: 0;
+  }
+}
+

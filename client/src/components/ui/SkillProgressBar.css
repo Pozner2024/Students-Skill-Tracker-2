@@ -137,3 +137,13 @@
   transform: translateY(-50%);
   opacity: 1;
 }
+
+@media (width < 480px) {
+  .header-container {
+    font-size: 18px;
+  }
+
+  .header-container h2 {
+    font-size: 20px;
+  }
+}

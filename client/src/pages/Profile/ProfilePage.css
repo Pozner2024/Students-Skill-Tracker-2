@@ -3,18 +3,23 @@
 @import "./filesSection.css";
 @import "./testResultsSection.css";
 
-.profile h1 {
+.profile h1,
+main.profile.container h1,
+#profile h1 {
   text-align: center;
   color: black;
   background-color: white;
   padding: 2px;
   margin-top: 10px;
   height: 40px;
-  margin: 0;
+  margin: 0 auto;
   width: 100%;
   font-size: 28px;
   line-height: 1.1;
   font-family: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-container {
@@ -103,7 +108,9 @@
 }
 
 @media (width < 768px) {
-  .profile h1 {
+  .profile h1,
+  main.profile.container h1,
+  #profile h1 {
     font-size: 24px;
     padding: 2px;
     color: black;

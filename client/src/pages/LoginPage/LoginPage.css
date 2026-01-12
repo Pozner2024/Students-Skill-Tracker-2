@@ -430,3 +430,13 @@
   }
 }
 
+@media (width < 480px) {
+  .text-section p {
+    display: none;
+  }
+
+  .mb-3 {
+    margin-bottom: calc(1rem + 4px);
+  }
+}
+

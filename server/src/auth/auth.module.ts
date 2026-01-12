@@ -10,11 +10,16 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
+
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'your-secret-key',
+      secret: jwtSecret,
       signOptions: { expiresIn: '24h' },
     }),
   ],

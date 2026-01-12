@@ -77,36 +77,67 @@ const createUserService = (auth) => ({
       const formData = new FormData();
       formData.append("file", file);
 
-      const data = await apiClient.uploadFile(
-        API_CONFIG.ENDPOINTS.UPLOAD.UPLOAD,
-        formData,
-        {
-          context: "AuthService.uploadFile",
-          handleErrors: false,
-        }
-      );
+      try {
+        const data = await apiClient.uploadFile(
+          API_CONFIG.ENDPOINTS.UPLOAD.UPLOAD,
+          formData,
+          {
+            context: "AuthService.uploadFile",
+            handleErrors: false,
+          }
+        );
 
-      return {
-        success: true,
-        data: data.data,
-      };
+        // Проверяем, что сервер вернул успешный ответ
+        if (data && data.success !== false) {
+          return {
+            success: true,
+            data: data.data || data,
+          };
+        } else {
+          // Если сервер вернул success: false или ошибку
+          return {
+            success: false,
+            error: data.message || data.error || "Ошибка при загрузке файла",
+          };
+        }
+      } catch (error) {
+        // Если произошла ошибка при запросе
+        console.error("Upload file error:", error);
+        throw error; // Пробрасываем ошибку, чтобы runWithAuth мог её обработать
+      }
     });
   },
 
   async getUserFiles() {
     return auth.runWithAuth(
       async () => {
-        const data = await apiClient.get(API_CONFIG.ENDPOINTS.UPLOAD.FILES, {
-          context: "AuthService.getUserFiles",
-          handleErrors: false,
-        });
+        try {
+          const data = await apiClient.get(API_CONFIG.ENDPOINTS.UPLOAD.FILES, {
+            context: "AuthService.getUserFiles",
+            handleErrors: false,
+          });
 
-        return {
-          success: true,
-          files: data.files || [],
-        };
+          // Проверяем, что сервер вернул успешный ответ
+          if (data && (data.success !== false)) {
+            return {
+              success: true,
+              files: data.files || [],
+            };
+          } else {
+            // Если сервер вернул success: false или ошибку
+            console.warn("Сервер вернул ошибку при получении файлов:", data);
+            return {
+              success: false,
+              error: data.message || data.error || "Ошибка при получении списка файлов",
+              files: [],
+            };
+          }
+        } catch (error) {
+          console.error("Ошибка при запросе списка файлов:", error);
+          throw error; // Пробрасываем ошибку, чтобы runWithAuth мог её обработать
+        }
       },
-      { files: [] }
+      { success: false, files: [], error: "Пользователь не авторизован" }
     );
   },
 

@@ -222,15 +222,9 @@ export class UploadService {
             // Проверяем, что декодирование дало валидную строку
             if (decoded !== originalFileName) {
               originalFileName = decoded;
-              this.logger.debug(
-                `Decoded filename from URL encoding: ${originalFileName}`,
-              );
             }
           } catch {
             // Если decodeURIComponent не сработал, пробуем декодировать только безопасные части
-            this.logger.debug(
-              `URL decode failed, trying alternative: ${originalFileName}`,
-            );
             try {
               // Пробуем декодировать через escape/unescape для совместимости
               originalFileName = originalFileName.replace(
@@ -240,17 +234,29 @@ export class UploadService {
                 },
               );
             } catch {
-              this.logger.debug(
-                `Alternative decode failed, using original: ${originalFileName}`,
-              );
+              // Если декодирование не удалось, используем оригинальное имя
             }
           }
         }
 
-        // Логируем финальное имя для отладки
-        this.logger.debug(
-          `Final filename after processing: ${originalFileName}`,
-        );
+        // Дополнительная обработка: если имя файла выглядит как неправильно закодированное
+        // (содержит последовательности типа \uXXXX или похожие), пробуем исправить
+        // Проверяем, не является ли имя файла в неправильной кодировке (например, latin1 вместо utf8)
+        try {
+          // Если имя файла содержит символы, которые выглядят как неправильно декодированные UTF-8
+          // (например, последовательности типа Ð, Ñ, Ò), пробуем перекодировать
+          const buffer = Buffer.from(originalFileName, 'latin1');
+          const utf8Name = buffer.toString('utf8');
+          
+          // Проверяем, содержит ли перекодированное имя валидные UTF-8 символы
+          // и отличается ли оно от оригинала
+          if (utf8Name !== originalFileName && /[\u0400-\u04FF]/.test(utf8Name)) {
+            // Если содержит кириллицу, используем перекодированное имя
+            originalFileName = utf8Name;
+          }
+        } catch (recodeError) {
+          // Если перекодирование не удалось, используем оригинальное имя
+        }
       } catch (e) {
         // Если все попытки не удались, используем оригинальное имя
         this.logger.warn(`Could not process filename: ${originalFileName}`, e);
@@ -480,9 +486,6 @@ export class UploadService {
             folder: folder || null,
           },
         });
-        this.logger.debug(
-          `File record created in DB for user ${userId}: ${key}`,
-        );
       } catch (dbError) {
         // Логируем ошибку, но не прерываем процесс загрузки
         this.logger.error(
@@ -655,9 +658,6 @@ export class UploadService {
         });
 
         if (dbFiles.length > 0) {
-          this.logger.debug(
-            `Found ${dbFiles.length} files in DB for user ${userId}`,
-          );
           return dbFiles.map((file) => ({
             key: file.fileKey,
             fileName: file.fileName,

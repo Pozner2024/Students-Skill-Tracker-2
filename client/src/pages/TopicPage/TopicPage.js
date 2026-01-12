@@ -6,6 +6,7 @@ import { renderContent } from "./contentRenderer.js";
 import { extractTextFromContent } from "./contentExtractor.js";
 import CKEditorComponent from "../../components/editors/CKEditorComponent.js";
 import authService from "../../services/authService.js";
+import "../../components/ui/CubeLoader";
 import "./TopicPage.css";
 
 // Страница отображения конкретной темы: получает ID темы из URL,
@@ -26,6 +27,7 @@ class TopicPage extends Page {
     this.currentTopic = null;
     this.isEditMode = false;
     this.currentUser = null;
+    this.editButtonHtml = "";
   }
 
   async loadTopicData(topicId) {
@@ -74,6 +76,13 @@ class TopicPage extends Page {
 
   async saveTopicContent(topicId, content) {
     try {
+      console.log("[TopicPage.saveTopicContent] Отправляем content:");
+      console.log("  - Тип:", typeof content);
+      console.log("  - Является строкой:", typeof content === 'string');
+      console.log("  - Является объектом:", typeof content === 'object' && content !== null);
+      console.log("  - Первые 200 символов:", typeof content === 'string' ? content.substring(0, 200) : JSON.stringify(content).substring(0, 200));
+      console.log("  - Тело запроса будет:", JSON.stringify({ content }).substring(0, 300));
+      
       const response = await apiClient.put(
         `${API_CONFIG.ENDPOINTS.TOPICS}/${topicId}/content`,
         { content },
@@ -178,6 +187,9 @@ class TopicPage extends Page {
 
     try {
       const editorData = this.editor.getData();
+      console.log("[TopicPage] editorData тип:", typeof editorData);
+      console.log("[TopicPage] editorData значение:", editorData);
+      console.log("[TopicPage] editorData первые 200 символов:", editorData?.substring?.(0, 200));
       const topicId = this.currentTopic.id;
 
       // Показываем индикатор загрузки
@@ -297,76 +309,108 @@ class TopicPage extends Page {
     if (!topicId) {
       this.title = "Темы";
       this.metaTitle = "Темы";
+      this.editButtonHtml = "";
       this.content = `
         <div class="topic-page">
           <p class="error-note">ID темы не указан.</p>
         </div>
       `;
+      window.loader.hide();
       return this.render();
     }
 
-    const topic = await this.loadTopicData(topicId);
-    console.log("[TopicPage] renderPage - загруженный topic:", topic);
+    window.loader.show();
+    try {
+      const topic = await this.loadTopicData(topicId);
+      console.log("[TopicPage] renderPage - загруженный topic:", topic);
 
-    if (topic) {
-      this.currentTopic = topic;
-      this.title = topic.name || "Тема";
-      this.metaTitle = topic.name || "Тема";
+      if (topic) {
+        this.currentTopic = topic;
+        this.title = topic.name || "Тема";
+        this.metaTitle = topic.name || "Тема";
 
-      // Проверяем роль пользователя
-      const isAdmin = await this.checkUserRole();
+        // Проверяем роль пользователя
+        const isAdmin = await this.checkUserRole();
 
-      if (this.isEditMode && isAdmin) {
-        // Режим редактирования
-        const textContent = extractTextFromContent(topic.content) || "";
-        this.content = `
-          <div class="topic-page edit-mode">
-            <div class="topic-header">
-              <div class="topic-actions">
-                <button id="topic-save-btn" class="btn btn-primary">Сохранить</button>
-                <button id="topic-cancel-btn" class="btn btn-secondary">Отмена</button>
-              </div>
+        if (this.isEditMode && isAdmin) {
+          // Режим редактирования
+          const textContent = extractTextFromContent(topic.content) || "";
+          this.editButtonHtml = `
+            <div class="topic-actions">
+              <button id="topic-save-btn" class="btn btn-primary">Сохранить</button>
+              <button id="topic-cancel-btn" class="btn btn-secondary">Отмена</button>
             </div>
-            <div id="topic-editor-container" class="topic-editor-container"></div>
-          </div>
-        `;
-      } else {
-        // Режим просмотра
-        const renderedContent = renderContent(topic);
-        let headerHtml = "";
-        if (isAdmin) {
-          headerHtml = `
-            <div class="topic-header topic-header--view">
+          `;
+          this.content = `
+            <div class="topic-page edit-mode">
+              <div id="topic-editor-container" class="topic-editor-container"></div>
+            </div>
+          `;
+        } else {
+          // Режим просмотра
+          const renderedContent = renderContent(topic);
+          // Сохраняем HTML кнопки редактирования для использования в render()
+          if (isAdmin) {
+            this.editButtonHtml = `
               <div class="topic-actions topic-actions--edit">
                 <button id="topic-edit-btn" class="btn btn-primary">Редактировать</button>
               </div>
+            `;
+          } else {
+            this.editButtonHtml = "";
+          }
+          this.content = `
+            <div class="topic-page">
+              ${renderedContent}
             </div>
           `;
         }
+      } else {
+        console.warn("[TopicPage] renderPage - топик не загружен");
+        this.title = "Тема";
+        this.metaTitle = "Тема";
+        this.editButtonHtml = "";
         this.content = `
           <div class="topic-page">
-            ${headerHtml}
-            ${renderedContent}
+            <p class="error-note">Не удалось загрузить тему.</p>
           </div>
         `;
       }
-    } else {
-      console.warn("[TopicPage] renderPage - топик не загружен");
+
+      const renderedHTML = this.render();
+      console.log("[TopicPage] renderPage - финальный HTML:", renderedHTML);
+
+      // Обработчики событий будут прикреплены в методе init(),
+      // который вызывается роутером после вставки HTML в DOM
+      return renderedHTML;
+    } catch (error) {
+      console.error("[TopicPage] Ошибка при рендеринге страницы:", error);
+      errorHandler.handle(error, "TopicPage.renderPage");
       this.title = "Тема";
       this.metaTitle = "Тема";
+      this.editButtonHtml = "";
       this.content = `
         <div class="topic-page">
-          <p class="error-note">Не удалось загрузить тему.</p>
+          <p class="error-note">Ошибка при загрузке темы.</p>
         </div>
       `;
+      return this.render();
+    } finally {
+      window.loader.hide();
     }
+  }
 
-    const renderedHTML = this.render();
-    console.log("[TopicPage] renderPage - финальный HTML:", renderedHTML);
-
-    // Обработчики событий будут прикреплены в методе init(),
-    // который вызывается роутером после вставки HTML в DOM
-    return renderedHTML;
+  render(className = "container my-4") {
+    document.title = this.metaTitle;
+    return `
+      <main id="${this.id}" class="${className}">
+        <div class="topic-page-header">
+          <h1>${this.title}</h1>
+          ${this.editButtonHtml || ""}
+        </div>
+        <section>${this.content}</section>
+      </main>
+    `;
   }
 }
 

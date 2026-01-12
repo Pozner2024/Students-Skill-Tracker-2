@@ -8,6 +8,67 @@ export function extractTextFromContent(content) {
     return null;
   }
 
+  // Проверяем, является ли content массивом (для JSON из Prisma Studio)
+  if (Array.isArray(content)) {
+    console.log(
+      "[extractTextFromContent] Content - массив, длина:",
+      content.length
+    );
+    if (content.length === 0) {
+      return null;
+    }
+
+    // Обрабатываем массив секций с полями sectionId, title, contentHtml
+    const sectionsHtml = content
+      .map((section, index) => {
+        console.log(
+          `[extractTextFromContent] Обрабатываем секцию ${index}:`,
+          section
+        );
+
+        if (typeof section === "object" && section !== null) {
+          // Ищем поле contentHtml (для JSON из файлов)
+          if (section.contentHtml && typeof section.contentHtml === "string") {
+            console.log(
+              `[extractTextFromContent] Найдено contentHtml в секции ${index}`
+            );
+            return section.contentHtml.trim();
+          }
+          // Ищем поле html (для данных из CKEditor)
+          if (section.html && typeof section.html === "string") {
+            console.log(
+              `[extractTextFromContent] Найдено html в секции ${index}`
+            );
+            return section.html.trim();
+          }
+          // Ищем другие текстовые поля
+          const textFields = ["text", "content", "body", "description"];
+          for (const field of textFields) {
+            if (
+              section[field] &&
+              typeof section[field] === "string" &&
+              section[field].trim().length > 0
+            ) {
+              console.log(
+                `[extractTextFromContent] Найдено поле '${field}' в секции ${index}`
+              );
+              return section[field].trim();
+            }
+          }
+        }
+        return null;
+      })
+      .filter((html) => html && html.trim().length > 0);
+
+    if (sectionsHtml.length > 0) {
+      console.log("[extractTextFromContent] Извлечен HTML из массива секций");
+      return sectionsHtml.join("\n\n");
+    }
+
+    console.warn("[extractTextFromContent] Не удалось извлечь HTML из массива");
+    return null;
+  }
+
   if (typeof content === "string") {
     console.log(
       "[extractTextFromContent] Content - строка, длина:",
@@ -19,7 +80,7 @@ export function extractTextFromContent(content) {
         "[extractTextFromContent] Строка распарсена как JSON:",
         parsed
       );
-      return extractTextFromContent(parsed      );
+      return extractTextFromContent(parsed);
     } catch (e) {
       console.log(
         "[extractTextFromContent] Строка не JSON, возвращаем как текст"
@@ -35,6 +96,26 @@ export function extractTextFromContent(content) {
 
     if (keys.length === 0) {
       return null;
+    }
+
+    // Проверяем поле 'html' (для данных из CKEditor)
+    if (content.html !== undefined && content.html !== null) {
+      console.log(
+        "[extractTextFromContent] Проверяем поле 'html':",
+        content.html,
+        "тип:",
+        typeof content.html
+      );
+      if (typeof content.html === "string" && content.html.trim().length > 0) {
+        console.log("[extractTextFromContent] Найдено поле 'html', возвращаем");
+        return content.html.trim();
+      } else if (typeof content.html === "object") {
+        console.log(
+          "[extractTextFromContent] Поле 'html' - объект, обрабатываем рекурсивно"
+        );
+        const htmlResult = extractTextFromContent(content.html);
+        if (htmlResult) return htmlResult;
+      }
     }
 
     if (content.text !== undefined && content.text !== null) {

@@ -3,7 +3,7 @@ import Page from "../../common/Page.js";
 import authService from "../../services/authService.js";
 import errorHandler from "../../services/errorHandler.js";
 import apiClient from "../../services/apiClient.js";
-import createCubeLoader from "../../components/ui/CubeLoader";
+import "../../components/ui/CubeLoader";
 import AdminPageRenderer from "./AdminPageRenderer.js";
 
 class AdminPage extends Page {
@@ -14,7 +14,6 @@ class AdminPage extends Page {
       metaTitle: "Кабинет администратора",
     });
 
-    this.loader = createCubeLoader();
     this.renderer = new AdminPageRenderer();
   }
 
@@ -45,7 +44,7 @@ class AdminPage extends Page {
     const container = document.querySelector("#admin .test-results-section");
     if (!container) return;
 
-    this.loader?.show();
+    window.loader.show();
     try {
       const data = await this.fetchResults();
 
@@ -58,7 +57,7 @@ class AdminPage extends Page {
       console.error("Error loading admin data:", e);
       container.innerHTML = `<div class="no-results"><p>${e.message}</p></div>`;
     } finally {
-      this.loader?.hide();
+      window.loader.hide();
     }
   }
 

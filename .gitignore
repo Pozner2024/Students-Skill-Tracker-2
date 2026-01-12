@@ -28,6 +28,9 @@ dist/
 .temp
 .tmp
 
+# Database dumps
+server/dumps/
+
 # Runtime data
 pids
 *.pid

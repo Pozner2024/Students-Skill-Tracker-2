@@ -23,7 +23,7 @@ export class TestsController {
   constructor(private readonly testsService: TestsService) {}
 
   // ✅ Добавляем обработку preflight-запросов
-  @Options('*')
+  @Options('*path')
   handleOptions(@Res() res: Response) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9000');
     res.setHeader(

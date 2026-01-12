@@ -9,7 +9,7 @@ import {
 export async function renderFilesSection() {
   try {
     const filesResult = await authService.getUserFiles();
-    const files = filesResult.success ? filesResult.files : [];
+    const files = filesResult && filesResult.success ? filesResult.files : [];
 
     return `
         <div class="files-section">
@@ -28,10 +28,11 @@ export async function renderFilesSection() {
         </div>
       `;
   } catch (error) {
+    console.error("Ошибка при рендеринге секции файлов:", error);
     return `
         <div class="files-section">
           <h3>Мои файлы</h3>
-          <div class="alert alert-danger" role="alert">Ошибка загрузки списка файлов: ${error.message}</div>
+          <div class="alert alert-danger" role="alert">Ошибка загрузки списка файлов: ${error.message || "Неизвестная ошибка"}</div>
         </div>
       `;
   }
@@ -98,14 +99,17 @@ export function handleFileUpload() {
     try {
       const result = await authService.uploadFile(file);
 
-      if (result.success) {
+      if (result && result.success) {
         showSuccessMessage("Файл успешно загружен!");
         await refreshFilesList();
       } else {
-        showErrorMessage("Ошибка при загрузке файла: " + result.error);
+        const errorMsg = result?.error || "Неизвестная ошибка";
+        console.error("Ошибка загрузки файла:", errorMsg);
+        showErrorMessage("Ошибка при загрузке файла: " + errorMsg);
       }
     } catch (error) {
-      showErrorMessage("Ошибка при загрузке файла: " + error.message);
+      console.error("Исключение при загрузке файла:", error);
+      showErrorMessage("Ошибка при загрузке файла: " + (error.message || "Неизвестная ошибка"));
     } finally {
       if (uploadBtn) {
         uploadBtn.disabled = false;
@@ -122,13 +126,17 @@ export function handleFileUpload() {
 export async function refreshFilesList() {
   try {
     const filesResult = await authService.getUserFiles();
-    const files = filesResult.success ? filesResult.files : [];
+    const files = filesResult && filesResult.success ? filesResult.files : [];
 
     const filesListContainer = document.querySelector(".files-list");
     const filesSection = document.querySelector(".files-section");
 
     if (filesListContainer && filesSection) {
       filesListContainer.outerHTML = renderFilesList(files);
+      // Обработчики событий уже установлены через делегирование в handleFileDelete(),
+      // поэтому переинициализация не требуется
+    } else {
+      console.warn("Контейнеры файлов не найдены:", { filesListContainer, filesSection });
     }
   } catch (error) {
     console.error("Ошибка при обновлении списка файлов:", error);

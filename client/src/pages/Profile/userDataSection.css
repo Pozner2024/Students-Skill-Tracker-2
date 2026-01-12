@@ -80,7 +80,7 @@
 }
 
 .bootstrap-alert-container {
-  z-index: 9999;
+  z-index: 200;
 }
 
 .bootstrap-alert-container .alert {
@@ -99,7 +99,7 @@
 
 /* Принудительно скрываем, пока не нажали "Редактировать" */
 .user-data-section .hidden {
-  display: none !important;
+  display: none;
 }
 
 .edit-btn,

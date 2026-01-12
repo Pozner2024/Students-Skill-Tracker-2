@@ -163,11 +163,25 @@ function renderQuestionHTML(question, index, imagePath, answerManager) {
   }
 
   let imageHTML = "";
-  if (imagePath && imagePath.trim() !== "") {
+  // Проверяем, что imagePath валиден (не null, не пустая строка, и является валидным URL)
+  if (
+    imagePath &&
+    typeof imagePath === "string" &&
+    imagePath.trim() !== "" &&
+    (imagePath.startsWith("http://") ||
+      imagePath.startsWith("https://") ||
+      imagePath.startsWith("data:"))
+  ) {
+    // Экранируем URL для безопасности
+    const escapedImagePath = imagePath.replace(/"/g, "&quot;");
+    // Используем data-src вместо src, чтобы отложить загрузку до активации элемента
     imageHTML = `
       <div class="question-image">
-        <img src="${imagePath}" alt="Изображение для вопроса ${index + 1}" 
-             onerror="this.style.display='none';" />
+        <img data-src="${escapedImagePath}" alt="" 
+             loading="lazy"
+             referrerpolicy="no-referrer"
+             onerror="try{this.style.display='none';}catch(e){} this.onerror=function(){try{this.style.display='none';}catch(e){} return false;}; this.onload=null;" 
+             onload="this.onerror=null;" />
       </div>
     `;
   }
@@ -198,9 +212,28 @@ function renderQuestionHTML(question, index, imagePath, answerManager) {
 
   return `
     <div class="question ${additionalClass}">
-      ${imageHTML}
-      <div class="question-text">
-        ${questionHTML}
+      <div class="question-navigation">
+        <button id="prevButton" class="nav-button">
+          <svg width="24" height="24" viewBox="0 0 24 24"
+     xmlns="http://www.w3.org/2000/svg">
+  <path d="M11 5L4 12L11 19V13.5H21V10.5H11V5Z"
+        fill="currentColor"/>
+</svg>
+        </button>
+        <button id="nextButton" class="nav-button">
+          <span>Далее</span>
+          <svg width="24" height="24" viewBox="0 0 24 24"
+     xmlns="http://www.w3.org/2000/svg">
+  <path d="M13 5L20 12L13 19V13.5H3V10.5H13V5Z"
+        fill="currentColor"/>
+</svg>
+        </button>
+      </div>
+      <div class="question-content">
+        <div class="question-text">
+          ${questionHTML}
+        </div>
+        ${imageHTML}
       </div>
     </div>
   `;
