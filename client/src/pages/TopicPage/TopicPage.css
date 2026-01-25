@@ -1,0 +1,242 @@
+.topic-page {
+  padding: 20px;
+  color: white;
+}
+
+.topic-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.topic-page-header h1 {
+  margin: 0;
+  flex: 1;
+}
+
+.topic-page p {
+  text-indent: 50px;
+}
+
+.topic-loading,
+.error-note,
+.placeholder-note {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+}
+
+.topic-content {
+  border-radius: 8px;
+  line-height: 1.8;
+  font-size: 1.1rem;
+  word-wrap: break-word;
+  color: white;
+  min-height: 100px;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+.topic-content p {
+  margin: 0 0 1em 0;
+  text-indent: 50px;
+}
+
+.topic-content p:last-child {
+  margin-bottom: 0;
+}
+
+.topic-section-title {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.topic-images {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.topic-images img {
+  width: 30%;
+  border-radius: 8px;
+}
+
+@media (width < 768px) {
+  .topic-images {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .topic-images img {
+    width: 100%;
+    width: min(100%, 300px);
+    height: auto;
+    object-fit: contain;
+  }
+}
+
+@media (width < 480px) {
+  .topic-images img {
+    width: min(100%, 250px);
+  }
+}
+
+.topic-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.topic-header--view {
+  justify-content: flex-end;
+}
+
+.topic-page.edit-mode .topic-header {
+  justify-content: flex-end;
+}
+
+.topic-page.edit-mode .topic-actions {
+  margin-left: auto;
+}
+
+.topic-title {
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.topic-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.topic-actions--edit {
+  margin-left: auto;
+}
+
+.topic-page-header .topic-actions--edit {
+  margin-left: 0;
+}
+
+.topic-actions .btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: default;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.topic-actions .btn-primary {
+  background-color: var(--btn-primary-color, var(--color-green));
+  color: var(--color-white);
+}
+
+.topic-actions .btn-primary:hover:not(:disabled) {
+  background-color: var(--btn-primary-color, var(--color-green));
+  box-shadow: 0 0 0 4px
+    var(--btn-primary-hover-shadow, rgba(var(--color-green-rgb), 0.25));
+}
+
+.topic-page.edit-mode {
+  color: var(--color-black);
+}
+
+.topic-page.edit-mode p {
+  color: var(--color-black);
+}
+
+.topic-actions .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.topic-actions .btn-secondary:hover:not(:disabled) {
+  background-color: #545b62;
+}
+
+.topic-actions .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.topic-editor-container {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  min-height: 400px;
+}
+
+/* Стили для CKEditor */
+.ck-editor {
+  color: #333;
+}
+
+.ck-editor__editable {
+  min-height: 400px;
+  background: white;
+  color: #333;
+}
+
+.ck-toolbar {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px 4px 0 0;
+}
+
+.ck-content {
+  border: 1px solid #dee2e6;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+
+@media (width < 768px) {
+  .topic-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .topic-page-header h1 {
+    width: 100%;
+  }
+
+  .topic-page-header .topic-actions {
+    width: 100%;
+  }
+
+  .topic-page-header .topic-actions .btn {
+    width: 100%;
+  }
+
+  .topic-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .topic-title {
+    font-size: 1.5rem;
+  }
+
+  .topic-actions {
+    width: 100%;
+  }
+
+  .topic-actions .btn {
+    flex: 1;
+  }
+}

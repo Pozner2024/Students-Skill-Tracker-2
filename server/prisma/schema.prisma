@@ -1,0 +1,98 @@
+// Prisma описывает таблицы из базы данных PostgreSQL и связывает их с моделями в коде.
+// Благодаря этому можно работать с данными не через SQL-запросы, а через удобный JS-клиент.
+// Если таблицы уже существуют, Prisma просто использует их структуру для доступа к данным.
+// Если таблиц нет — Prisma может создать их автоматически с помощью миграций.
+// Таблица Tests — содержит тесты, их коды, названия, варианты и вопросы (JSON).
+// Таблица TestImages — хранит ссылки на изображения для тестов по темам и вариантам.
+// Таблица User — хранит данные пользователей (email, пароль, имя, группу, роль)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tests {
+  id         Int       @id @default(autoincrement())
+  test_code  String    @unique @db.VarChar(20)
+  test_title String
+  variant    Int
+  questions  Json
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+
+  @@map("tests")
+}
+
+model TestImages {
+  id         Int      @id @default(autoincrement())
+  test_code  String   @db.VarChar(20)
+  variant    Int
+  topic_id   Int
+  image_url  String?
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
+
+  @@unique([test_code, variant, topic_id])
+  @@map("test_images")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique @db.VarChar(255)
+  password    String   @db.VarChar(255)
+  created_at  DateTime @default(now()) @db.Timestamp(6)
+  updated_at  DateTime @default(now()) @updatedAt @db.Timestamp(6)
+  fullName    String?  @db.VarChar(255)
+  groupNumber String?  @db.VarChar(50)
+  role        String   @default("student") @db.VarChar(20)
+  testResults Json?
+  totalQuestionsAnswered Int @default(0)
+  averageScore Float? @default(0.0)
+  files       UserFile[]
+
+  @@map("users")
+}
+
+model Topic {
+  id                Int        @id @default(autoincrement())
+  name              String     @db.VarChar(255)
+  project_name      String     @db.VarChar(500)
+  project_description String   @db.Text
+  content           Json?     
+  created_at        DateTime   @default(now()) @db.Timestamp(6)
+  updated_at        DateTime   @updatedAt @db.Timestamp(6)
+  questions         Question[]
+
+  @@map("topics")
+}
+
+model Question {
+  id         Int      @id @default(autoincrement())
+  topic_id   Int
+  text       String   @db.Text
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
+  topic      Topic    @relation(fields: [topic_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("questions")
+}
+
+model UserFile {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  fileName    String   @db.VarChar(500)
+  fileKey     String   @db.VarChar(1000) // Ключ файла в S3 (путь)
+  fileSize    BigInt   // Размер файла в байтах
+  contentType String?  @db.VarChar(100)
+  folder      String?  @db.VarChar(255) // Опциональная папка
+  created_at  DateTime @default(now()) @db.Timestamp(6)
+  updated_at  DateTime @updatedAt @db.Timestamp(6)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([userId])
+  @@index([userId, folder])
+  @@map("user_files")
+}

@@ -1,0 +1,190 @@
+/* Секция пользовательских данных */
+.user-data-section {
+  margin: 10px 0 20px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.user-data-section h3 {
+  font-size: 1.3rem;
+  color: black;
+  text-align: center;
+  margin: 0 0 15px 0;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.user-data {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.data-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  background: linear-gradient(135deg, #59b149 0%, #4f9e3f 100%);
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  gap: 10px;
+}
+
+.data-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.data-label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.data-value {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.editable-item {
+  position: relative;
+}
+
+.editable-field {
+  min-width: 150px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.editable-field:focus {
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.editable-field.editing {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #2c3e50;
+  padding: 4px 8px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px #59b149;
+}
+
+.bootstrap-alert-container {
+  z-index: 200;
+}
+
+.bootstrap-alert-container .alert {
+  color: #fff;
+}
+
+.bootstrap-alert-container .alert .btn-close {
+  filter: invert(1);
+}
+
+.edit-btn,
+.save-btn-field,
+.cancel-btn-field {
+  display: inline-block;
+}
+
+/* Принудительно скрываем, пока не нажали "Редактировать" */
+.user-data-section .hidden {
+  display: none;
+}
+
+.edit-btn,
+.save-btn-field,
+.cancel-btn-field {
+  padding: 6px 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  margin-left: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+  color: white;
+  box-shadow: 0 3px 6px rgba(155, 89, 182, 0.3);
+}
+
+.edit-btn:hover {
+  background: linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(155, 89, 182, 0.4);
+}
+
+.save-btn-field {
+  background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+  color: white;
+  box-shadow: 0 3px 6px rgba(155, 89, 182, 0.3);
+}
+
+.save-btn-field:hover:not(:disabled) {
+  background: linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(155, 89, 182, 0.4);
+}
+
+.save-btn-field:disabled {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cancel-btn-field {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  box-shadow: 0 3px 6px rgba(231, 76, 60, 0.3);
+}
+
+.cancel-btn-field:hover:not(:disabled) {
+  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(231, 76, 60, 0.4);
+}
+
+.cancel-btn-field:disabled {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (width < 768px) {
+  .data-item {
+    padding: 12px;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .data-label,
+  .data-value {
+    font-size: 0.9rem;
+  }
+
+  .edit-btn,
+  .save-btn-field,
+  .cancel-btn-field {
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+    padding: 8px 12px;
+  }
+}
+

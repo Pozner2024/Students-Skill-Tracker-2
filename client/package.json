@@ -1,0 +1,38 @@
+{
+  "name": "webpack-boilerplate-vanillajs",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "dev": "webpack serve --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "clean": "rimraf dist/"
+  },
+  "keywords": [],
+  "author": "Natallia Pazniak <natalyua_nata_@mail.ru>",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "babel-loader": "^9.2.1",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^6.9.1",
+    "css-minimizer-webpack-plugin": "^6.0.0",
+    "dotenv-webpack": "^8.1.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.7.7",
+    "style-loader": "^3.3.4",
+    "terser-webpack-plugin": "^5.3.10",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "rimraf": "^5.0.5"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8",
+    "canvas-confetti": "^1.9.3",
+    "@ckeditor/ckeditor5-build-classic": "^41.0.0"
+  }
+}

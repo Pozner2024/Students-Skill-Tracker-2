@@ -1,0 +1,314 @@
+/* Стили для админ-страницы */
+#admin .test-results-section {
+  min-height: 60vh;
+}
+
+.no-group-message {
+  color: black;
+}
+#admin h3 {
+  color: var(--color-black);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.admin-accordion {
+  margin-bottom: 2rem;
+}
+.accordion-item {
+  border: 1px solid rgba(var(--color-black-rgb), 0.1);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  background: var(--color-white);
+  overflow: hidden;
+}
+.accordion-header {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(var(--color-black-rgb), 0.03);
+  border: none;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.accordion-header:hover {
+  background: rgba(var(--color-black-rgb), 0.05);
+}
+.accordion-header.active {
+  background: rgba(var(--color-black-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--color-black-rgb), 0.1);
+}
+.student-number {
+  margin-right: 0.75rem;
+  font-weight: 600;
+  color: rgba(var(--color-black-rgb), 0.6);
+  min-width: 2rem;
+  text-align: right;
+}
+.student-name {
+  flex: 1;
+  font-weight: 600;
+  color: var(--color-black);
+  min-width: 0;
+}
+@media (min-width: 993px) {
+  .student-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+.header-right-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.header-right-group > * {
+  pointer-events: auto;
+}
+.tests-count {
+  margin-left: 0;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-heading-bg);
+  color: var(--color-white);
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: center;
+  display: inline-block;
+  line-height: 1.2;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+.accordion-icon {
+  margin-left: 1rem;
+  transition: transform 0.3s;
+  color: rgba(var(--color-black-rgb), 0.6);
+  flex-shrink: 0;
+}
+.accordion-header.active .accordion-icon {
+  transform: rotate(180deg);
+}
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+.accordion-content.active {
+  max-height: 5000px;
+  transition: max-height 0.5s ease-in;
+}
+.student-tests-list {
+  padding: 1rem 1.5rem;
+}
+.test-result-item {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: rgba(var(--color-black-rgb), 0.03);
+  border-radius: 4px;
+  border-left: 3px solid var(--color-heading-bg);
+}
+.test-result-item:last-child {
+  margin-bottom: 0;
+}
+.test-header {
+  margin-bottom: 0.75rem;
+}
+.test-details {
+  color: var(--color-black);
+}
+.files-indicator {
+  margin-left: 0;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-green);
+  color: var(--color-white);
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: center;
+  display: inline-block;
+  line-height: 1.2;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+.files-indicator.no-files {
+  background: rgba(var(--color-black-rgb), 0.4);
+}
+.student-files-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+.files-section-title {
+  color: var(--color-black);
+}
+.no-files-message {
+  color: var(--color-black);
+}
+.files-list-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.file-item-admin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(var(--color-black-rgb), 0.03);
+  border-radius: 4px;
+  border-left: 3px solid var(--color-green);
+}
+.file-info-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+.file-name-admin {
+  font-weight: 600;
+  color: var(--color-black);
+}
+.file-size-admin,
+.file-date-admin {
+  font-size: 0.875rem;
+  color: var(--color-black);
+}
+.file-actions-admin {
+  display: flex;
+  gap: 0.5rem;
+}
+.file-download-admin,
+.file-delete-admin {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+.file-download-admin {
+  background: var(--color-heading-bg);
+  color: var(--color-white);
+}
+.file-download-admin:hover {
+  background: var(--color-bg);
+}
+.file-delete-admin {
+  background: var(--alert-danger-border);
+  color: var(--color-white);
+}
+.file-delete-admin:hover {
+  background: var(--alert-danger-text);
+}
+.file-download-admin:disabled,
+.file-delete-admin:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#admin .alert-success {
+  color: #fff;
+}
+
+#admin .alert-success .btn-close {
+  filter: invert(1);
+}
+.delete-user-btn {
+  margin-left: 0;
+  padding: 0.5rem 0.75rem;
+  background: var(--alert-danger-border);
+  color: var(--color-white);
+  border: none;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 80px;
+  text-align: center;
+  line-height: 1.2;
+  box-sizing: border-box;
+}
+.delete-user-btn:hover {
+  background: var(--alert-danger-text);
+}
+.delete-user-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+@media (width < 992px) {
+  .accordion-header {
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+  }
+  .student-number {
+    order: 1;
+  }
+  .student-name {
+    width: 100%;
+    margin-top: 0.5rem;
+    order: 2;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-word;
+  }
+  .header-right-group {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0.5rem;
+    order: 3;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .accordion-icon {
+    margin-left: auto;
+    order: 0;
+  }
+}
+@media (width < 768px) {
+  .tests-count,
+  .files-indicator,
+  .delete-user-btn {
+    min-width: 70px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  .accordion-header {
+    padding: 0.75rem;
+  }
+}
+@media (width < 576px) {
+  .tests-count,
+  .files-indicator,
+  .delete-user-btn {
+    min-width: 60px;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  .tests-count {
+    min-width: auto;
+    padding: 0.35rem 0.6rem;
+  }
+  .files-indicator {
+    min-width: auto;
+    padding: 0.35rem 0.6rem;
+  }
+}
+

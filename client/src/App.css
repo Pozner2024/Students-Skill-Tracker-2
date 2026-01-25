@@ -1,0 +1,6 @@
+/* Импортируем все модули стилей */
+@import "./common/base.css";
+@import "./components/layout/Header.css";
+@import "./components/layout/Menu.css";
+@import "./components/layout/Footer.css";
+@import "./common/bootstrap-overrides.css";

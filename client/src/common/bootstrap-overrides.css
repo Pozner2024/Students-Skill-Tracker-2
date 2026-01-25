@@ -1,0 +1,143 @@
+.btn-primary {
+  background-color: var(--btn-primary-color);
+  border-color: var(--btn-primary-color);
+  cursor: default;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
+  cursor: default;
+}
+
+.btn-success {
+  background-color: var(--btn-primary-color);
+  border-color: var(--btn-primary-color);
+  cursor: default;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
+  cursor: default;
+}
+
+.btn-info {
+  background-color: var(--btn-primary-color);
+  border-color: var(--btn-primary-color);
+  cursor: default;
+}
+
+.btn-info:hover,
+.btn-info:focus {
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
+  cursor: default;
+}
+
+.btn {
+  cursor: default;
+}
+
+.btn:hover,
+.btn:focus,
+.btn:active {
+  cursor: default;
+}
+
+.project-info-btn,
+.control-question-btn,
+.test-btn {
+  cursor: default;
+}
+
+.project-info-btn:hover,
+.control-question-btn:hover,
+.test-btn:hover {
+  cursor: default;
+}
+
+.alert-danger {
+  background-color: var(--alert-danger-bg);
+  border-color: var(--alert-danger-border);
+  color: var(--alert-danger-text);
+}
+
+.alert-success {
+  background-color: var(--alert-success-bg);
+  border-color: var(--alert-success-border);
+  color: #fff;
+}
+
+.alert-success .btn-close {
+  filter: invert(1);
+}
+
+.alert-warning {
+  background-color: var(--alert-warning-bg);
+  border-color: var(--alert-warning-border);
+  color: var(--alert-warning-text);
+}
+
+.alert-info {
+  background-color: var(--alert-info-bg);
+  border-color: var(--alert-info-border);
+  color: var(--alert-info-text);
+}
+
+.form-control:focus {
+  border-color: var(--btn-primary-color);
+  box-shadow: 0 0 0 0.25rem var(--btn-primary-hover-shadow);
+}
+
+.navbar-nav .nav-link {
+  color: var(--nav-link-color);
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--nav-link-hover-color);
+}
+
+.navbar-nav .nav-link.active {
+  color: var(--nav-link-active-color);
+}
+
+.card {
+  background-color: transparent;
+  border: none;
+}
+
+.card-body {
+  background-color: transparent;
+}
+
+.container,
+.container-fluid {
+  background-color: transparent;
+}
+
+.table {
+  background-color: transparent;
+  color: var(--table-text-color);
+}
+
+.table tbody tr {
+  background-color: transparent;
+  color: var(--table-text-color);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > td {
+  background-color: var(--table-striped-bg);
+  color: var(--table-text-color);
+}
+
+table {
+  color: var(--table-text-color);
+}
+
+td,
+th {
+  color: var(--table-text-color);
+}

@@ -1,0 +1,365 @@
+/* Стили для навигации и кнопок */
+.indicator-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.indicator-panel #finishButton {
+  margin-left: 15px;
+}
+
+.page-button {
+  padding: 8px 12px;
+  width: 50px;
+  border: 1px solid var(--test-white-3);
+  background-color: var(--color-white);
+  color: black;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+.page-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.page-button:active {
+  transform: scale(0.95);
+}
+
+.page-button.active {
+  color: var(--color-white);
+  border-color: var(--test-red-active);
+  box-shadow: 0 0 0 4px var(--test-red-active);
+}
+
+.page-button.visited {
+  background-color: var(--color-bg);
+  color: var(--color-white);
+  border-color: var(--color-bg);
+}
+
+.navigation-panel {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0 6px 0;
+}
+
+.nav-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  color: var(--color-white);
+  background-color: var(--test-green);
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3),
+    inset 0px -2px 4px var(--test-white-3);
+  margin: 0 10px;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+.nav-button:hover {
+  background-color: var(--color-bg);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4),
+    inset 0px -3px 6px var(--test-white-3);
+  transform: scale(1.07);
+}
+
+.question-navigation .nav-button:hover {
+  background-color: transparent;
+  box-shadow: none;
+  transform: scale(1.2);
+  opacity: 0.8;
+  color: var(--test-green);
+}
+
+.nav-button:active {
+  transform: scale(0.97);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4),
+    inset 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Исключаем кнопки навигации в карточке вопроса из общего стиля active */
+.question-navigation .nav-button:active {
+  transform: scale(1.1);
+  opacity: 0.6;
+  background-color: transparent;
+  box-shadow: none;
+  color: var(--test-green);
+}
+
+.finish-button {
+  background-color: var(--test-red);
+  font-weight: 600;
+}
+
+.finish-button:hover {
+  background-color: var(--test-red-dark);
+  transform: scale(1.05);
+  box-shadow: 0px 8px 16px rgba(220, 53, 69, 0.5);
+}
+
+.question-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 0px;
+  order: -1;
+}
+
+.question-navigation #prevButton {
+  margin-left: -5px;
+}
+
+.question-navigation #nextButton {
+  margin-right: -5px;
+}
+
+.question-navigation .nav-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  transition: transform 0.2s, opacity 0.2s;
+  margin: 0;
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
+  line-height: 1;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.question-navigation .nav-button svg {
+  width: 24px;
+  height: 24px;
+  transition: all 0.2s ease;
+}
+
+.question-navigation #nextButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.question-navigation #nextButton span {
+  color: purple;
+  font-size: 16px;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.question-navigation #nextButton:hover span {
+  color: var(--test-green);
+}
+
+.question-navigation .nav-button svg path {
+  stroke: purple;
+  fill: purple;
+  transition: stroke 0.2s ease, fill 0.2s ease;
+}
+
+.question-navigation #nextButton svg path {
+  stroke: purple;
+  fill: purple;
+}
+
+.question-navigation #prevButton svg path {
+  stroke: purple;
+  fill: purple;
+}
+
+.question-navigation .nav-button:hover svg path {
+  stroke: var(--test-green);
+  fill: var(--test-green);
+}
+
+.question-navigation #nextButton:hover svg path {
+  stroke: var(--test-green);
+  fill: var(--test-green);
+}
+
+.question-navigation #prevButton:hover svg path {
+  stroke: var(--test-green);
+  fill: var(--test-green);
+}
+
+.question-navigation .nav-button:active svg path {
+  stroke: var(--test-green);
+  fill: var(--test-green);
+}
+
+.question-navigation #prevButton:active svg path {
+  stroke: var(--test-green);
+  fill: var(--test-green);
+}
+
+.question-navigation #nextButton:active span {
+  color: var(--test-green);
+}
+
+.question-navigation #nextButton:active svg path {
+  stroke: var(--test-green);
+  fill: var(--test-green);
+}
+
+@media (width < 992px) {
+  .nav-button {
+    padding: 6px 12px;
+    font-size: 14px;
+    margin: 0 5px;
+  }
+
+  .page-button {
+    width: 40px;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+@media (width < 768px) {
+  .indicator-panel {
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .page-button {
+    width: 50px;
+    padding: 7px 10px;
+    font-size: 13px;
+    min-width: 50px;
+  }
+
+  .navigation-panel {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  #finishButton {
+    order: 1;
+  }
+
+  .nav-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .question-navigation {
+    flex-direction: row;
+    gap: 0;
+    margin-top: 0;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .question-navigation .nav-button {
+    flex: 0 0 auto;
+    font-size: 11px;
+    width: 90px;
+    box-sizing: border-box;
+  }
+
+  .question-navigation .nav-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .question-navigation #nextButton span {
+    font-size: 13px;
+  }
+
+  .question.matching-only .question-navigation,
+  .question.ordering-only .question-navigation {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+    box-sizing: border-box;
+  }
+
+  .question-navigation {
+    justify-content: center;
+    margin-bottom: -20px;
+    gap: 240px;
+  }
+}
+
+@media (width < 480px) {
+  .page-button {
+    width: 45px;
+    padding: 6px 9px;
+    font-size: 12px;
+    min-width: 45px;
+  }
+
+  .indicator-panel {
+    gap: 6px;
+  }
+
+  .nav-button {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .question-navigation {
+    margin-top: 0px;
+    margin-bottom: -15px;
+    gap: 150px;
+  }
+
+  .question-navigation .nav-button {
+    font-size: 11px;
+    width: 90px;
+  }
+
+  .question-navigation .nav-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .question-navigation #nextButton span {
+    font-size: 13px;
+  }
+}
+
+@media (width < 360px) {
+  .question-navigation {
+    gap: 80px;
+  }
+
+  .page-button {
+    width: 40px;
+    padding: 5px 8px;
+    font-size: 11px;
+    min-width: 40px;
+  }
+}
+

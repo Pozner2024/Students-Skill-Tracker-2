@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: students-skill-tracker-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: students_skill_tracker
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: students-skill-tracker-server
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/students_skill_tracker?schema=public
+      PORT: "3000"
+      JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret}
+      YANDEX_CLOUD_ACCESS_KEY_ID: ${YANDEX_CLOUD_ACCESS_KEY_ID:-dev_access_key}
+      YANDEX_CLOUD_SECRET_ACCESS_KEY: ${YANDEX_CLOUD_SECRET_ACCESS_KEY:-dev_secret_key}
+      YANDEX_CLOUD_BUCKET_NAME: ${YANDEX_CLOUD_BUCKET_NAME:-students-skill-tracker}
+      YANDEX_CLOUD_ENDPOINT: ${YANDEX_CLOUD_ENDPOINT:-https://storage.yandexcloud.net}
+      YANDEX_CLOUD_REGION: ${YANDEX_CLOUD_REGION:-ru-central1}
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+
+volumes:
+  db_data:
+

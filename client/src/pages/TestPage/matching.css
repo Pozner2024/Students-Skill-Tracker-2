@@ -1,0 +1,182 @@
+/* Стили для сопоставления (matching) */
+.matching-question {
+  width: 100%;
+  width: min(100%, 1200px);
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.matching-question li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.matching-items li label {
+  width: 65%;
+  margin-right: 20px;
+  text-align: left;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.matching-question select {
+  flex-grow: 1;
+  padding: 5px 30px 5px 10px;
+  font-size: 20px;
+  color: var(--color-white);
+  background-color: var(--test-bg-5);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  border: 1px solid var(--test-white-3);
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  white-space: normal;
+  overflow: auto;
+  line-height: 1.5;
+  outline: none;
+}
+
+.matching-question select,
+.matching-question select::picker(select) {
+  appearance: base-select;
+}
+
+.matching-question select::picker-icon {
+  display: none;
+}
+
+.matching-question select option {
+  background-color: var(--test-bg-95);
+  color: var(--color-white);
+  padding: 8px;
+}
+
+.matching-question select:hover {
+  background-color: var(--test-green);
+  color: var(--color-white);
+}
+
+.matching-question select:focus {
+  border-color: var(--test-green);
+  box-shadow: 0 0 5px var(--test-green-rgba-5);
+  outline: none;
+}
+
+/* Стили для открытого состояния select (Chrome 135+) */
+.matching-question select:open {
+  border-color: var(--test-green);
+  box-shadow: 0 0 5px var(--test-green-rgba-5);
+  .ratio option::checkmark {
+    display: none;
+  }
+}
+
+.matching-question select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--test-bg-3);
+}
+
+/* Стилизация popover части (выпадающего списка) */
+.matching-question select::picker(select) {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  background: var(--test-bg-95);
+  padding: 5px;
+}
+
+/* Ховер для option - работает в Chrome 135+ с appearance: base-select */
+.matching-question select option:hover {
+  background: var(--test-green-rgba-2);
+  border-radius: 4px;
+}
+
+.matching-option-full-text {
+  margin-top: 5px;
+  padding: 5px 8px;
+  background-color: var(--test-green-rgba-2);
+  border: 1px solid var(--test-green-rgba-4);
+  border-radius: 4px;
+  font-size: 14px;
+  color: black;
+  display: none;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+@media (width < 992px) {
+  .matching-question select {
+    font-size: 18px;
+    padding: 4px 28px 4px 8px;
+    background-size: 10px;
+    background-position: right 8px center;
+  }
+}
+
+@media (width < 768px) {
+  .matching-question {
+    margin-top: 15px;
+  }
+
+  .matching-items li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .matching-items li label {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 5px;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    display: block;
+    line-height: 1.4;
+  }
+
+  .matching-question select {
+    width: 100%;
+    padding: 4px 28px 4px 8px;
+    background-size: 10px;
+    background-position: right 8px center;
+  }
+
+  .matching-question {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .matching-items {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+}
+
+@media (width < 480px) {
+  .matching-question {
+    margin-top: 5px;
+  }
+
+  .matching-question select {
+    font-size: 18px;
+    padding: 4px 26px 4px 6px;
+    background-size: 10px;
+    background-position: right 6px center;
+  }
+}
+

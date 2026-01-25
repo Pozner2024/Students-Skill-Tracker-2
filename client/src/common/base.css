@@ -1,0 +1,298 @@
+:root {
+  /* Базовые цвета */
+  --color-bg: #4f2568;
+  --color-heading-bg: #5b2d77;
+  --color-text: rgba(255, 255, 255, 0.87);
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-black-rgb: 0, 0, 0;
+  --color-link: #646470;
+  --color-link-hover: var(--color-white);
+  --color-green: #4caf50;
+  --color-green-rgb: 76, 175, 80;
+
+  /* Шрифты */
+  --font-family-base: "Exo 2", system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  /* Цвета кнопок */
+  --btn-primary-color: var(--color-green);
+  --btn-primary-hover-shadow: rgba(var(--color-green-rgb), 0.25);
+
+  /* Цвета навигации */
+  --nav-link-color: var(--color-green);
+  --nav-link-hover-color: var(--color-white);
+  --nav-link-active-color: var(--color-white);
+
+  /* Цвета меню */
+  --menu-bg: var(--color-heading-bg);
+  --menu-surface: rgba(255, 255, 255, 0.15);
+  --menu-border: var(--menu-surface);
+  --menu-border-weak: var(--menu-border);
+  --menu-border-mid: var(--menu-border);
+  --menu-backdrop: rgba(0, 0, 0, 0.6);
+  --menu-overlay-bg: rgba(91, 45, 119, 0.98);
+  --menu-overlay-shadow: rgba(0, 0, 0, 0.3);
+  --menu-shadow-1: rgba(var(--color-black-rgb), 0.15);
+  --menu-shadow-2: rgba(var(--color-black-rgb), 0.8);
+  --menu-shadow-3: rgba(var(--color-black-rgb), 0.9);
+  --menu-shadow-4: rgba(var(--color-black-rgb), 0.9);
+  --menu-shadow-5: rgba(var(--color-black-rgb), 0.7);
+  --menu-text: var(--color-white);
+  --menu-link: #a6e89c;
+  --menu-link-bg-mobile: rgba(255, 255, 255, 0.08);
+  --menu-link-border-mobile: var(--menu-border);
+  --menu-link-hover-bg-mobile: var(--menu-surface);
+  --menu-link-hover-border-mobile: var(--menu-border);
+  --menu-active-bg: rgba(166, 232, 156, 0.2);
+  --menu-link-active-bg-mobile: var(--menu-active-bg);
+  --menu-link-active-border-mobile: var(--menu-border);
+  --menu-close-bg: rgba(91, 45, 119, 0.9);
+  --menu-close-bg-hover: rgba(91, 45, 119, 1);
+  --menu-close-border: var(--menu-border-mid);
+
+  /* Цвета алертов */
+  --alert-danger-bg: rgba(248, 215, 218, 0.9);
+  --alert-danger-border: #f5c6cb;
+  --alert-danger-text: #721c24;
+
+  --alert-success-bg: rgba(var(--color-green-rgb), 0.9);
+  --alert-success-border: var(--color-green);
+  --alert-success-text: var(--color-green);
+
+  --alert-warning-bg: rgba(255, 243, 205, 0.9);
+  --alert-warning-border: #ffeaa7;
+  --alert-warning-text: #856404;
+
+  --alert-info-bg: rgba(209, 236, 241, 0.9);
+  --alert-info-border: #bee5eb;
+  --alert-info-text: #0c5460;
+
+  /* Цвета таблиц */
+  --table-striped-bg: var(--test-bg-3);
+  --table-text-color: var(--color-white);
+
+  /* Цвета для тестов */
+  --test-bg-rgb: 79, 37, 104;
+  --test-bg: rgba(var(--test-bg-rgb), 1);
+  --test-bg-95: rgba(var(--test-bg-rgb), 0.95);
+  --test-bg-85: rgba(var(--test-bg-rgb), 0.85);
+  --test-bg-75: rgba(var(--test-bg-rgb), 0.75);
+  --test-bg-6: rgba(var(--test-bg-rgb), 0.6);
+  --test-bg-5: rgba(var(--test-bg-rgb), 0.5);
+  --test-bg-3: rgba(var(--test-bg-rgb), 0.3);
+  --test-green: #59b149;
+  --test-green-rgb: 89, 177, 73;
+  --test-green-rgba-2: rgba(var(--test-green-rgb), 0.2);
+  --test-green-rgba-3: rgba(var(--test-green-rgb), 0.3);
+  --test-green-rgba-4: rgba(var(--test-green-rgb), 0.4);
+  --test-green-rgba-5: rgba(var(--test-green-rgb), 0.5);
+  --test-white-3: rgba(255, 255, 255, 0.3);
+  --test-red: #dc3545;
+  --test-red-dark: #7d0612;
+  --test-red-active: #ae0404;
+
+  /* Цвета модальных окон */
+  --modal-overlay-bg: rgba(0, 0, 0, 0.7);
+  --modal-shadow: rgba(0, 0, 0, 0.3);
+  --modal-shadow-light: rgba(0, 0, 0, 0.2);
+  --modal-shadow-dark: rgba(0, 0, 0, 0.7);
+  --modal-body-bg: rgba(106, 13, 173, 0.7);
+  --modal-text-shadow: rgba(255, 255, 255, 0.3);
+  --modal-close-button-bg: red;
+  --modal-close-button-hover-bg: var(--color-white);
+  --modal-close-button-hover-color: red;
+  --modal-action-button-bg: var(--color-green);
+  --modal-action-button-active-bg: var(--color-green);
+  --modal-action-button-hover-bg: var(--color-white);
+  --modal-action-button-hover-color: purple;
+  --modal-success-bg: rgba(var(--color-green-rgb), 0.9);
+  --modal-success-bg-light: rgba(var(--color-green-rgb), 0.8);
+  --modal-success-border: var(--color-green);
+  --modal-success-icon-color: var(--color-green);
+  --modal-success-button-hover-bg: var(--color-green);
+
+  font-family: var(--font-family-base);
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  box-sizing: border-box;
+  background-color: var(--color-bg);
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+h1 {
+  font-size: 28px;
+  line-height: 1.1;
+  font-family: var(--font-family-base);
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-white);
+}
+
+/* Кастомные стили для заголовков на страницах */
+main.container h1 {
+  color: var(--color-white);
+
+  padding: 2px;
+  height: 40px;
+  display: flex;
+  align-items: left;
+}
+
+p {
+  color: var(--color-white);
+}
+
+ul,
+ol,
+li {
+  color: var(--color-white);
+}
+
+main,
+section,
+div {
+  color: inherit;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 320px;
+  width: min(100%, 1280px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+#root > section {
+  flex-grow: 1;
+}
+
+@media (width < 768px) {
+  #root {
+    padding: 10px 16px 16px;
+  }
+}
+
+@media (width < 576px) {
+  #root {
+    padding: 5px 10px 10px;
+  }
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-link);
+  text-decoration: inherit;
+  cursor: default;
+}
+
+a:hover {
+  color: var(--color-link-hover);
+}
+
+button {
+  cursor: default;
+}
+
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  cursor: default;
+}
+
+/* Глобальное переопределение cursor: pointer для всех интерактивных элементов */
+a,
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"],
+[onclick],
+label[for],
+.btn,
+.nav-link,
+.menu-link,
+.file-download,
+.file-delete,
+.edit-btn,
+.save-btn-field,
+.cancel-btn-field,
+.upload-btn,
+.password-toggle-btn,
+.navbar-toggler,
+.navbar-close-btn,
+.close-button,
+.action-button,
+.back-to-home-btn,
+.page-button,
+.nav-button,
+.finish-button,
+.card-title-link,
+.project-info-btn,
+.control-question-btn,
+.test-btn {
+  cursor: default;
+}
+
+/* Дополнительные специфичные правила для кнопок Bootstrap */
+.btn-success,
+.btn-info,
+.btn-primary,
+button.btn {
+  cursor: default;
+}
+
+main {
+  background-color: var(--color-bg);
+}
+
+/* Утилитарные классы для display */
+.hidden {
+  display: none;
+}
+
+.show-block {
+  display: block;
+}
+
+.show-flex {
+  display: flex;
+}
+
+.show-inline-block {
+  display: inline-block;
+}
+
+.error-handler-alert-z-index {
+  z-index: 100;
+}
