@@ -35,7 +35,8 @@ class ApiClient {
   }
 
   buildURL(endpoint, params = {}) {
-    const url = new URL(`${this.baseURL}${endpoint}`);
+    const baseOrigin = window.location.origin;
+    const url = new URL(`${this.baseURL}${endpoint}`, baseOrigin);
 
     Object.keys(params).forEach((key) => {
       if (params[key] !== null && params[key] !== undefined) {

@@ -56,7 +56,10 @@ const renderComponent = async (component, root, initialPath) => {
     component.renderPage &&
     typeof component.renderPage === "function"
   ) {
-    component.renderPage();
+    await component.renderPage();
+    if (component.init && typeof component.init === "function") {
+      component.init();
+    }
     return;
   }
 

@@ -5,7 +5,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
-import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
@@ -35,6 +34,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new CustomLogger(),
   });
+
+  app.setGlobalPrefix('api');
 
   // UTF-8 для всех JSON ответов
   app.use((_req: Request, res: Response, next: NextFunction) => {
@@ -77,43 +78,10 @@ async function bootstrap() {
     next(err);
   });
 
-  // ✅ ИСПРАВЛЕННЫЙ CORS
-  const corsOrigin: NonNullable<CorsOptions['origin']> = (
-    origin: string | undefined,
-    callback: (err: Error | null, allow?: boolean) => void,
-  ) => {
-    const allowedOrigins = [
-      'http://localhost:9000',
-      'http://localhost:3000',
-      'http://127.0.0.1:9000',
-      'http://127.0.0.1:3000',
-      'https://students-skill-tracker-2.pages.dev',
-      ...(process.env.ALLOWED_ORIGINS?.split(',').map((o) => o.trim()) || []),
-    ];
-
-    // разрешаем запросы без origin (Postman, OPTIONS)
-    if (!origin) {
-      return callback(null, true);
-    }
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    // ❗️ ВАЖНО: НЕ бросаем Error
-    return callback(null, false);
-  };
-
-  const corsOptions: CorsOptions = {
-    credentials: true,
-    origin: corsOrigin,
-  };
-  app.enableCors(corsOptions);
-
   const port = Number(process.env.PORT) || 3000;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 
-  console.log(`🚀 Server running on port ${port}`);
+  console.log(` Server running on port ${port}`);
 }
 
 bootstrap().catch((err) => {

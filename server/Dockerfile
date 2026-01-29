@@ -2,14 +2,21 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-RUN apk add --no-cache python3 make g++ openssl
+RUN apk add --no-cache openssl
 
 COPY package*.json ./
+COPY prisma ./prisma
 RUN npm ci
 
-COPY . .
-RUN npx prisma generate
+COPY tsconfig*.json ./
+COPY src ./src
+COPY src/data ./src/data
+COPY seed.ts ./seed.ts
 
+# сборка NestJS
+RUN npm run build
+
+RUN ls -la dist
 EXPOSE 3000
 
-CMD ["sh", "-c", "npm run build && npm run start:dev"]
+CMD ["node", "dist/src/main.js"]

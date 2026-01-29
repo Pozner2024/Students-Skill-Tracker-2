@@ -18,6 +18,8 @@ import type { Response } from 'express';
 import { TestsService } from './tests.service';
 import { GetTestDto, TestResponseDto, CreateTestDto } from './dto/test.dto';
 
+const corsOrigin = process.env.CORS_ORIGIN || '*';
+
 @Controller('tests')
 export class TestsController {
   constructor(private readonly testsService: TestsService) {}
@@ -25,7 +27,7 @@ export class TestsController {
   // ✅ Добавляем обработку preflight-запросов
   @Options('*path')
   handleOptions(@Res() res: Response) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9000');
+    res.setHeader('Access-Control-Allow-Origin', corsOrigin);
     res.setHeader(
       'Access-Control-Allow-Methods',
       'GET, POST, PUT, DELETE, PATCH, OPTIONS',

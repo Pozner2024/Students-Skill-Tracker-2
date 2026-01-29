@@ -12,6 +12,7 @@ class HomePage extends Page {
       metaTitle: "Главная страница",
     });
 
+    this.manualRender = true;
     this.topicsComponent = new Topics();
   }
 

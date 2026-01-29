@@ -1,6 +1,15 @@
 // Контроллер администратора: проверяет роль пользователя и возвращает результаты тестов по группам.
 
-import { Controller, Get, Delete, UseGuards, Param, ForbiddenException, BadRequestException, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Delete,
+  UseGuards,
+  Param,
+  ForbiddenException,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { AdminService } from './admin.service';
@@ -69,19 +78,21 @@ export class AdminController {
   ) {
     try {
       this.logger.debug(`Delete request for key: ${key}, user: ${user.id}`);
-      
+
       const dbUser = await this.prisma.user.findUnique({
         where: { id: user.id },
         select: { role: true },
       });
       if (!dbUser || dbUser.role !== 'admin') {
-        this.logger.warn(`Access denied for user ${user.id}, role: ${dbUser?.role}`);
+        this.logger.warn(
+          `Access denied for user ${user.id}, role: ${dbUser?.role}`,
+        );
         throw new ForbiddenException('Доступ только для администраторов');
       }
 
       const decodedKey = decodeURIComponent(key);
       this.logger.debug(`Decoded key: ${decodedKey}`);
-      
+
       const deleted = await this.adminService.deleteStudentFile(decodedKey);
 
       if (deleted) {
@@ -143,14 +154,18 @@ export class AdminController {
     @Param('userId') userId: string,
   ) {
     try {
-      this.logger.debug(`Delete user request: userId=${userId}, admin=${user.id}`);
+      this.logger.debug(
+        `Delete user request: userId=${userId}, admin=${user.id}`,
+      );
 
       const dbUser = await this.prisma.user.findUnique({
         where: { id: user.id },
         select: { role: true },
       });
       if (!dbUser || dbUser.role !== 'admin') {
-        this.logger.warn(`Access denied for user ${user.id}, role: ${dbUser?.role}`);
+        this.logger.warn(
+          `Access denied for user ${user.id}, role: ${dbUser?.role}`,
+        );
         throw new ForbiddenException('Доступ только для администраторов');
       }
 
@@ -162,7 +177,9 @@ export class AdminController {
       const deleted = await this.adminService.deleteUser(userIdNum);
 
       if (deleted) {
-        this.logger.log(`User ${userIdNum} deleted successfully by admin ${user.id}`);
+        this.logger.log(
+          `User ${userIdNum} deleted successfully by admin ${user.id}`,
+        );
         return {
           success: true,
           message: 'Пользователь успешно удален',

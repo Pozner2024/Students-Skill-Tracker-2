@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Prisma } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
+import * as argon2 from 'argon2';
 
 type JsonValue = Prisma.InputJsonValue;
 
@@ -38,7 +39,7 @@ type TestImageSeed = {
 const prisma = new PrismaClient();
 
 const loadJson = <T>(fileName: string): T => {
-  const filePath = path.join(__dirname, 'src', 'data', fileName);
+  const filePath = path.join(process.cwd(), 'src', 'data', fileName);
   const raw = fs.readFileSync(filePath, 'utf-8');
   return JSON.parse(raw) as T;
 };
@@ -127,16 +128,39 @@ const seedTestImages = async (images: TestImageSeed[]): Promise<void> => {
   }
 };
 
+const seedAdminUser = async (): Promise<void> => {
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+
+  if (!email || !password) {
+    return;
+  }
+
+  const hashedPassword = await argon2.hash(password);
+
+  await prisma.user.upsert({
+    where: { email },
+    create: {
+      email,
+      password: hashedPassword,
+      role: 'admin',
+    },
+    update: {
+      role: 'admin',
+    },
+  });
+};
+
 const main = async (): Promise<void> => {
   const topics = loadJson<TopicSeed[]>('topics.json');
   const questions = loadJson<QuestionSeed[]>('question.json');
   const tests = loadJson<TestSeed[]>('tests.json');
   const testImages = loadJson<TestImageSeed[]>('test_images.json');
-
   await seedTopics(topics);
   await seedQuestions(questions);
   await seedTests(tests);
   await seedTestImages(testImages);
+  await seedAdminUser();
 };
 
 main()
@@ -148,4 +172,3 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
-

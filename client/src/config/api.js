@@ -1,7 +1,7 @@
 // API Configuration
 // Webpack настроен для загрузки .env файла через dotenv-webpack
 export const API_CONFIG = {
-  BASE_URL: process.env.API_BASE_URL || "http://localhost:5000",
+  BASE_URL: process.env.API_BASE_URL || "/api",
   ENDPOINTS: {
     TESTS: "/tests",
     TEST_BY_CODE: "/tests/test",

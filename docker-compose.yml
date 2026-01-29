@@ -1,13 +1,14 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:16-alpine
-    container_name: students-skill-tracker-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: students_skill_tracker
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - db_data:/var/lib/postgresql/data
 
@@ -15,21 +16,25 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: students-skill-tracker-server
+    restart: unless-stopped
+    env_file:
+      - .env.docker
     environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/students_skill_tracker?schema=public
+      NODE_ENV: production
       PORT: "3000"
-      JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret}
-      YANDEX_CLOUD_ACCESS_KEY_ID: ${YANDEX_CLOUD_ACCESS_KEY_ID:-dev_access_key}
-      YANDEX_CLOUD_SECRET_ACCESS_KEY: ${YANDEX_CLOUD_SECRET_ACCESS_KEY:-dev_secret_key}
-      YANDEX_CLOUD_BUCKET_NAME: ${YANDEX_CLOUD_BUCKET_NAME:-students-skill-tracker}
-      YANDEX_CLOUD_ENDPOINT: ${YANDEX_CLOUD_ENDPOINT:-https://storage.yandexcloud.net}
-      YANDEX_CLOUD_REGION: ${YANDEX_CLOUD_REGION:-ru-central1}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "127.0.0.1:80:80"
+    depends_on:
+      - server
 
 volumes:
   db_data:
-

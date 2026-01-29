@@ -14,6 +14,7 @@ class TestPage {
     this.metaTitle = metaTitle;
     this.testQuestion = null;
     this.pagination = null;
+    this.manualRender = true;
   }
 
   renderPageStructure(
@@ -46,7 +47,10 @@ class TestPage {
     }
   }
 
-  renderPage(title, variant) {
+  renderPage(
+    title = "Данные загружаются...",
+    variant = "Данные загружаются..."
+  ) {
     const contentElement = document.getElementById("content");
     const normalizedTitle = (title || "").replace(/^Тема:?\s*/i, "");
     this.metaTitle = `${normalizedTitle}: Вариант ${variant}`;
