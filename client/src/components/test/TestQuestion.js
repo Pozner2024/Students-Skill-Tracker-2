@@ -670,7 +670,7 @@ class TestQuestion {
       answeredPercentage,
       totalScore,
       this.scoreCalculator.getGrade(
-        totalScore,
+        answeredPercentage,
         this.testInstance.questions.length
       ),
       this.topicName
@@ -681,13 +681,13 @@ class TestQuestion {
   async saveTestResult(totalScore, answeredPercentage) {
     try {
       const testCode = this.testInstance.testCode || "unknown";
-      const variant = this.testInstance.variant || 1;
+      const variant = Number(this.testInstance.variant) || 1;
       const totalQuestions = this.testInstance.questions.length;
       const maxPoints = this.scoreCalculator.getMaxScore();
       const percentage =
         maxPoints > 0 ? Math.round((totalScore / maxPoints) * 100) : 0;
 
-      const grade = this.scoreCalculator.getGrade(totalScore, totalQuestions);
+      const grade = this.scoreCalculator.getGrade(percentage, totalQuestions);
 
       const testResultData = {
         testCode: testCode,

@@ -9,6 +9,7 @@ dist/
 *.launch
 .settings/
 *.sublime-workspace
+docker-compose.yml
 
 # IDE - VSCode
 .vscode/*
@@ -19,12 +20,14 @@ dist/
 
 # dotenv environment variable files
 .env
-.env.*
+
 .env.development.local
 .env.test.local
 .env.production.local
 .env.local
 .env.docker
+.env.*
+!.env.example
 
 # temp directory
 .temp

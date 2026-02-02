@@ -46,17 +46,6 @@ export function renderLoginPage() {
                     </svg>
                   </button>
                 </div>
-                <div class="password-strength-indicator mt-2 hidden" id="password-indicator">
-                  <span class="indicator-text">Ровно 6 символов:</span>
-                  <div class="stars-container">
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                  </div>
-                </div>
               </div>
               <button type="button" id="login-btn" class="btn btn-primary w-100 mb-2">Войти</button>
               <button type="button" id="register-btn" class="btn btn-success w-100">Зарегистрироваться</button>
@@ -84,9 +73,6 @@ export function renderLoginPage() {
     .getElementById("password-toggle")
     .addEventListener("click", togglePasswordVisibility);
 
-  document
-    .getElementById("password")
-    .addEventListener("input", updatePasswordIndicator);
 }
 
 function showBootstrapAlert(message, type = "info") {
@@ -144,21 +130,55 @@ async function handleRegister() {
 
   try {
     const result = await authService.register(email, password);
-    window.loader.hide();
 
     if (result.success) {
-      document.getElementById("email").value = "";
-      document.getElementById("password").value = "";
+      const token = authService.getToken();
+      const hasValidToken =
+        token && token !== "undefined" && token !== "null";
+
+      if (!hasValidToken) {
+        authService.removeToken();
+        const loginResult = await authService.login(email, password);
+        if (!loginResult.success) {
+          window.loader.hide();
+          errorHandler.handle(loginResult, "LoginPage.handleRegister.login");
+          return;
+        }
+      }
+
+      if (!authService.isAuthenticated()) {
+        window.loader.hide();
+        showBootstrapAlert(
+          "Не удалось сохранить токен авторизации. Попробуйте войти вручную.",
+          "danger"
+        );
+        return;
+      }
+
+      window.loader.hide();
+      let hasRedirected = false;
+      const redirectToApp = () => {
+        if (hasRedirected) return;
+        hasRedirected = true;
+        window.location.href = "/";
+      };
 
       const successModal = new SuccessModal({
         id: "registrationSuccessModal",
-        title: "Регистрация успешна!",
-        message: "Вы успешно зарегистрировались, теперь войдите в приложение",
-        buttonText: "Понятно",
+        title: "Регистрация прошла успешно!",
+        message: "Сейчас вы будете перенаправлены в приложение",
+        buttonText: "Перейти",
+        buttonAction: () => {
+          successModal.closeModal();
+          redirectToApp();
+        },
+        onClose: redirectToApp,
       });
 
       successModal.showModal();
+      setTimeout(redirectToApp, 800);
     } else {
+      window.loader.hide();
       errorHandler.handle(result, "LoginPage.handleRegister");
     }
   } catch (error) {
@@ -186,48 +206,3 @@ function togglePasswordVisibility() {
   }
 }
 
-function updatePasswordIndicator() {
-  const passwordInput = document.getElementById("password");
-  const indicator = document.getElementById("password-indicator");
-  const stars = indicator.querySelectorAll(".star");
-  const indicatorText = indicator.querySelector(".indicator-text");
-
-  const passwordLength = passwordInput.value.length;
-  const minLength = 6;
-  const maxLength = 6;
-
-  if (passwordLength > maxLength) {
-    passwordInput.value = passwordInput.value.substring(0, maxLength);
-    showBootstrapAlert("Пароль должен содержать ровно 6 символов", "warning");
-    return updatePasswordIndicator();
-  }
-
-  if (passwordLength > 0) {
-    indicator.classList.remove("hidden");
-    indicator.classList.add("show-flex");
-
-    stars.forEach((star, index) => {
-      if (index < passwordLength) {
-        star.classList.add("filled");
-        star.classList.remove("empty");
-      } else {
-        star.classList.add("empty");
-        star.classList.remove("filled");
-      }
-    });
-
-    if (passwordLength < minLength) {
-      const remaining = minLength - passwordLength;
-      indicatorText.textContent = `Осталось ${remaining} символов:`;
-      indicator.classList.remove("complete");
-      indicator.classList.add("incomplete");
-    } else {
-      indicatorText.textContent = "Пароль готов!";
-      indicator.classList.remove("incomplete");
-      indicator.classList.add("complete");
-    }
-  } else {
-    indicator.classList.add("hidden");
-    indicator.classList.remove("show-flex");
-  }
-}

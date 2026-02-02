@@ -1,6 +1,17 @@
 import { API_CONFIG } from "../config/api.js";
 import apiClient from "./apiClient.js";
 
+const extractToken = (data) =>
+  data?.access_token ||
+  data?.accessToken ||
+  data?.token ||
+  data?.data?.access_token ||
+  data?.data?.accessToken ||
+  data?.data?.token ||
+  null;
+
+const extractUser = (data) => data?.user || data?.data?.user || null;
+
 const createAuthApi = (auth) => ({
   async register(email, password) {
     try {
@@ -13,10 +24,13 @@ const createAuthApi = (auth) => ({
         }
       );
 
+      const token = extractToken(data);
+      auth.setToken(token);
+
       return {
         success: true,
-        user: data.user,
-        message: "Вы успешно зарегистрировались, а теперь войдите в систему",
+        user: extractUser(data),
+        token,
       };
     } catch (error) {
       return {
@@ -37,12 +51,17 @@ const createAuthApi = (auth) => ({
         }
       );
 
-      auth.setToken(data.access_token);
+      const token = extractToken(data);
+      if (!token) {
+        throw new Error("Токен авторизации не получен");
+      }
+
+      auth.setToken(token);
 
       return {
         success: true,
-        user: data.user,
-        token: data.access_token,
+        user: extractUser(data),
+        token,
       };
     } catch (error) {
       return {

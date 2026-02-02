@@ -22,6 +22,11 @@ class AuthCore {
   }
 
   setToken(token) {
+    if (!token || token === "undefined" || token === "null") {
+      this.removeToken();
+      return;
+    }
+
     localStorage.setItem("auth_token", token);
   }
 
@@ -34,7 +39,8 @@ class AuthCore {
   }
 
   isAuthenticated() {
-    return !!this.getToken();
+    const token = this.getToken();
+    return !!token && token !== "undefined" && token !== "null";
   }
 
   logout() {
@@ -51,8 +57,8 @@ class AuthCore {
   }
 
   validatePassword(password) {
-    if (!password || password.length !== 6) {
-      return "Пароль должен содержать ровно 6 символов";
+    if (!password) {
+      return "Введите пароль";
     }
     return null;
   }

@@ -132,9 +132,9 @@ class ErrorHandler {
   isAuthError(error) {
     if (!error) return false;
 
-    const message =
-      (error.message || error.error || "").toLowerCase() ||
-      (typeof error === "string" ? error : "").toLowerCase();
+    const rawMessage =
+      error.message || error.error || (typeof error === "string" ? error : "");
+    const message = String(rawMessage || "").toLowerCase();
 
     return (
       message.includes("unauthorized") ||

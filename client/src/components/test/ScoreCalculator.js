@@ -245,7 +245,7 @@ class ScoreCalculator {
     return totalQuestions ? (answeredQuestionsCount / totalQuestions) * 100 : 0;
   }
 
-  getGrade(totalScore, questionCount) {
+  getGrade(scorePercent, questionCount) {
     const gradingScale = {
       10: [
         [1, 20, 1],
@@ -272,11 +272,14 @@ class ScoreCalculator {
         [96, 100, 10],
       ],
     };
-    return (
-      gradingScale[questionCount]?.find(
-        ([min, max]) => totalScore >= min && totalScore <= max
-      )?.[2] || "Пройдите тест еще раз"
-    );
+
+    const percent = Number.isFinite(scorePercent) ? scorePercent : 0;
+    const normalized = Math.max(0, Math.min(100, percent));
+    const scale = gradingScale[questionCount] || gradingScale[10];
+
+    return scale.find(
+      ([min, max]) => normalized >= min && normalized <= max
+    )?.[2] || 0;
   }
 }
 

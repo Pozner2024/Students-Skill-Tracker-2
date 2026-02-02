@@ -8,6 +8,7 @@ export default class SuccessModal {
     message = "Операция выполнена успешно",
     buttonText = "Понятно",
     buttonAction = null,
+    onClose = null,
   }) {
     this.id = id;
     this.customClass = customClass;
@@ -15,6 +16,7 @@ export default class SuccessModal {
     this.message = message;
     this.buttonText = buttonText;
     this.buttonAction = buttonAction || this.closeModal.bind(this);
+    this.onClose = onClose;
   }
 
   render() {
@@ -73,6 +75,10 @@ export default class SuccessModal {
       modal.style.display = "none";
       document.body.style.overflow = "auto";
       modal.remove();
+    }
+
+    if (typeof this.onClose === "function") {
+      this.onClose();
     }
   }
 }

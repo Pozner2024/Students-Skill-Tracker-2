@@ -71,7 +71,7 @@
   }
 
   .site-header h1 {
-    display: none;
+    display: block;
     font-size: 24px;
     text-align: center;
     width: 100%;
@@ -85,7 +85,7 @@
   }
 
   .site-header .logo-link {
-    display: none;
+    display: flex;
   }
 }
 
