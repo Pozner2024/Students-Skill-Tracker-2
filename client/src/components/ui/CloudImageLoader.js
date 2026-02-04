@@ -22,7 +22,6 @@ class CloudImageLoader {
     try {
       const endpoint = `${API_CONFIG.ENDPOINTS.IMAGES}/${this.topicId}/${this.variant}`;
       const fullUrl = `${API_CONFIG.BASE_URL}${endpoint}`;
-      console.log(`CloudImageLoader: Запрос изображений: ${fullUrl}`);
 
       const data = await apiClient.publicRequest(endpoint, {
         method: "GET",
@@ -30,50 +29,17 @@ class CloudImageLoader {
         handleErrors: false,
       });
 
-      console.log(`CloudImageLoader: Получен ответ от сервера:`, data);
-
       if (data && data.success && data.images) {
         this.images = data.images;
         this.loaded = true;
-        console.log(
-          `CloudImageLoader: Загружено ${
-            Object.keys(this.images).length
-          } изображений для темы ${this.topicId}, вариант ${this.variant}`
-        );
-        console.log(
-          `CloudImageLoader: Ключи изображений:`,
-          Object.keys(this.images)
-        );
       } else if (data && data.images) {
         this.images = data.images;
         this.loaded = true;
-        console.log(
-          `CloudImageLoader: Загружено ${
-            Object.keys(this.images).length
-          } изображений (без success флага)`
-        );
-        console.log(
-          `CloudImageLoader: Ключи изображений:`,
-          Object.keys(this.images)
-        );
       } else {
-        console.warn(
-          `CloudImageLoader: Нет изображений для темы ${this.topicId}, вариант ${this.variant}`
-        );
-        console.warn(`CloudImageLoader: Полученные данные:`, data);
         this.images = {};
         this.loaded = true;
       }
     } catch (error) {
-      console.error(
-        `CloudImageLoader: Ошибка при загрузке изображений для темы ${this.topicId}, вариант ${this.variant}:`,
-        error
-      );
-      console.error(`CloudImageLoader: Детали ошибки:`, {
-        message: error.message,
-        stack: error.stack,
-        name: error.name,
-      });
       errorHandler.log(error, "CloudImageLoader.loadImages");
       this.images = {};
       this.loaded = true;
@@ -104,13 +70,6 @@ class CloudImageLoader {
       this.images[String(questionNumber)] ||
       this.images[Number(questionNumber)] ||
       null;
-
-    if (!imageUrl && Object.keys(this.images).length > 0) {
-      console.warn(
-        `CloudImageLoader: Изображение для вопроса ${questionNumber} не найдено. Доступные номера:`,
-        Object.keys(this.images)
-      );
-    }
 
     return imageUrl;
   }

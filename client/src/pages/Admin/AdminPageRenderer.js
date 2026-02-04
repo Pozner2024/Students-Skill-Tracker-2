@@ -19,6 +19,56 @@ export default class AdminPageRenderer {
     return count === 10 || count === 15 ? 100 : null;
   }
 
+  getGradeByPercent(scorePercent, questionCount) {
+    const gradingScale = {
+      10: [
+        [1, 10, 1],
+        [11, 20, 2],
+        [21, 30, 3],
+        [31, 40, 4],
+        [41, 50, 5],
+        [51, 60, 6],
+        [61, 70, 7],
+        [71, 80, 8],
+        [81, 90, 9],
+        [91, 100, 10],
+      ],
+      15: [
+        [1, 20, 1],
+        [21, 40, 2],
+        [41, 50, 3],
+        [51, 60, 4],
+        [61, 70, 5],
+        [71, 80, 6],
+        [81, 85, 7],
+        [86, 90, 8],
+        [91, 95, 9],
+        [96, 100, 10],
+      ],
+    };
+
+    const percent = Number.isFinite(scorePercent) ? scorePercent : 0;
+    const normalized = Math.max(0, Math.min(100, percent));
+    const scale = gradingScale[questionCount] || gradingScale[10];
+
+    return (
+      scale.find(([min, max]) => normalized >= min && normalized <= max)?.[2] ??
+      0
+    );
+  }
+
+  getGradeForTest(test) {
+    if (!test || typeof test.score !== "number") return null;
+    const maxPoints =
+      typeof test.max_points === "number" && test.max_points > 0
+        ? test.max_points
+        : this.getMaxPointsByCount(test.total_questions);
+    if (!maxPoints || maxPoints <= 0) return null;
+
+    const percentage = Math.round((test.score / maxPoints) * 100);
+    return this.getGradeByPercent(percentage, test.total_questions);
+  }
+
   formatDate(dateString, includeTime = true) {
     if (!dateString) return "-";
     const options = {
@@ -90,9 +140,14 @@ export default class AdminPageRenderer {
             <div class="test-details">
               ${this.formatAnswers(test.answers_details)}
               <div class="test-summary">
-                Итог: ${this.formatTestSummary(test)}${
-              test.grade ? `, Оценка: ${test.grade}` : ""
-            }
+                ${(() => {
+                  const grade =
+                    this.getGradeForTest(test) ??
+                    (typeof test.grade === "number" ? test.grade : null);
+                  return `Итог: ${this.formatTestSummary(test)}${
+                    grade !== null ? `, Оценка: ${grade}` : ""
+                  }`;
+                })()}
               </div>
             </div>
           </div>

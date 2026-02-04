@@ -21,6 +21,40 @@ export class AdminService {
       return null;
     };
 
+    const getGradeByPercent = (scorePercent: number, questionCount?: number) => {
+      const gradingScale: Record<number, Array<[number, number, number]>> = {
+        10: [
+          [1, 10, 1],
+          [11, 20, 2],
+          [21, 30, 3],
+          [31, 40, 4],
+          [41, 50, 5],
+          [51, 60, 6],
+          [61, 70, 7],
+          [71, 80, 8],
+          [81, 90, 9],
+          [91, 100, 10],
+        ],
+        15: [
+          [1, 20, 1],
+          [21, 40, 2],
+          [41, 50, 3],
+          [51, 60, 4],
+          [61, 70, 5],
+          [71, 80, 6],
+          [81, 85, 7],
+          [86, 90, 8],
+          [91, 95, 9],
+          [96, 100, 10],
+        ],
+      };
+
+      const percent = Number.isFinite(scorePercent) ? scorePercent : 0;
+      const normalized = Math.max(0, Math.min(100, percent));
+      const scale = gradingScale[questionCount ?? 10] || gradingScale[10];
+      return scale.find(([min, max]) => normalized >= min && normalized <= max)?.[2] ?? 0;
+    };
+
     // 🔹 Получаем всех пользователей из базы с нужными полями
     // Включаем всех пользователей, не только тех, у кого есть результаты тестов
     // Это нужно, чтобы показывать файлы даже у студентов без тестов
@@ -95,8 +129,25 @@ export class AdminService {
           const testCode =
             typeof result.test_code === 'string' ? result.test_code : null;
           return {
-            grade:
-              (typeof result.grade === 'number' ? result.grade : null) ?? null,
+            grade: (() => {
+              const score =
+                typeof result.score === 'number' ? result.score : null;
+              const totalQuestions =
+                typeof result.total_questions === 'number'
+                  ? result.total_questions
+                  : null;
+              const maxPoints =
+                typeof result.max_points === 'number'
+                  ? result.max_points
+                  : computeMaxPointsByCount(totalQuestions);
+
+              if (score !== null && maxPoints && maxPoints > 0) {
+                const percentage = Math.round((score / maxPoints) * 100);
+                return getGradeByPercent(percentage, totalQuestions ?? undefined);
+              }
+
+              return (typeof result.grade === 'number' ? result.grade : null) ?? null;
+            })(),
             completed_at: (result.completed_at as string | Date | null) ?? null,
             test_code: testCode,
             test_title: testCode ? testTitlesMap.get(testCode) ?? null : null, // Добавляем название из БД

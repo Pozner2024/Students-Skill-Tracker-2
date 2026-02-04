@@ -104,16 +104,10 @@ class TestQuestion {
         const match = testCode.match(/test(\d+)_/);
         if (match) {
           actualTopicId = parseInt(match[1], 10);
-          console.log(
-            `TestQuestion: Извлечен topicId ${actualTopicId} из testCode ${testCode}`
-          );
         }
       }
 
       if (!actualTopicId) {
-        console.warn(
-          `TestQuestion: topicId не определен, используем значение по умолчанию 1`
-        );
         actualTopicId = 1;
       }
 
@@ -131,9 +125,7 @@ class TestQuestion {
       this.testInstance = testResult.data;
 
       // Начинаем загрузку изображений в фоне (не блокируем инициализацию)
-      this.imageLoader.loadImages().catch((error) => {
-        console.warn("TestQuestion: Ошибка при загрузке изображений:", error);
-      });
+      this.imageLoader.loadImages().catch(() => {});
 
       if (!this.testInstance || !Array.isArray(this.testInstance.questions)) {
         return;
@@ -479,20 +471,9 @@ class TestQuestion {
     if (this.imageLoader) {
       const questionNumber = index + 1;
       imagePath = await this.imageLoader.getImagePath(questionNumber);
-      if (imagePath) {
-        console.log(
-          `TestQuestion: Найдено изображение для вопроса ${questionNumber}:`,
-          imagePath
-        );
-      } else {
-        console.log(
-          `TestQuestion: Изображение для вопроса ${questionNumber} не найдено`
-        );
-      }
+      // no-op: suppress image lookup logs
     } else {
-      console.warn(
-        `TestQuestion: imageLoader не инициализирован для вопроса ${index + 1}`
-      );
+      // no-op: suppress image loader warnings
     }
 
     const questionHTML = questionRenderer.renderQuestionHTML(
@@ -658,8 +639,31 @@ class TestQuestion {
     const totalScore = this.scoreCalculator.calculateTotalScore(userAnswers);
     const answeredPercentage =
       this.scoreCalculator.getAnsweredPercentage(userAnswers);
+    const localMaxPoints = this.scoreCalculator.getMaxScore();
+    const localScorePercentage =
+      localMaxPoints > 0 ? Math.round((totalScore / localMaxPoints) * 100) : 0;
 
-    await this.saveTestResult(totalScore, answeredPercentage);
+    const savedResult = await this.saveTestResult(
+      totalScore,
+      answeredPercentage
+    );
+    const savedResultObj =
+      savedResult && typeof savedResult === "object" ? savedResult : null;
+    const maxPoints =
+      savedResultObj &&
+      typeof savedResultObj.max_points === "number" &&
+      savedResultObj.max_points > 0
+        ? savedResultObj.max_points
+        : localMaxPoints;
+    const scorePercentage =
+      maxPoints > 0 ? Math.round((totalScore / maxPoints) * 100) : 0;
+    const grade =
+      savedResultObj && typeof savedResultObj.grade === "number"
+        ? savedResultObj.grade
+        : this.scoreCalculator.getGrade(
+            scorePercentage,
+            this.testInstance.questions.length
+          );
 
     const contentContainer = document.getElementById("content");
     if (!contentContainer) {
@@ -669,10 +673,7 @@ class TestQuestion {
     const skillProgressBar = new SkillProgressBar(
       answeredPercentage,
       totalScore,
-      this.scoreCalculator.getGrade(
-        answeredPercentage,
-        this.testInstance.questions.length
-      ),
+      grade,
       this.topicName
     );
     skillProgressBar.render("content");
@@ -697,15 +698,18 @@ class TestQuestion {
         maxPoints: maxPoints,
         percentage: percentage,
         grade: grade,
-        answersDetails: this.scoreCalculator?.lastDetails || [],
+        answersDetails:
+          (this.scoreCalculator && this.scoreCalculator.lastDetails) || [],
       };
 
       const { default: authService } = await import(
         "../../services/authService.js"
       );
 
-      await authService.saveTestResult(testResultData);
+      const response = await authService.saveTestResult(testResultData);
+      return response && response.result ? response.result : null;
     } catch (error) {}
+    return null;
   }
 }
 

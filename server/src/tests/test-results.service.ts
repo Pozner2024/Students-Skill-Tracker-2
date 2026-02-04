@@ -21,6 +21,49 @@ export class TestResultsService {
 
     const results = (user?.testResults as TestResult[]) || [];
 
+    const computeMaxPointsByCount = (count?: number | null) => {
+      if (count === 10) return 100;
+      if (count === 15) return 100;
+      return null;
+    };
+
+    const getGradeByPercent = (scorePercent: number, questionCount?: number) => {
+      const gradingScale: Record<number, Array<[number, number, number]>> = {
+        10: [
+          [1, 10, 1],
+          [11, 20, 2],
+          [21, 30, 3],
+          [31, 40, 4],
+          [41, 50, 5],
+          [51, 60, 6],
+          [61, 70, 7],
+          [71, 80, 8],
+          [81, 90, 9],
+          [91, 100, 10],
+        ],
+        15: [
+          [1, 20, 1],
+          [21, 40, 2],
+          [41, 50, 3],
+          [51, 60, 4],
+          [61, 70, 5],
+          [71, 80, 6],
+          [81, 85, 7],
+          [86, 90, 8],
+          [91, 95, 9],
+          [96, 100, 10],
+        ],
+      };
+
+      const percent = Number.isFinite(scorePercent) ? scorePercent : 0;
+      const normalized = Math.max(0, Math.min(100, percent));
+      const scale = gradingScale[questionCount ?? 10] || gradingScale[10];
+      return (
+        scale.find(([min, max]) => normalized >= min && normalized <= max)?.[2] ??
+        0
+      );
+    };
+
     // 🔹 Получаем все уникальные test_code для загрузки названий из БД
     const testCodes = new Set<string>();
     for (const result of results) {
@@ -58,9 +101,28 @@ export class TestResultsService {
         result?.test_code && typeof result.test_code === 'string'
           ? result.test_code
           : null;
+      const totalQuestions =
+        typeof result?.total_questions === 'number'
+          ? result.total_questions
+          : null;
+      const score = typeof result?.score === 'number' ? result.score : null;
+      const resolvedMaxPoints =
+        typeof result?.max_points === 'number' && result.max_points > 0
+          ? result.max_points
+          : computeMaxPointsByCount(totalQuestions);
+      const computedGrade =
+        score !== null && resolvedMaxPoints && resolvedMaxPoints > 0
+          ? getGradeByPercent(
+              Math.round((score / resolvedMaxPoints) * 100),
+              totalQuestions ?? undefined,
+            )
+          : (typeof result?.grade === 'number' ? result.grade : null) ?? null;
+
       return {
         ...result,
         test_title: testCode ? (testTitlesMap.get(testCode) ?? null) : null,
+        max_points: resolvedMaxPoints ?? null,
+        grade: computedGrade,
       };
     });
 
@@ -84,6 +146,61 @@ export class TestResultsService {
       answersDetails,
     } = testResultData;
 
+    const computeMaxPointsByCount = (count?: number | null) => {
+      if (count === 10) return 100;
+      if (count === 15) return 100;
+      return null;
+    };
+
+    const getGradeByPercent = (scorePercent: number, questionCount?: number) => {
+      const gradingScale: Record<number, Array<[number, number, number]>> = {
+        10: [
+          [1, 10, 1],
+          [11, 20, 2],
+          [21, 30, 3],
+          [31, 40, 4],
+          [41, 50, 5],
+          [51, 60, 6],
+          [61, 70, 7],
+          [71, 80, 8],
+          [81, 90, 9],
+          [91, 100, 10],
+        ],
+        15: [
+          [1, 20, 1],
+          [21, 40, 2],
+          [41, 50, 3],
+          [51, 60, 4],
+          [61, 70, 5],
+          [71, 80, 6],
+          [81, 85, 7],
+          [86, 90, 8],
+          [91, 95, 9],
+          [96, 100, 10],
+        ],
+      };
+
+      const percent = Number.isFinite(scorePercent) ? scorePercent : 0;
+      const normalized = Math.max(0, Math.min(100, percent));
+      const scale = gradingScale[questionCount ?? 10] || gradingScale[10];
+      return (
+        scale.find(([min, max]) => normalized >= min && normalized <= max)?.[2] ??
+        0
+      );
+    };
+
+    const resolvedMaxPoints =
+      typeof maxPoints === 'number' && maxPoints > 0
+        ? maxPoints
+        : computeMaxPointsByCount(totalQuestions);
+    const computedGrade =
+      typeof score === 'number' && resolvedMaxPoints && resolvedMaxPoints > 0
+        ? getGradeByPercent(
+            Math.round((score / resolvedMaxPoints) * 100),
+            totalQuestions,
+          )
+        : (typeof grade === 'number' ? grade : null) ?? null;
+
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: { testResults: true },
@@ -97,8 +214,8 @@ export class TestResultsService {
       variant,
       score,
       total_questions: totalQuestions,
-      max_points: maxPoints ?? null,
-      grade,
+      max_points: resolvedMaxPoints ?? null,
+      grade: computedGrade,
       answers_details: answersDetails || [],
       completed_at: new Date().toISOString(),
     };

@@ -85,7 +85,7 @@
   }
 
   .site-header .logo-link {
-    display: flex;
+    display: none;
   }
 }
 

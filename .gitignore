@@ -9,7 +9,7 @@ dist/
 *.launch
 .settings/
 *.sublime-workspace
-docker-compose.yml
+
 
 # IDE - VSCode
 .vscode/*
