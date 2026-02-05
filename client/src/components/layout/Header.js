@@ -33,15 +33,13 @@ export default class Header extends Section {
   afterRender() {
     this.removeListeners();
 
-    // Показываем лоадер только при первой загрузке страницы
-    // При навигации по SPA страница уже загружена, поэтому событие load не произойдет
+    
     if (document.readyState === 'loading') {
       window.loader.show();
       window.addEventListener("load", this.handleWindowLoad, { once: true });
       this.isLoadListenerAttached = true;
     } else {
-      // Страница уже загружена, лоадер не показываем
-      // Каждая страница сама управляет своим лоадером
+      
     }
 
     this.logoElement = document.querySelector(".logo-link");

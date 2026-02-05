@@ -34,5 +34,11 @@
     "bootstrap": "^5.3.8",
     "canvas-confetti": "^1.9.3",
     "@ckeditor/ckeditor5-build-classic": "^41.0.0"
-  }
+  },
+  "browserslist": [
+    ">= 0.5%",
+    "last 2 versions",
+    "not dead",
+    "Safari >= 12"
+  ]
 }
