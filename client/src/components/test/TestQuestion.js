@@ -629,7 +629,8 @@ class TestQuestion {
   async submitAllAnswers() {
     let userAnswers = this.answerManager.getAllAnswers();
     if (typeof userAnswers === "object" && !Array.isArray(userAnswers)) {
-      userAnswers = Object.values(userAnswers);
+      const totalQuestions = this.testInstance?.questions?.length || 0;
+      userAnswers = Array.from({ length: totalQuestions }, (_, i) => userAnswers[i]);
     }
 
     if (!Array.isArray(userAnswers)) {

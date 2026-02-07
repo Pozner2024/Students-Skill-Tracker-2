@@ -62,21 +62,13 @@ function sanitizeHtml(html) {
 
 export function renderContent(topic) {
   if (!topic) {
-    console.warn("[renderContent] Топик не передан");
     return `
       <p class="error-note">Тема не найдена.</p>
     `;
   }
 
-  console.log("[renderContent] Получен топик:", topic);
-  console.log("[renderContent] topic.content:", topic.content);
-  console.log("[renderContent] Тип topic.content:", typeof topic.content);
-
   // Если content - это массив секций, рендерим их с заголовками
   if (Array.isArray(topic.content) && topic.content.length > 0) {
-    console.log(
-      "[renderContent] Content - массив секций, рендерим с заголовками"
-    );
     const sectionsHtml = topic.content
       .map((section) => {
         if (typeof section === "object" && section !== null) {
@@ -119,21 +111,12 @@ export function renderContent(topic) {
   // Обычная обработка (для других форматов)
   const textContent = extractTextFromContent(topic.content);
 
-  console.log("[renderContent] Извлеченный текст:", textContent);
-  console.log("[renderContent] Длина текста:", textContent?.length);
-
   if (!textContent || textContent.trim().length === 0) {
-    console.warn("[renderContent] Текст пустой или не извлечен");
-    console.warn(
-      "[renderContent] Структура content для отладки:",
-      JSON.stringify(topic.content, null, 2)
-    );
     return `
       <p class="placeholder-note">Содержание темы пока не добавлено.</p>
     `;
   }
 
-  console.log("[renderContent] Обрабатываем контент как HTML");
   const formattedText = sanitizeHtml(textContent);
 
   return `

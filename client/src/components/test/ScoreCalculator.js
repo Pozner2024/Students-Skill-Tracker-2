@@ -20,7 +20,29 @@ class ScoreCalculator {
   }
 
   normalizeString(str) {
-    return typeof str === "string" ? str.trim().toLowerCase() : str;
+    if (typeof str !== "string") {
+      return str;
+    }
+    return str
+      .replace(/&nbsp;/gi, " ")
+      .replace(/\u00a0/g, " ")
+      .replace(/[–—−]/g, "-")
+      .replace(/([+-])\s+(?=\d)/g, "$1")
+      .replace(/(\d)\s*-\s*(\d)/g, "$1-$2")
+      .replace(/\s*%/g, "%")
+      .replace(/°\s*[cс]/gi, "°c")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
+  normalizeChoiceValue(value) {
+    const normalized = this.normalizeString(value);
+    return typeof normalized === "string"
+      ? normalized
+          .replace(/[\u00a0\u202f\u2007]/g, "")
+          .replace(/\s+/g, "")
+      : normalized;
   }
 
   isNumericLike(value) {
@@ -124,7 +146,9 @@ class ScoreCalculator {
         case "multiple_choice":
           isCorrect =
             this.normalizeString(userAnswer) ===
-            this.normalizeString(question.correct_answer);
+              this.normalizeString(question.correct_answer) ||
+            this.normalizeChoiceValue(userAnswer) ===
+              this.normalizeChoiceValue(question.correct_answer);
           questionScore = isCorrect ? scale[index] : 0;
           details.push({
             questionNumber: index + 1,

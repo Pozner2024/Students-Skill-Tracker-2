@@ -20,8 +20,17 @@ export function renderLoginPage() {
       <div class="main-container">
         <div class="text-section">
           <img src="${logo}" alt="Логотип УО ВГИК" class="logo">
-          <h1>Кондитер-Pro. Контроль и оценка компетенций обучающихся по учебному предмету "Специальная технология".</h1>
-          <p>Специальность: "Обслуживание и изготовление продукции в общественном питании". Квалификация: "Кондитер 4 разряда".</p>
+          <h1 class="login-title">
+            <span class="login-title-main">Кондитер-Pro</span>
+          </h1>
+          <p class="login-title-sub login-title-sub--primary">
+            Контроль и оценка компетенций обучающихся по учебному предмету
+            "Специальная технология"
+          </p>
+          <p class="login-title-sub login-title-sub--secondary">
+            Специальность: "Обслуживание и изготовление продукции в общественном питании".
+            Квалификация: "Кондитер 4 разряда"
+          </p>
         </div>
         <div class="login-wrapper">
           <div class="form-box">

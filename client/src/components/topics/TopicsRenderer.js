@@ -51,7 +51,6 @@ export default class TopicsRenderer {
 
       if (data.success && data.topics) {
         this.topics = data.topics;
-        console.log(`Загружено тем: ${this.topics.length}`);
         return this.topics;
       } else {
         throw new Error(

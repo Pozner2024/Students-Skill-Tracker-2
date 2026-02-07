@@ -39,7 +39,7 @@ export function renderTestResults(testResults) {
       (result) => `
       <div class="test-result-item">
         <div class="result-header">
-          <span class="test-title">Вы прошли тест: ${getTestTitle(result)}</span>
+          <span class="test-title">Вы прошли тест ${getTestTitle(result)}</span>
           <span class="test-date">${new Date(
             result.completed_at
           ).toLocaleDateString("ru-RU")}</span>

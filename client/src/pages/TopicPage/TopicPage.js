@@ -40,18 +40,11 @@ class TopicPage extends Page {
         }
       );
 
-      console.log("[TopicPage] Получены данные с сервера:", data);
-
       if (data?.success && data.topic) {
-        console.log("[TopicPage] Топик найден:", data.topic);
-        console.log("[TopicPage] Content топика:", data.topic.content);
-        console.log("[TopicPage] Тип content:", typeof data.topic.content);
         return data.topic;
       }
-      console.warn("[TopicPage] Данные топика не найдены или формат неверный");
       return null;
     } catch (error) {
-      console.error("[TopicPage] Ошибка при загрузке данных:", error);
       errorHandler.handle(error, "TopicPage.loadTopicData");
       return null;
     }
@@ -66,23 +59,12 @@ class TopicPage extends Page {
       }
       return false;
     } catch (error) {
-      console.error(
-        "[TopicPage] Ошибка при проверке роли пользователя:",
-        error
-      );
       return false;
     }
   }
 
   async saveTopicContent(topicId, content) {
     try {
-      console.log("[TopicPage.saveTopicContent] Отправляем content:");
-      console.log("  - Тип:", typeof content);
-      console.log("  - Является строкой:", typeof content === 'string');
-      console.log("  - Является объектом:", typeof content === 'object' && content !== null);
-      console.log("  - Первые 200 символов:", typeof content === 'string' ? content.substring(0, 200) : JSON.stringify(content).substring(0, 200));
-      console.log("  - Тело запроса будет:", JSON.stringify({ content }).substring(0, 300));
-      
       const response = await apiClient.put(
         `${API_CONFIG.ENDPOINTS.TOPICS}/${topicId}/content`,
         { content },
@@ -100,7 +82,6 @@ class TopicPage extends Page {
       }
       return { success: false, message: "Ошибка при сохранении" };
     } catch (error) {
-      console.error("[TopicPage] Ошибка при сохранении контента:", error);
       errorHandler.handle(error, "TopicPage.saveTopicContent");
       return {
         success: false,
@@ -119,7 +100,6 @@ class TopicPage extends Page {
 
       const editorContainer = document.getElementById("topic-editor-container");
       if (!editorContainer) {
-        console.warn("[TopicPage] Контейнер редактора не найден");
         return;
       }
 
@@ -134,15 +114,12 @@ class TopicPage extends Page {
       });
 
       await this.editor.init();
-      console.log("[TopicPage] Редактор успешно инициализирован");
     } catch (error) {
-      console.error("[TopicPage] Ошибка при инициализации редактора:", error);
       errorHandler.handle(error, "TopicPage.initEditor");
     }
   }
 
   async handleEditClick() {
-    console.log("[TopicPage] handleEditClick вызван");
     this.isEditMode = true;
     const pageContent = await this.renderPage();
 
@@ -163,7 +140,6 @@ class TopicPage extends Page {
   }
 
   async handleCancelClick() {
-    console.log("[TopicPage] handleCancelClick вызван");
     this.isEditMode = false;
     if (this.editor) {
       await this.editor.destroy();
@@ -187,9 +163,6 @@ class TopicPage extends Page {
 
     try {
       const editorData = this.editor.getData();
-      console.log("[TopicPage] editorData тип:", typeof editorData);
-      console.log("[TopicPage] editorData значение:", editorData);
-      console.log("[TopicPage] editorData первые 200 символов:", editorData?.substring?.(0, 200));
       const topicId = this.currentTopic.id;
 
       // Показываем индикатор загрузки
@@ -226,7 +199,6 @@ class TopicPage extends Page {
         }
       }
     } catch (error) {
-      console.error("[TopicPage] Ошибка при сохранении:", error);
       errorHandler.handle(error, "TopicPage.handleSaveClick");
       alert("Произошла ошибка при сохранении");
       const saveButton = document.getElementById("topic-save-btn");
@@ -242,42 +214,25 @@ class TopicPage extends Page {
     const cancelButton = document.getElementById("topic-cancel-btn");
     const saveButton = document.getElementById("topic-save-btn");
 
-    console.log("[TopicPage] attachEventListeners - editButton:", editButton);
-    console.log(
-      "[TopicPage] attachEventListeners - cancelButton:",
-      cancelButton
-    );
-    console.log("[TopicPage] attachEventListeners - saveButton:", saveButton);
-
     if (editButton) {
       editButton.addEventListener("click", (e) => {
         e.preventDefault();
-        console.log("[TopicPage] Кнопка редактирования нажата");
         this.handleEditClick();
       });
-      console.log(
-        "[TopicPage] Обработчик для кнопки редактирования прикреплен"
-      );
-    } else {
-      console.warn("[TopicPage] Кнопка редактирования не найдена в DOM");
     }
 
     if (cancelButton) {
       cancelButton.addEventListener("click", (e) => {
         e.preventDefault();
-        console.log("[TopicPage] Кнопка отмены нажата");
         this.handleCancelClick();
       });
-      console.log("[TopicPage] Обработчик для кнопки отмены прикреплен");
     }
 
     if (saveButton) {
       saveButton.addEventListener("click", (e) => {
         e.preventDefault();
-        console.log("[TopicPage] Кнопка сохранения нажата");
         this.handleSaveClick();
       });
-      console.log("[TopicPage] Обработчик для кнопки сохранения прикреплен");
     }
   }
 
@@ -285,15 +240,11 @@ class TopicPage extends Page {
    * Метод init вызывается роутером после вставки HTML в DOM
    */
   init() {
-    console.log("[TopicPage] init() вызван, isEditMode:", this.isEditMode);
     // Прикрепляем обработчики событий после того, как DOM обновлен
     this.attachEventListeners();
 
     // Если мы в режиме редактирования, инициализируем редактор
     if (this.isEditMode && this.currentTopic) {
-      console.log(
-        "[TopicPage] Инициализация редактора в режиме редактирования"
-      );
       setTimeout(async () => {
         await this.initEditor(this.currentTopic);
         // Повторно прикрепляем обработчики после инициализации редактора
@@ -322,7 +273,6 @@ class TopicPage extends Page {
     window.loader.show();
     try {
       const topic = await this.loadTopicData(topicId);
-      console.log("[TopicPage] renderPage - загруженный topic:", topic);
 
       if (topic) {
         this.currentTopic = topic;
@@ -366,7 +316,6 @@ class TopicPage extends Page {
           `;
         }
       } else {
-        console.warn("[TopicPage] renderPage - топик не загружен");
         this.title = "Тема";
         this.metaTitle = "Тема";
         this.editButtonHtml = "";
@@ -378,13 +327,11 @@ class TopicPage extends Page {
       }
 
       const renderedHTML = this.render();
-      console.log("[TopicPage] renderPage - финальный HTML:", renderedHTML);
 
       // Обработчики событий будут прикреплены в методе init(),
       // который вызывается роутером после вставки HTML в DOM
       return renderedHTML;
     } catch (error) {
-      console.error("[TopicPage] Ошибка при рендеринге страницы:", error);
       errorHandler.handle(error, "TopicPage.renderPage");
       this.title = "Тема";
       this.metaTitle = "Тема";

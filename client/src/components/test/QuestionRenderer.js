@@ -15,6 +15,14 @@ function formatUnits(text) {
   });
 }
 
+function escapeAttributeValue(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 function renderMultipleChoice(question, index, answerManager) {
   const savedAnswer = answerManager.getAnswer(index);
 
@@ -25,10 +33,12 @@ function renderMultipleChoice(question, index, answerManager) {
   return question.options
     .map((optionRaw) => {
       const option = formatUnits(optionRaw);
+      const rawValue = escapeAttributeValue(optionRaw);
+      const isChecked = savedAnswer === optionRaw || savedAnswer === option;
       return `
         <label>
-          <input type="radio" name="answer_${index}" value="${option}" ${
-        savedAnswer === option ? "checked" : ""
+          <input type="radio" name="answer_${index}" value="${rawValue}" ${
+        isChecked ? "checked" : ""
       } />
           ${option}
         </label><br/>

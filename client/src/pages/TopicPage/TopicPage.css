@@ -1,5 +1,5 @@
 .topic-page {
-  padding: 20px;
+  padding: 0px;
   color: white;
 }
 
@@ -40,11 +40,13 @@
   display: block;
   visibility: visible;
   opacity: 1;
+  text-align: justify;
 }
 
 .topic-content p {
   margin: 0 0 1em 0;
   text-indent: 50px;
+  text-align: justify;
 }
 
 .topic-content p:last-child {
@@ -206,6 +208,10 @@
 }
 
 @media (width < 768px) {
+  .topic-page {
+    padding: 0px;
+  }
+
   .topic-page-header {
     flex-direction: column;
     align-items: flex-start;
@@ -238,5 +244,17 @@
 
   .topic-actions .btn {
     flex: 1;
+  }
+
+  .topic-page p,
+  .topic-content p {
+    text-indent: 25px;
+  }
+}
+
+@media (width < 480px) {
+  .topic-page p,
+  .topic-content p {
+    text-indent: 15px;
   }
 }

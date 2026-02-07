@@ -61,16 +61,16 @@ class CriteriaPage extends Page {
             </tr>
           </thead>
           <tbody>
-            <tr><td>1-20</td><td class="grade-column"><strong>1</strong></td></tr>
-            <tr><td>21-40</td><td class="grade-column"><strong>2</strong></td></tr>
-            <tr><td>41-50</td><td class="grade-column"><strong>3</strong></td></tr>
-            <tr><td>51-60</td><td class="grade-column"><strong>4</strong></td></tr>
-            <tr><td>61-70</td><td class="grade-column"><strong>5</strong></td></tr>
-            <tr><td>71-80</td><td class="grade-column"><strong>6</strong></td></tr>
-            <tr><td>81-85</td><td class="grade-column"><strong>7</strong></td></tr>
-            <tr><td>86-90</td><td class="grade-column"><strong>8</strong></td></tr>
-            <tr><td>91-95</td><td class="grade-column"><strong>9</strong></td></tr>
-            <tr><td>96-100</td><td class="grade-column"><strong>10</strong></td></tr>
+            <tr><td>1-10</td><td class="grade-column"><strong>1</strong></td></tr>
+            <tr><td>11-20</td><td class="grade-column"><strong>2</strong></td></tr>
+            <tr><td>21-30</td><td class="grade-column"><strong>3</strong></td></tr>
+            <tr><td>31-40</td><td class="grade-column"><strong>4</strong></td></tr>
+            <tr><td>41-50</td><td class="grade-column"><strong>5</strong></td></tr>
+            <tr><td>51-60</td><td class="grade-column"><strong>6</strong></td></tr>
+            <tr><td>61-70</td><td class="grade-column"><strong>7</strong></td></tr>
+            <tr><td>71-80</td><td class="grade-column"><strong>8</strong></td></tr>
+            <tr><td>81-90</td><td class="grade-column"><strong>9</strong></td></tr>
+            <tr><td>91-100</td><td class="grade-column"><strong>10</strong></td></tr>
           </tbody>
         </table>
       </div>
