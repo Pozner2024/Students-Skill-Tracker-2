@@ -21,6 +21,12 @@ export default class Menu extends Section {
   }
 
   render() {
+    const mobileMenuTitleHTML = `
+      <li class="nav-item menu-mobile-title">
+        <span class="nav-link menu-link menu-mobile-title-text">Меню</span>
+      </li>
+    `;
+
     const menuItemsHTML = MENU_ITEMS.map(
       (item) => `
         <li class="nav-item">
@@ -63,6 +69,7 @@ export default class Menu extends Section {
               </button>
 
               <ul class="navbar-nav mx-auto">
+                ${mobileMenuTitleHTML}
                 ${menuItemsHTML}
               </ul>
             </div>

@@ -16,6 +16,11 @@ class ApiClient {
     };
   }
 
+  async readResponseText(response) {
+    const buffer = await response.arrayBuffer();
+    return new TextDecoder("utf-8").decode(buffer);
+  }
+
   getHeaders(customHeaders = {}, includeAuth = true, body = null) {
     const headers = { ...this.defaultHeaders };
 
@@ -60,7 +65,7 @@ class ApiClient {
         const clonedResponse = response.clone();
         
         // Сначала читаем как текст, чтобы проверить содержимое
-        const responseText = await clonedResponse.text();
+        const responseText = await this.readResponseText(clonedResponse);
         
         // Проверяем, не является ли это multipart данными (даже если Content-Type не указывает на это)
         if (responseText && (responseText.startsWith("------") || responseText.includes("multipart/form-data"))) {
@@ -100,7 +105,7 @@ class ApiClient {
     // Это позволяет обнаружить multipart даже если Content-Type не установлен правильно
     let responseText;
     try {
-      responseText = await response.text();
+      responseText = await this.readResponseText(response);
     } catch (e) {
       throw new Error("Не удалось прочитать ответ сервера");
     }

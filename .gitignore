@@ -42,6 +42,10 @@ pids
 *.seed
 *.pid.lock
 
+# Local docker/nginx overrides
+docker-compose.override.yml
+nginx/nginx.local.conf
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

@@ -167,6 +167,17 @@
   }
 }
 
+@media (pointer: coarse) {
+  /* На мобильных устройcтвах используем нативный select,
+     чтобы выпадающий список не обрезался контейнерами. */
+  .matching-question select {
+    appearance: auto;
+    -webkit-appearance: menulist;
+    background-image: none;
+    padding-right: 10px;
+  }
+}
+
 @media (width < 480px) {
   .matching-question {
     margin-top: 5px;

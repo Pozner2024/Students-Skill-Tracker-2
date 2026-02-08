@@ -230,6 +230,12 @@ input[type="reset"] {
   cursor: default;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-white);
+  opacity: 1;
+}
+
 /* Глобальное переопределение cursor: pointer для всех интерактивных элементов */
 a,
 button,

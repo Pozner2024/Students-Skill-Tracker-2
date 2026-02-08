@@ -10,7 +10,11 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  GetObjectCommand,
+  HeadObjectCommand,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { YandexCloudConfig } from '../config/yandex-cloud.config';
 
@@ -49,6 +53,13 @@ export class ImagesService {
     try {
       const config = this.configService.get<YandexCloudConfig>('yandexCloud')!;
       const key = `img${topicId}_${variant}/${questionNumber}.jpg`;
+
+      // Проверяем существование объекта, чтобы не выдавать URL для отсутствующих файлов
+      const headCommand = new HeadObjectCommand({
+        Bucket: config.bucketName,
+        Key: key,
+      });
+      await this.s3Client.send(headCommand);
 
       const command = new GetObjectCommand({
         Bucket: config.bucketName,

@@ -72,7 +72,7 @@ function renderFillInTheBlank(question, index, answerManager) {
           type="text"
           name="answer_${index}_${answerIndex - 1}"
           value="${savedText}"
-          placeholder="Введите ваш ответ"
+          placeholder="Введите Ваш ответ"
         />
         ${punctuation}
       </span>
