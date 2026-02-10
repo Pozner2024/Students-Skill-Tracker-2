@@ -19,6 +19,7 @@ class TestQuestion {
     this.scoreCalculator = null;
     this.imageLoader = null;
     this.topicName = null;
+    this.maxQuestions = null;
     this.onPaginationUpdate = null;
     this.currentQuestionElement = null;
     this.previousQuestionIndex = null;
@@ -123,9 +124,16 @@ class TestQuestion {
 
       this.topicName = testResult.topicName;
       this.testInstance = testResult.data;
+      this.maxQuestions = Array.isArray(this.testInstance.questions)
+        ? this.testInstance.questions.length
+        : null;
+
+      if (this.imageLoader && Number.isFinite(this.maxQuestions)) {
+        this.imageLoader.setMaxQuestions(this.maxQuestions);
+      }
 
       // Начинаем загрузку изображений в фоне (не блокируем инициализацию)
-      this.imageLoader.loadImages().catch(() => {});
+      this.imageLoader.loadImages(this.maxQuestions).catch(() => {});
 
       if (!this.testInstance || !Array.isArray(this.testInstance.questions)) {
         return;
@@ -211,6 +219,59 @@ class TestQuestion {
         });
       }
     });
+  }
+
+  createQuestionImageElement(imagePath) {
+    if (!imagePath || typeof imagePath !== "string") {
+      return null;
+    }
+    const escapedImagePath = imagePath.replace(/"/g, "&quot;");
+    const wrapper = document.createElement("div");
+    wrapper.className = "question-image";
+    wrapper.innerHTML = `
+      <img data-src="${escapedImagePath}" alt=""
+           loading="lazy"
+           referrerpolicy="no-referrer"
+           onerror="try{this.style.display='none';}catch(e){} this.onerror=function(){try{this.style.display='none';}catch(e){} return false;}; this.onload=null;"
+           onload="this.onerror=null;" />
+    `;
+    return wrapper;
+  }
+
+  async injectImageIfAvailable(cardElement, questionIndex) {
+    if (!cardElement || !this.imageLoader) return;
+
+    const existingImage = cardElement.querySelector(".question-image img");
+    if (existingImage) return;
+
+    if (!this.imageLoader.isLoaded()) {
+      try {
+        await this.imageLoader.loadImages(this.maxQuestions);
+      } catch (e) {
+        return;
+      }
+    }
+
+    const imagePath = this.imageLoader.getImagePathSync(questionIndex + 1);
+    if (!imagePath) return;
+
+    // Проверяем, что карточка еще актуальна
+    const currentIndex = Number(cardElement.getAttribute("data-question-index"));
+    if (Number.isNaN(currentIndex) || currentIndex !== questionIndex) {
+      return;
+    }
+
+    const questionContent = cardElement.querySelector(".question-content");
+    if (!questionContent) return;
+
+    const imageElement = this.createQuestionImageElement(imagePath);
+    if (!imageElement) return;
+
+    questionContent.appendChild(imageElement);
+
+    if (cardElement.classList.contains("center")) {
+      this.loadImagesForElement(cardElement);
+    }
   }
 
   // Вспомогательная функция для остановки загрузки всех изображений в контейнере
@@ -470,10 +531,11 @@ class TestQuestion {
     let imagePath = null;
     if (this.imageLoader) {
       const questionNumber = index + 1;
-      imagePath = await this.imageLoader.getImagePath(questionNumber);
-      // no-op: suppress image lookup logs
-    } else {
-      // no-op: suppress image loader warnings
+      // Не блокируем показ вопроса ожиданием загрузки изображений
+      imagePath = this.imageLoader.getImagePathSync(questionNumber);
+      if (!imagePath && !this.imageLoader.isLoaded()) {
+        this.imageLoader.loadImages(this.maxQuestions).catch(() => {});
+      }
     }
 
     const questionHTML = questionRenderer.renderQuestionHTML(
@@ -558,10 +620,16 @@ class TestQuestion {
       }
       this.currentQuestionElement = newCard;
       this.isTransitioning = false;
+      if (!imagePath) {
+        this.injectImageIfAvailable(newCard, index);
+      }
     } else {
       // Используем анимацию перехода
       this.isTransitioning = true;
       this.transition(oldCard, newCard, direction);
+      if (!imagePath) {
+        this.injectImageIfAvailable(newCard, index);
+      }
     }
 
     questionRenderer.addAnswerHandlers(container, index, this.answerManager);

@@ -131,6 +131,25 @@
   #home.container.my-4 {
     margin-top: 0.5rem;
   }
+
+  .rectangles-container {
+    --bs-gutter-x: 0.75rem;
+  }
+
+  .rectangles-container > [class*="col-"]:nth-child(odd) {
+    padding-left: 0.5rem;
+  }
+
+  .rectangles-container > [class*="col-"]:nth-child(even) {
+    padding-right: 0.5rem;
+  }
+}
+
+@media (width >= 768px) and (width <= 1000px) {
+  .rectangles-container .col-md-4 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
 }
 
 @media (width < 576px) {

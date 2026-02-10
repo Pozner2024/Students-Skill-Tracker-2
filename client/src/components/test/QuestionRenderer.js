@@ -221,7 +221,7 @@ function renderQuestionHTML(question, index, imagePath, answerManager) {
       : "general-question";
 
   return `
-    <div class="question ${additionalClass}">
+    <div class="question ${additionalClass}" data-question-index="${index}">
       <div class="question-navigation">
         <button id="prevButton" class="nav-button">
           <svg width="24" height="24" viewBox="0 0 24 24"

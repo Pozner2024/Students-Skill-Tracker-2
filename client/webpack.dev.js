@@ -49,6 +49,12 @@ module.exports = {
       },
       logging: "warn",
     },
+    proxy: {
+      "/api": {
+        target: process.env.API_PROXY_TARGET || "http://localhost:3000",
+        changeOrigin: true,
+      },
+    },
     setupMiddlewares: (middlewares, devServer) => {
       const publicPath = path.join(__dirname, "public");
       const express = require("express");

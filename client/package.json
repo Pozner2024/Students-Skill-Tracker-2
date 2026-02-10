@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "clean": "rimraf dist/"
+    "clean": "rimraf dist/",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:docker": "cypress open --config baseUrl=http://localhost",
+    "cypress:docker:run": "cypress run --config baseUrl=http://localhost"
   },
   "keywords": [],
   "author": "Natallia Pazniak <natalyua_nata_@mail.ru>",
@@ -15,6 +19,7 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.4",
     "babel-loader": "^9.2.1",
+    "cypress": "^13.17.0",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^6.9.1",

@@ -83,8 +83,6 @@ class TestPage {
     try {
       this.renderLoadingPage();
 
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
       this.testQuestion = new TestQuestion("questions-panel");
       await this.testQuestion.initialize();
 
@@ -92,8 +90,6 @@ class TestPage {
       const variant = this.testQuestion.testInstance?.variant || "1";
 
       this.renderPage(title, variant);
-
-      await new Promise((resolve) => setTimeout(resolve, 100));
 
       if (this.testQuestion.navigator && this.testQuestion.testInstance) {
         const totalQuestions = this.testQuestion.getTotalQuestions();

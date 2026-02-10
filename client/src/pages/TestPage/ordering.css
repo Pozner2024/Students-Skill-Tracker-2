@@ -1,8 +1,8 @@
 /* Стили для сортировки (ordering/draggable) */
 .draggable-item {
-  width: 100%;
+  width: 60%;
   padding: 4px 8px;
-  margin: 4px 0;
+  margin: 4px auto;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   background-color: var(--color-bg);

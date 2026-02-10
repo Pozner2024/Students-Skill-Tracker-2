@@ -1,6 +1,7 @@
 /* Стили для страницы "О проекте" */
 .about-page p {
   text-indent: 50px;
+  text-align: justify;
 }
 
 .about-section-title {

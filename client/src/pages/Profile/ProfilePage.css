@@ -111,7 +111,7 @@ main.profile.container h1,
   .profile h1,
   main.profile.container h1,
   #profile h1 {
-    font-size: 24px;
+    font-size: 20px;
     padding: 2px;
     color: black;
     background-color: white;
@@ -141,7 +141,7 @@ main.profile.container h1,
 
 @media (width < 420px) {
   .profile h1 {
-    font-size: 16px;
+    font-size: 14px;
     height: auto;
     min-height: 35px;
     padding: 5px 3px;

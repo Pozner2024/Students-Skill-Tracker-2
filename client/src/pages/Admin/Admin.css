@@ -108,7 +108,8 @@
   transition: max-height 0.3s ease-out;
 }
 .accordion-content.active {
-  max-height: 5000px;
+  max-height: 70vh;
+  overflow-y: auto;
   transition: max-height 0.5s ease-in;
 }
 .student-tests-list {

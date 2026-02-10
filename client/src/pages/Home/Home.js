@@ -28,11 +28,16 @@ class HomePage extends Page {
   async renderPage() {
     const contentElement = document.getElementById("content");
     if (!contentElement) {
-      window.loader.hide();
       return "";
     }
 
-    window.loader.show();
+    let loaderTimeout = null;
+    let loaderShown = false;
+    loaderTimeout = setTimeout(() => {
+      loaderShown = true;
+      window.loader.show();
+    }, 200);
+
     try {
       await this.topicsComponent.loadTopics();
 
@@ -59,7 +64,13 @@ class HomePage extends Page {
         "Не удалось загрузить тесты. Пожалуйста, обновите страницу.";
       this.renderErrorView(contentElement, errorMessage);
     } finally {
-      window.loader.hide();
+      if (loaderTimeout) {
+        clearTimeout(loaderTimeout);
+        loaderTimeout = null;
+      }
+      if (loaderShown) {
+        window.loader.hide();
+      }
     }
 
     return "";

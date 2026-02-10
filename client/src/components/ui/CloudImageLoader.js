@@ -7,47 +7,74 @@ class CloudImageLoader {
   constructor(topicId, variant) {
     this.topicId = topicId;
     this.variant = variant;
+    this.maxQuestions = null;
     this.images = {};
     this.loading = false;
     this.loaded = false;
+    this.loadingPromise = null;
   }
 
-  async loadImages() {
-    if (this.loading || this.loaded) {
+  setMaxQuestions(maxQuestions) {
+    if (!Number.isFinite(maxQuestions) || maxQuestions <= 0) {
+      return;
+    }
+    this.maxQuestions = Math.floor(maxQuestions);
+  }
+
+  async loadImages(maxQuestions = null) {
+    if (Number.isFinite(maxQuestions) && maxQuestions > 0) {
+      this.setMaxQuestions(maxQuestions);
+    }
+
+    if (this.loaded) {
       return this.images;
     }
 
-    this.loading = true;
-
-    try {
-      const endpoint = `${API_CONFIG.ENDPOINTS.IMAGES}/${this.topicId}/${this.variant}`;
-      const fullUrl = `${API_CONFIG.BASE_URL}${endpoint}`;
-
-      const data = await apiClient.publicRequest(endpoint, {
-        method: "GET",
-        context: "CloudImageLoader.loadImages",
-        handleErrors: false,
-      });
-
-      if (data && data.success && data.images) {
-        this.images = data.images;
-        this.loaded = true;
-      } else if (data && data.images) {
-        this.images = data.images;
-        this.loaded = true;
-      } else {
-        this.images = {};
-        this.loaded = true;
-      }
-    } catch (error) {
-      errorHandler.log(error, "CloudImageLoader.loadImages");
-      this.images = {};
-      this.loaded = true;
-    } finally {
-      this.loading = false;
+    if (this.loading && this.loadingPromise) {
+      return this.loadingPromise;
     }
 
-    return this.images;
+    this.loading = true;
+    this.loadingPromise = (async () => {
+      try {
+        const endpoint = `${API_CONFIG.ENDPOINTS.IMAGES}/${this.topicId}/${this.variant}`;
+        const fullUrl = `${API_CONFIG.BASE_URL}${endpoint}`;
+
+        const params =
+          Number.isFinite(this.maxQuestions) && this.maxQuestions > 0
+            ? { maxQuestions: this.maxQuestions }
+            : {};
+
+        const data = await apiClient.publicRequest(endpoint, {
+          method: "GET",
+          params,
+          context: "CloudImageLoader.loadImages",
+          handleErrors: false,
+        });
+
+        if (data && data.success && data.images) {
+          this.images = data.images;
+          this.loaded = true;
+        } else if (data && data.images) {
+          this.images = data.images;
+          this.loaded = true;
+        } else {
+          this.images = {};
+          this.loaded = true;
+        }
+      } catch (error) {
+        errorHandler.log(error, "CloudImageLoader.loadImages");
+        this.images = {};
+        this.loaded = true;
+      } finally {
+        this.loading = false;
+        this.loadingPromise = null;
+      }
+
+      return this.images;
+    })();
+
+    return this.loadingPromise;
   }
 
   async getImagePath(questionNumber) {
