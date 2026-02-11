@@ -98,16 +98,20 @@ function renderOrdering(question, index, answerManager) {
     .map(
       (item, i) => `
         <li class="draggable-item" draggable="true" data-index="${i}">
-          ${item}
+          <span class="drag-handle" aria-hidden="true">|||</span>
+          <span class="drag-label">${item}</span>
         </li>
       `
     )
     .join("");
 
   return `
-    <ul class="ordering-list" id="ordering_${index}">
-      ${listItems}
-    </ul>
+    <div class="ordering-container">
+      <div class="ordering-hint">Зажмите значок и перетащите, чтобы изменить порядок</div>
+      <ul class="ordering-list" id="ordering_${index}">
+        ${listItems}
+      </ul>
+    </div>
   `;
 }
 
@@ -269,9 +273,10 @@ function getDragAfterElement(container, y) {
 }
 
 function saveOrderingAnswer(orderingList, questionIndex, answerManager) {
-  const newOrder = Array.from(orderingList.children).map((item) =>
-    item.textContent.trim()
-  );
+  const newOrder = Array.from(orderingList.children).map((item) => {
+    const label = item.querySelector(".drag-label");
+    return (label ? label.textContent : item.textContent).trim();
+  });
   const hasOrder = newOrder.length > 0 && newOrder.some((item) => item);
   answerManager.saveAnswer(questionIndex, hasOrder ? newOrder : null);
 }
@@ -379,19 +384,59 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
       });
     } else {
       let activePointerId = null;
+      let dragStartTimer = null;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let isDragActive = false;
+      const dragStartDelayMs = 220;
+      const dragCancelThreshold = 8;
+
+      const resetPointerDrag = (shouldSave) => {
+        if (dragStartTimer) {
+          window.clearTimeout(dragStartTimer);
+          dragStartTimer = null;
+        }
+        if (draggedItem) {
+          draggedItem.classList.remove("dragging");
+        }
+        if (shouldSave && draggedItem && isDragActive) {
+          saveOrderingAnswer(orderingList, questionIndex, answerManager);
+        }
+        draggedItem = null;
+        activePointerId = null;
+        isDragActive = false;
+      };
 
       orderingList.addEventListener("pointerdown", (event) => {
-        const target = event.target;
-        if (!target.classList.contains("draggable-item")) return;
+        const handle = event.target.closest(".drag-handle");
+        const target = event.target.closest(".draggable-item");
+        if (!target || !handle) return;
 
         draggedItem = target;
         activePointerId = event.pointerId;
-        draggedItem.classList.add("dragging");
-        draggedItem.setPointerCapture(activePointerId);
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        isDragActive = false;
+
+        dragStartTimer = window.setTimeout(() => {
+          if (!draggedItem) return;
+          isDragActive = true;
+          draggedItem.classList.add("dragging");
+          draggedItem.setPointerCapture(activePointerId);
+        }, dragStartDelayMs);
       });
 
       orderingList.addEventListener("pointermove", (event) => {
         if (!draggedItem || event.pointerId !== activePointerId) return;
+        if (!isDragActive) {
+          const deltaX = Math.abs(event.clientX - dragStartX);
+          const deltaY = Math.abs(event.clientY - dragStartY);
+          if (deltaX + deltaY > dragCancelThreshold) {
+            resetPointerDrag(false);
+          }
+          return;
+        }
+
         event.preventDefault();
 
         const afterElement = getDragAfterElement(orderingList, event.clientY);
@@ -402,16 +447,11 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
         }
       });
 
-      const finishPointerDrag = () => {
-        if (!draggedItem) return;
-        draggedItem.classList.remove("dragging");
-        draggedItem = null;
-        activePointerId = null;
-        saveOrderingAnswer(orderingList, questionIndex, answerManager);
-      };
+      const finishPointerDrag = () => resetPointerDrag(true);
+      const cancelPointerDrag = () => resetPointerDrag(false);
 
       orderingList.addEventListener("pointerup", finishPointerDrag);
-      orderingList.addEventListener("pointercancel", finishPointerDrag);
+      orderingList.addEventListener("pointercancel", cancelPointerDrag);
     }
   }
 }
