@@ -98,20 +98,16 @@ function renderOrdering(question, index, answerManager) {
     .map(
       (item, i) => `
         <li class="draggable-item" draggable="true" data-index="${i}">
-          <span class="drag-handle" aria-hidden="true">|||</span>
-          <span class="drag-label">${item}</span>
+          ${item}
         </li>
       `
     )
     .join("");
 
   return `
-    <div class="ordering-container">
-      <div class="ordering-hint">Зажмите значок и перетащите, чтобы изменить порядок</div>
-      <ul class="ordering-list" id="ordering_${index}">
-        ${listItems}
-      </ul>
-    </div>
+    <ul class="ordering-list" id="ordering_${index}">
+      ${listItems}
+    </ul>
   `;
 }
 
@@ -273,10 +269,9 @@ function getDragAfterElement(container, y) {
 }
 
 function saveOrderingAnswer(orderingList, questionIndex, answerManager) {
-  const newOrder = Array.from(orderingList.children).map((item) => {
-    const label = item.querySelector(".drag-label");
-    return (label ? label.textContent : item.textContent).trim();
-  });
+  const newOrder = Array.from(orderingList.children).map((item) =>
+    item.textContent.trim()
+  );
   const hasOrder = newOrder.length > 0 && newOrder.some((item) => item);
   answerManager.saveAnswer(questionIndex, hasOrder ? newOrder : null);
 }
@@ -388,14 +383,23 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
       let dragStartX = 0;
       let dragStartY = 0;
       let isDragActive = false;
-      const dragStartDelayMs = 220;
+      let dragOverItem = null;
+      const dragStartDelayMs = 350;
       const dragCancelThreshold = 8;
+
+      const clearDragOver = () => {
+        if (dragOverItem) {
+          dragOverItem.classList.remove("drag-over");
+          dragOverItem = null;
+        }
+      };
 
       const resetPointerDrag = (shouldSave) => {
         if (dragStartTimer) {
           window.clearTimeout(dragStartTimer);
           dragStartTimer = null;
         }
+        clearDragOver();
         if (draggedItem) {
           draggedItem.classList.remove("dragging");
         }
@@ -408,9 +412,8 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
       };
 
       orderingList.addEventListener("pointerdown", (event) => {
-        const handle = event.target.closest(".drag-handle");
-        const target = event.target.closest(".draggable-item");
-        if (!target || !handle) return;
+        const target = event.target;
+        if (!target.classList.contains("draggable-item")) return;
 
         draggedItem = target;
         activePointerId = event.pointerId;
@@ -442,7 +445,13 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
         const afterElement = getDragAfterElement(orderingList, event.clientY);
         if (afterElement == null) {
           orderingList.appendChild(draggedItem);
+          clearDragOver();
         } else if (afterElement !== draggedItem) {
+          if (dragOverItem !== afterElement) {
+            clearDragOver();
+            dragOverItem = afterElement;
+            dragOverItem.classList.add("drag-over");
+          }
           orderingList.insertBefore(draggedItem, afterElement);
         }
       });

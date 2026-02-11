@@ -7,6 +7,10 @@ import API_CONFIG from "../../config/api.js";
 import apiClient from "../../services/apiClient.js";
 import errorHandler from "../../services/errorHandler.js";
 
+const TOPICS_CACHE_TTL_MS = 5 * 60 * 1000;
+let topicsCache = null;
+let topicsCacheAt = 0;
+
 // Явно импортируем картинки, чтобы сохранить нужный порядок:
 // pic1 — для первой карточки, pic2 — для второй и т.д.
 import pic1 from "../../assets/pic/pic1.jpg";
@@ -44,6 +48,14 @@ export default class TopicsRenderer {
 
   async loadTopics() {
     try {
+      if (
+        topicsCache &&
+        Date.now() - topicsCacheAt < TOPICS_CACHE_TTL_MS
+      ) {
+        this.topics = topicsCache;
+        return this.topics;
+      }
+
       const data = await apiClient.publicRequest(API_CONFIG.ENDPOINTS.TOPICS, {
         method: "GET",
         context: "TopicsRenderer.loadTopics",
@@ -51,6 +63,8 @@ export default class TopicsRenderer {
 
       if (data.success && data.topics) {
         this.topics = data.topics;
+        topicsCache = data.topics;
+        topicsCacheAt = Date.now();
         return this.topics;
       } else {
         throw new Error(
