@@ -343,6 +343,13 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
   const orderingList = container.querySelector(`#ordering_${questionIndex}`);
 
   if (orderingList) {
+    orderingList.addEventListener("selectstart", (event) =>
+      event.preventDefault()
+    );
+    orderingList.addEventListener("contextmenu", (event) =>
+      event.preventDefault()
+    );
+
     let draggedItem = null;
     const isTouchDevice =
       "ontouchstart" in window ||
@@ -387,6 +394,16 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
       const dragStartDelayMs = 350;
       const dragCancelThreshold = 8;
 
+      const getDraggableTarget = (eventTarget) => {
+        if (eventTarget instanceof Element) {
+          return eventTarget.closest(".draggable-item");
+        }
+        if (eventTarget && eventTarget.parentElement) {
+          return eventTarget.parentElement.closest(".draggable-item");
+        }
+        return null;
+      };
+
       const clearDragOver = () => {
         if (dragOverItem) {
           dragOverItem.classList.remove("drag-over");
@@ -411,9 +428,24 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
         isDragActive = false;
       };
 
+      const updateDragPosition = (clientY) => {
+        const afterElement = getDragAfterElement(orderingList, clientY);
+        if (afterElement == null) {
+          orderingList.appendChild(draggedItem);
+          clearDragOver();
+        } else if (afterElement !== draggedItem) {
+          if (dragOverItem !== afterElement) {
+            clearDragOver();
+            dragOverItem = afterElement;
+            dragOverItem.classList.add("drag-over");
+          }
+          orderingList.insertBefore(draggedItem, afterElement);
+        }
+      };
+
       orderingList.addEventListener("pointerdown", (event) => {
-        const target = event.target;
-        if (!target.classList.contains("draggable-item")) return;
+        const target = getDraggableTarget(event.target);
+        if (!target) return;
 
         draggedItem = target;
         activePointerId = event.pointerId;
@@ -441,19 +473,7 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
         }
 
         event.preventDefault();
-
-        const afterElement = getDragAfterElement(orderingList, event.clientY);
-        if (afterElement == null) {
-          orderingList.appendChild(draggedItem);
-          clearDragOver();
-        } else if (afterElement !== draggedItem) {
-          if (dragOverItem !== afterElement) {
-            clearDragOver();
-            dragOverItem = afterElement;
-            dragOverItem.classList.add("drag-over");
-          }
-          orderingList.insertBefore(draggedItem, afterElement);
-        }
+        updateDragPosition(event.clientY);
       });
 
       const finishPointerDrag = () => resetPointerDrag(true);
@@ -461,6 +481,56 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
 
       orderingList.addEventListener("pointerup", finishPointerDrag);
       orderingList.addEventListener("pointercancel", cancelPointerDrag);
+
+      orderingList.addEventListener(
+        "touchstart",
+        (event) => {
+          if (!event.touches || event.touches.length !== 1) return;
+          if (draggedItem) return;
+          const target = getDraggableTarget(event.target);
+          if (!target) return;
+
+          draggedItem = target;
+          const touch = event.touches[0];
+          dragStartX = touch.clientX;
+          dragStartY = touch.clientY;
+          isDragActive = false;
+
+          dragStartTimer = window.setTimeout(() => {
+            if (!draggedItem) return;
+            isDragActive = true;
+            draggedItem.classList.add("dragging");
+          }, dragStartDelayMs);
+        },
+        { passive: false }
+      );
+
+      orderingList.addEventListener(
+        "touchmove",
+        (event) => {
+          if (!draggedItem || !event.touches || event.touches.length !== 1) {
+            return;
+          }
+          const touch = event.touches[0];
+          if (!isDragActive) {
+            const deltaX = Math.abs(touch.clientX - dragStartX);
+            const deltaY = Math.abs(touch.clientY - dragStartY);
+            if (deltaX + deltaY > dragCancelThreshold) {
+              resetPointerDrag(false);
+            }
+            return;
+          }
+
+          event.preventDefault();
+          updateDragPosition(touch.clientY);
+        },
+        { passive: false }
+      );
+
+      orderingList.addEventListener("touchend", () => resetPointerDrag(true));
+      orderingList.addEventListener("touchcancel", () =>
+        resetPointerDrag(false)
+      );
     }
   }
 }
