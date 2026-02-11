@@ -268,6 +268,14 @@ function getDragAfterElement(container, y) {
   ).element;
 }
 
+function saveOrderingAnswer(orderingList, questionIndex, answerManager) {
+  const newOrder = Array.from(orderingList.children).map((item) =>
+    item.textContent.trim()
+  );
+  const hasOrder = newOrder.length > 0 && newOrder.some((item) => item);
+  answerManager.saveAnswer(questionIndex, hasOrder ? newOrder : null);
+}
+
 function addAnswerHandlers(container, questionIndex, answerManager) {
   container
     .querySelectorAll(`input[name="answer_${questionIndex}"]`)
@@ -336,39 +344,75 @@ function addAnswerHandlers(container, questionIndex, answerManager) {
 
   if (orderingList) {
     let draggedItem = null;
+    const isTouchDevice =
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      navigator.msMaxTouchPoints > 0;
 
-    orderingList.addEventListener("dragstart", (event) => {
-      if (event.target.classList.contains("draggable-item")) {
-        draggedItem = event.target;
-        event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.setData("text/plain", event.target.dataset.index);
+    if (!isTouchDevice) {
+      orderingList.addEventListener("dragstart", (event) => {
+        if (event.target.classList.contains("draggable-item")) {
+          draggedItem = event.target;
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData("text/plain", event.target.dataset.index);
+          draggedItem.classList.add("dragging");
+        }
+      });
+
+      orderingList.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        const afterElement = getDragAfterElement(orderingList, event.clientY);
+        if (afterElement == null) {
+          orderingList.appendChild(draggedItem);
+        } else {
+          orderingList.insertBefore(draggedItem, afterElement);
+        }
+      });
+
+      orderingList.addEventListener("drop", (event) => {
+        event.preventDefault();
+        if (draggedItem) {
+          draggedItem.classList.remove("dragging");
+          draggedItem = null;
+          saveOrderingAnswer(orderingList, questionIndex, answerManager);
+        }
+      });
+    } else {
+      let activePointerId = null;
+
+      orderingList.addEventListener("pointerdown", (event) => {
+        const target = event.target;
+        if (!target.classList.contains("draggable-item")) return;
+
+        draggedItem = target;
+        activePointerId = event.pointerId;
         draggedItem.classList.add("dragging");
-      }
-    });
+        draggedItem.setPointerCapture(activePointerId);
+      });
 
-    orderingList.addEventListener("dragover", (event) => {
-      event.preventDefault();
-      const afterElement = getDragAfterElement(orderingList, event.clientY);
-      if (afterElement == null) {
-        orderingList.appendChild(draggedItem);
-      } else {
-        orderingList.insertBefore(draggedItem, afterElement);
-      }
-    });
+      orderingList.addEventListener("pointermove", (event) => {
+        if (!draggedItem || event.pointerId !== activePointerId) return;
+        event.preventDefault();
 
-    orderingList.addEventListener("drop", (event) => {
-      event.preventDefault();
-      if (draggedItem) {
+        const afterElement = getDragAfterElement(orderingList, event.clientY);
+        if (afterElement == null) {
+          orderingList.appendChild(draggedItem);
+        } else if (afterElement !== draggedItem) {
+          orderingList.insertBefore(draggedItem, afterElement);
+        }
+      });
+
+      const finishPointerDrag = () => {
+        if (!draggedItem) return;
         draggedItem.classList.remove("dragging");
         draggedItem = null;
+        activePointerId = null;
+        saveOrderingAnswer(orderingList, questionIndex, answerManager);
+      };
 
-        const newOrder = Array.from(orderingList.children).map((item) =>
-          item.textContent.trim()
-        );
-        const hasOrder = newOrder.length > 0 && newOrder.some((item) => item);
-        answerManager.saveAnswer(questionIndex, hasOrder ? newOrder : null);
-      }
-    });
+      orderingList.addEventListener("pointerup", finishPointerDrag);
+      orderingList.addEventListener("pointercancel", finishPointerDrag);
+    }
   }
 }
 

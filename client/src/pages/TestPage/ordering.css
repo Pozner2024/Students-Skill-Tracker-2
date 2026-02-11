@@ -26,6 +26,11 @@
   color: white;
 }
 
+.draggable-item.dragging {
+  touch-action: none;
+  user-select: none;
+}
+
 @media (width < 992px) {
   .draggable-item {
     font-size: 18px;
@@ -34,6 +39,7 @@
 
 @media (width < 768px) {
   .draggable-item {
+    width: 100%;
     font-size: 18px;
     padding: 6px 10px;
   }
@@ -41,6 +47,7 @@
 
 @media (width < 480px) {
   .draggable-item {
+    width: 100%;
     font-size: 16px;
     padding: 5px 8px;
   }

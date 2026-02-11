@@ -96,13 +96,21 @@ export class ImagesService {
   ): Promise<Record<number, string>> {
     const images: Record<number, string> = {};
 
-    // Проверяем изображения от 1 до maxQuestions
-    for (let i = 1; i <= maxQuestions; i++) {
-      const url = await this.getImageUrl(topicId, variant, i);
+    // Проверяем изображения от 1 до maxQuestions параллельно
+    const tasks = Array.from({ length: maxQuestions }, (_, index) => {
+      const questionNumber = index + 1;
+      return this.getImageUrl(topicId, variant, questionNumber).then((url) => ({
+        questionNumber,
+        url,
+      }));
+    });
+
+    const results = await Promise.all(tasks);
+    results.forEach(({ questionNumber, url }) => {
       if (url) {
-        images[i] = url;
+        images[questionNumber] = url;
       }
-    }
+    });
 
     return images;
   }

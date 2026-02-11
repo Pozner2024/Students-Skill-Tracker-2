@@ -30,37 +30,40 @@ export class TestResultsService {
     const getGradeByPercent = (scorePercent: number, questionCount?: number) => {
       const gradingScale: Record<number, Array<[number, number, number]>> = {
         10: [
-          [1, 10, 1],
-          [11, 20, 2],
-          [21, 30, 3],
-          [31, 40, 4],
-          [41, 50, 5],
-          [51, 60, 6],
-          [61, 70, 7],
-          [71, 80, 8],
-          [81, 90, 9],
-          [91, 100, 10],
-        ],
-        15: [
-          [1, 20, 1],
-          [21, 40, 2],
-          [41, 50, 3],
-          [51, 60, 4],
-          [61, 70, 5],
-          [71, 80, 6],
-          [81, 85, 7],
+          [1, 8, 1],
+          [9, 16, 2],
+          [17, 27, 3],
+          [28, 38, 4],
+          [39, 49, 5],
+          [50, 65, 6],
+          [66, 76, 7],
           [86, 90, 8],
           [91, 95, 9],
           [96, 100, 10],
+        ],
+        15: [
+          [1, 8, 1],
+          [9, 16, 2],
+          [17, 26, 3],
+          [27, 36, 4],
+          [37, 48, 5],
+          [49, 59, 6],
+          [60, 70, 7],
+          [71, 80, 8],
+          [81, 91, 9],
+          [92, 100, 10],
         ],
       };
 
       const percent = Number.isFinite(scorePercent) ? scorePercent : 0;
       const normalized = Math.max(0, Math.min(100, percent));
       const scale = gradingScale[questionCount ?? 10] || gradingScale[10];
+      if (normalized === 0) {
+        return 1;
+      }
       return (
         scale.find(([min, max]) => normalized >= min && normalized <= max)?.[2] ??
-        0
+        1
       );
     };
 
@@ -155,37 +158,40 @@ export class TestResultsService {
     const getGradeByPercent = (scorePercent: number, questionCount?: number) => {
       const gradingScale: Record<number, Array<[number, number, number]>> = {
         10: [
-          [1, 10, 1],
-          [11, 20, 2],
-          [21, 30, 3],
-          [31, 40, 4],
-          [41, 50, 5],
-          [51, 60, 6],
-          [61, 70, 7],
-          [71, 80, 8],
-          [81, 90, 9],
-          [91, 100, 10],
-        ],
-        15: [
-          [1, 20, 1],
-          [21, 40, 2],
-          [41, 50, 3],
-          [51, 60, 4],
-          [61, 70, 5],
-          [71, 80, 6],
-          [81, 85, 7],
+          [1, 8, 1],
+          [9, 16, 2],
+          [17, 27, 3],
+          [28, 38, 4],
+          [39, 49, 5],
+          [50, 65, 6],
+          [66, 76, 7],
           [86, 90, 8],
           [91, 95, 9],
           [96, 100, 10],
+        ],
+        15: [
+          [1, 8, 1],
+          [9, 16, 2],
+          [17, 26, 3],
+          [27, 36, 4],
+          [37, 48, 5],
+          [49, 59, 6],
+          [60, 70, 7],
+          [71, 80, 8],
+          [81, 91, 9],
+          [92, 100, 10],
         ],
       };
 
       const percent = Number.isFinite(scorePercent) ? scorePercent : 0;
       const normalized = Math.max(0, Math.min(100, percent));
       const scale = gradingScale[questionCount ?? 10] || gradingScale[10];
+      if (normalized === 0) {
+        return 1;
+      }
       return (
         scale.find(([min, max]) => normalized >= min && normalized <= max)?.[2] ??
-        0
+        1
       );
     };
 
