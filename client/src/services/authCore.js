@@ -13,9 +13,15 @@ class AuthCore {
     try {
       return await action(token);
     } catch (error) {
+      const errorMessage = error?.message || "";
+      if (this.isAuthErrorMessage(errorMessage)) {
+        // Снимаем токен, чтобы роутер снова запросил авторизацию
+        this.removeToken();
+      }
+
       return {
         success: false,
-        error: error.message,
+        error: errorMessage,
         ...errorDefaults,
       };
     }
@@ -46,6 +52,17 @@ class AuthCore {
   logout() {
     this.removeToken();
     window.location.href = "/login";
+  }
+
+  isAuthErrorMessage(message) {
+    const normalized = String(message || "").toLowerCase();
+    return (
+      normalized.includes("unauthorized") ||
+      normalized.includes("401") ||
+      normalized.includes("токен") ||
+      normalized.includes("сессия") ||
+      normalized.includes("авторизац")
+    );
   }
 
   validateEmail(email) {

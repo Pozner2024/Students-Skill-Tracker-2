@@ -1,3 +1,5 @@
+import dragIcon from "../../assets/icons/drag-dots.svg";
+
 // Модуль для рендеринга различных типов вопросов
 // (например, выбор из нескольких вариантов, заполнение пропусков, сортировка
 // и сопоставление) и для привязки обработчиков ответов.
@@ -98,7 +100,8 @@ function renderOrdering(question, index, answerManager) {
     .map(
       (item, i) => `
         <li class="draggable-item" draggable="true" data-index="${i}">
-          ${item}
+          <span class="draggable-item-text">${item}</span>
+          <img class="draggable-item-icon" src="${dragIcon}" alt="" />
         </li>
       `
     )

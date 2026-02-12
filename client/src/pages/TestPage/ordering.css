@@ -22,6 +22,10 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s, box-shadow 0.3s;
   line-height: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .draggable-item:hover {
@@ -46,6 +50,18 @@
 .draggable-item.drag-over {
   border-color: rgba(89, 177, 73, 0.9);
   box-shadow: 0 0 0 2px rgba(89, 177, 73, 0.25);
+}
+
+.draggable-item-text {
+  flex: 1;
+}
+
+.draggable-item-icon {
+  width: 22px;
+  height: 22px;
+  opacity: 0.8;
+  flex-shrink: 0;
+  filter: brightness(0) invert(1);
 }
 
 @media (width < 992px) {

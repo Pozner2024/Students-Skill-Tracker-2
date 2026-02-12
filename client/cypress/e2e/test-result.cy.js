@@ -62,13 +62,24 @@ const dragToIndex = (listSelector, itemText, targetIndex) => {
   cy.get(listSelector).within(() => {
     cy.contains(".draggable-item", itemText)
       .as("dragItem")
-      .trigger("dragstart", { dataTransfer });
+      .trigger("dragstart", { dataTransfer, force: true });
 
     cy.get(".draggable-item").then((items) => {
       const target =
         targetIndex >= items.length ? items[items.length - 1] : items[targetIndex];
-      cy.wrap(target).trigger("dragover", { dataTransfer });
-      cy.wrap(target).trigger("drop", { dataTransfer });
+      cy.get("@dragItem").then(($dragItem) => {
+        const list = items[0]?.parentElement;
+        const draggedItem = $dragItem[0];
+        if (!list || !draggedItem) return;
+
+        if (target === draggedItem) {
+          cy.wrap(list).trigger("drop", { dataTransfer, force: true });
+          return;
+        }
+
+        list.insertBefore(draggedItem, target);
+        cy.wrap(list).trigger("drop", { dataTransfer, force: true });
+      });
     });
   });
 };
