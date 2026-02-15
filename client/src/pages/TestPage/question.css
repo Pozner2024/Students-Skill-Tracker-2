@@ -127,14 +127,14 @@
 .question label {
   font-size: 24px;
   line-height: 1.2;
-  margin-bottom: 4px;
+  margin: 0;
   display: block;
   color: black;
 }
 
 .question-text label {
   padding-left: 40px;
-  margin-bottom: 8px;
+  margin: 0;
 }
 
 .general-question .question-text p {
@@ -190,6 +190,7 @@
   text-align: left;
   display: flex;
   flex-direction: column;
+  row-gap: 8px;
   margin-top: 0;
   padding-top: 0;
 }
@@ -238,6 +239,7 @@
 
   .question-text {
     width: 100%;
+    row-gap: 14px;
   }
 
   .question-image {
@@ -251,11 +253,11 @@
 
   .question label {
     font-size: 20px;
-    margin-bottom: 10px;
+    margin: 0;
   }
 
   .question-text label {
-    margin-bottom: 14px;
+    margin: 0;
   }
 
   .general-question .question-text p {
@@ -339,6 +341,7 @@
     align-items: center;
     display: flex;
     flex-direction: column;
+    row-gap: 8px;
   }
 
   .general-question .question-text {
@@ -373,14 +376,13 @@
   .question label {
     font-size: 18px;
     display: block;
-    margin-bottom: 4px;
-    margin-top: -2px;
+    margin: 0;
     line-height: 1;
     padding: 0;
   }
 
   .question-text label {
-    margin-bottom: 3px;
+    margin: 0;
   }
 
   .question label:first-child {
@@ -422,16 +424,19 @@
     margin-bottom: 10px;
   }
 
+  .question-text {
+    row-gap: 3px;
+  }
+
   .question label {
     font-size: 16px;
-    margin-bottom: 0px;
-    margin-top: -3px;
+    margin: 0;
     line-height: 1;
     padding: 0;
   }
 
   .question-text label {
-    margin-bottom: 8px;
+    margin: 0;
   }
 
   .question label:first-child {
@@ -444,16 +449,19 @@
     font-size: 18px;
   }
 
+  .question-text {
+    row-gap: 3px;
+  }
+
   .question label {
     font-size: 15px;
-    margin-bottom: 0px;
-    margin-top: -4px;
+    margin: 0;
     line-height: 1;
     padding: 0;
   }
 
   .question-text label {
-    margin-bottom: 6px;
+    margin: 0;
   }
 
   .question label:first-child {
