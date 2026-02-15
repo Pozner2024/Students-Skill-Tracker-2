@@ -380,7 +380,7 @@
   }
 
   .question-text label {
-    margin-bottom: 8px;
+    margin-bottom: 3px;
   }
 
   .question label:first-child {
@@ -410,8 +410,16 @@
     margin-bottom: 12px;
   }
 
+  .question-content {
+    gap: 5px;
+  }
+
   .question p {
     font-size: 18px;
+  }
+
+  .question-text p:last-of-type {
+    margin-bottom: 10px;
   }
 
   .question label {
