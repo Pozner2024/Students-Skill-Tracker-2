@@ -47,6 +47,15 @@
 - `npm run build` — продакшн-сборка в `dist/`.
 - `npm run cypress:open` / `npm run cypress:run` — e2e-тесты.
 
+### Клиент Vue (новый, `client-vue/`)
+- `npm run dev` — Vite dev-сервер (порт 5173), проксирует `/api` на `http://localhost:3000`.
+- `npm run build` — type-check (vue-tsc) + продакшн-сборка в `dist/`.
+- `npm run type-check` — только проверка типов.
+- `npm run lint` — ESLint с автофиксом. `npm run format` — Prettier.
+
+> Для работы dev-клиента локально должен быть запущен сервер на порту 3000
+> (`server/`: `npm run start:dev`, либо через docker-compose).
+
 ### Сервер (`server/`)
 - `npm run start:dev` — `prisma migrate deploy` + запуск.
 - `npm run build` — `nest build`.
