@@ -1,7 +1,7 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <HelloWorld />
+  <div id="app-root">
+    <h1 class="text-center my-4">client-vue работает</h1>
+  </div>
 </template>
