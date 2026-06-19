@@ -38,3 +38,34 @@ export interface TestResultsResult {
   results: TestResult[]
   error?: string
 }
+
+export interface UserFile {
+  key: string
+  fileName: string
+  size: number
+  lastModified: string
+}
+
+export interface FilesResult {
+  success: boolean
+  files: UserFile[]
+  error?: string
+}
+
+export interface UploadResult {
+  success: boolean
+  data?: unknown
+  error?: string
+}
+
+export interface DeleteResult {
+  success: boolean
+  message?: string
+  error?: string
+}
+
+export interface DownloadUrlResult {
+  success: boolean
+  url?: string
+  error?: string
+}

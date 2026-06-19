@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { getTestResults } from './users'
+import { getTestResults, getUserFiles } from './users'
 import { setToken } from './tokenStorage'
 
 function mockFetchJson(body: unknown, ok = true, status = 200) {
@@ -31,5 +31,29 @@ describe('getTestResults', () => {
     const res = await getTestResults()
     expect(res.success).toBe(true)
     expect(res.results).toHaveLength(1)
+  })
+})
+
+describe('getUserFiles', () => {
+  beforeEach(() => localStorage.clear())
+  afterEach(() => vi.restoreAllMocks())
+
+  it('без токена — success: false, пустой список', async () => {
+    const res = await getUserFiles()
+    expect(res.success).toBe(false)
+    expect(res.files).toEqual([])
+  })
+
+  it('с токеном возвращает файлы', async () => {
+    setToken('tok')
+    vi.stubGlobal(
+      'fetch',
+      mockFetchJson({
+        files: [{ key: 'k', fileName: 'a.pdf', size: 10, lastModified: '2026-01-01' }],
+      }),
+    )
+    const res = await getUserFiles()
+    expect(res.success).toBe(true)
+    expect(res.files[0].fileName).toBe('a.pdf')
   })
 })
