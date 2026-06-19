@@ -19,3 +19,22 @@ export interface CurrentUserResult {
   user?: User
   error?: string
 }
+
+export interface TestResult {
+  test_title?: string
+  test_code?: string
+  completed_at: string
+  grade?: number | string
+}
+
+export interface UpdateProfileResult {
+  success: boolean
+  user?: User
+  error?: string
+}
+
+export interface TestResultsResult {
+  success: boolean
+  results: TestResult[]
+  error?: string
+}
