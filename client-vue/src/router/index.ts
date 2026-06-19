@@ -3,6 +3,8 @@ import HomeView from '@/views/HomeView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import PlaceholderView from '@/views/PlaceholderView.vue'
 import LoginView from '@/views/LoginView.vue'
+import AboutView from '@/views/AboutView.vue'
+import ContactsView from '@/views/ContactsView.vue'
 import { decideRedirect } from './guards'
 import { useAuthStore } from '@/stores/auth'
 
@@ -10,8 +12,8 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', name: 'home', component: HomeView, meta: { title: 'Главная' } },
-    { path: '/about', name: 'about', component: PlaceholderView, meta: { title: 'О проекте' } },
-    { path: '/contacts', name: 'contacts', component: PlaceholderView, meta: { title: 'Контакты' } },
+    { path: '/about', name: 'about', component: AboutView, meta: { title: 'О проекте' } },
+    { path: '/contacts', name: 'contacts', component: ContactsView, meta: { title: 'Контакты' } },
     {
       path: '/criteria',
       name: 'criteria',

@@ -1,0 +1,110 @@
+.contacts {
+  overflow-x: hidden;
+}
+
+.contacts p {
+  font-size: 1.2em;
+  color: white;
+  margin: 10px 0;
+}
+
+.contacts p strong {
+  color: #000;
+  font-weight: bold;
+}
+
+.contacts p strong + p {
+  margin-left: 20px;
+}
+
+.contacts p a:hover {
+  text-decoration: underline;
+}
+
+.contact-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  max-width: 100%;
+}
+
+.contacts .table-responsive {
+  overflow-x: hidden;
+}
+
+.contact-table td {
+  border: 1px solid white;
+  padding: 15px;
+  vertical-align: top;
+  color: white;
+  width: 50%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+@media (width < 768px) {
+  .contact-table,
+  .contact-table tbody,
+  .contact-table tr,
+  .contact-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .contact-table tr {
+    border: 0;
+  }
+
+  .contact-table td {
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .contact-table .horizontal-line {
+    display: none;
+  }
+}
+
+.contact-table .horizontal-line {
+  border-top: 2px solid white;
+  padding: 0;
+  height: 2px;
+}
+
+.contact-table a {
+  color: #058548;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.contact-table a:hover {
+  text-decoration: underline;
+}
+
+.contact-table .block {
+  display: block;
+}
+
+.contact-table p {
+  font-size: 1.2em;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.contact-table p strong {
+  font-weight: bold;
+  color: white;
+}
+
+.contact-table.table td {
+  border-color: white;
+  color: white;
+  background-color: transparent;
+}
+
+.contact-table.table thead th {
+  background-color: var(--color-heading-bg);
+  color: white;
+  border-color: white;
+}
+
