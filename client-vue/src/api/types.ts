@@ -69,3 +69,29 @@ export interface DownloadUrlResult {
   url?: string
   error?: string
 }
+
+export interface TopicProject {
+  name?: string
+  description?: string
+  content?: { projectTitle?: string; content?: string; html?: string }
+}
+
+export interface Topic {
+  id: number | string
+  name?: string
+  project?: TopicProject
+  questions?: string[]
+  content?: unknown
+}
+
+export interface TopicsResult {
+  success: boolean
+  topics: Topic[]
+  error?: string
+}
+
+export interface TopicResult {
+  success: boolean
+  topic: Topic | null
+  error?: string
+}
