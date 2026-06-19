@@ -5,6 +5,7 @@ import PlaceholderView from '@/views/PlaceholderView.vue'
 import LoginView from '@/views/LoginView.vue'
 import AboutView from '@/views/AboutView.vue'
 import ContactsView from '@/views/ContactsView.vue'
+import CriteriaView from '@/views/CriteriaView.vue'
 import { decideRedirect } from './guards'
 import { useAuthStore } from '@/stores/auth'
 
@@ -17,7 +18,7 @@ const router = createRouter({
     {
       path: '/criteria',
       name: 'criteria',
-      component: PlaceholderView,
+      component: CriteriaView,
       meta: { title: 'Оценочные критерии' },
     },
     {
