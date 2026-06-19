@@ -13,3 +13,10 @@ export function validatePassword(password: string): string | null {
 export function validateLoginInput(email: string, password: string): string | null {
   return validateEmail(email) || validatePassword(password) || null
 }
+
+const GROUP_RE = /^(?:\d-\d{2}|\d{2}-\d{2})$/
+
+export function validateGroupNumber(group: string): string | null {
+  if (group && !GROUP_RE.test(group)) return 'Номер группы должен быть в формате X-XX или XX-XX'
+  return null
+}
