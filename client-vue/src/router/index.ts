@@ -36,7 +36,12 @@ const router = createRouter({
       meta: { title: 'Тест' },
     },
     { path: '/topic', name: 'topic', component: PlaceholderView, meta: { title: 'Информация о теме' } },
-    { path: '/login', name: 'login', component: PlaceholderView, meta: { title: 'Вход' } },
+    {
+      path: '/login',
+      name: 'login',
+      component: PlaceholderView,
+      meta: { title: 'Вход', layout: 'bare' },
+    },
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
