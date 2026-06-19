@@ -1,0 +1,200 @@
+/* Стили секции файлов */
+.files-section {
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.files-section h3 {
+  font-size: 1.3rem;
+  color: black;
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.upload-area {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+  border: 2px dashed #59b149;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #4f9e3f;
+  background: linear-gradient(135deg, #f0f8f0 0%, #e0f0e0 100%);
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #59b149 0%, #4f9e3f 100%);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 12px rgba(89, 177, 73, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.upload-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(89, 177, 73, 0.4);
+}
+
+.upload-btn:disabled {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.upload-icon {
+  font-size: 1.2rem;
+}
+
+.upload-info {
+  margin-top: 10px;
+  color: black;
+  font-size: 0.85rem;
+}
+
+.files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.files-list.empty {
+  text-align: center;
+  padding: 20px;
+  color: black;
+  font-style: italic;
+}
+
+.files-list.empty p {
+  color: black;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.file-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.file-name {
+  font-weight: 600;
+  color: black;
+  font-size: 1rem;
+  word-break: break-word;
+}
+
+.file-size,
+.file-date {
+  color: black;
+  font-size: 0.85rem;
+}
+
+.file-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.file-download,
+.file-delete {
+  padding: 8px 12px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  background: transparent;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-download {
+  color: #59b149;
+}
+
+.file-download:hover {
+  background: rgba(89, 177, 73, 0.1);
+  transform: scale(1.1);
+}
+
+.file-delete {
+  color: #e74c3c;
+}
+
+.file-delete:hover:not(:disabled) {
+  background: rgba(231, 76, 60, 0.1);
+  transform: scale(1.1);
+}
+
+.file-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (width < 768px) {
+  .files-section {
+    margin: 15px 0;
+    padding: 15px;
+  }
+
+  .files-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+
+  .file-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .file-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .upload-area {
+    padding: 15px;
+  }
+}
+

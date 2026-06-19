@@ -13,6 +13,11 @@ import '@/assets/pages/login.css'
 import '@/assets/pages/about.css'
 import '@/assets/pages/contacts.css'
 import '@/assets/pages/criteria.css'
+import '@/assets/pages/profile/profile.css'
+import '@/assets/pages/profile/profile-form.css'
+import '@/assets/pages/profile/user-data.css'
+import '@/assets/pages/profile/files.css'
+import '@/assets/pages/profile/test-results.css'
 import '@/assets/ui/modal.css'
 
 const app = createApp(App)

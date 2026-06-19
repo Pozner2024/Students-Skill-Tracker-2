@@ -1,0 +1,22 @@
+.profile-form {
+  margin: 15px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+@media (width < 768px) {
+  .profile-form {
+    padding: 25px;
+    margin: 20px 0;
+  }
+}
+
+@media (width < 480px) {
+  .profile-form {
+    padding: 20px;
+  }
+}
