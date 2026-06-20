@@ -64,11 +64,16 @@ export function sanitizeHtml(html: string): string {
     Array.from(el.attributes).forEach((attr) => {
       if (!['href', 'class', 'id'].includes(attr.name)) {
         el.removeAttribute(attr.name)
-      } else if (
-        attr.name === 'href' &&
-        (attr.value.startsWith('javascript:') || attr.value.startsWith('data:'))
-      ) {
-        el.removeAttribute(attr.name)
+        return
+      }
+      if (attr.name === 'href') {
+        const normalized = attr.value
+          .trim()
+          .toLowerCase()
+          .replace(/[\u0000-\u001f\u007f]/g, '')
+        if (!/^(https?:|mailto:|\/|#|\.\/|\.\.\/)/.test(normalized)) {
+          el.removeAttribute(attr.name)
+        }
       }
     })
     if (!ALLOWED_TAGS.includes(el.tagName.toLowerCase())) {
