@@ -22,8 +22,7 @@ function onInput(blankIndex: number, value: string): void {
 <template>
   <p>
     <template v-for="(seg, i) in segments" :key="i">
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <span v-if="seg.kind === 'html'" v-html="seg.html"></span>
+      <span v-if="seg.kind === 'text'">{{ seg.text }}</span>
       <span v-else class="question-part">
         <template v-if="seg.prefix">{{ seg.prefix }} </template>
         <input

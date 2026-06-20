@@ -3,10 +3,10 @@ import { formatUnits, parseFillInBlanks } from './testFormat'
 
 describe('formatUnits', () => {
   it('ставит неразрывный пробел перед %', () => {
-    expect(formatUnits('влажность 70 %')).toBe('влажность 70&nbsp;%')
+    expect(formatUnits('влажность 70 %')).toBe('влажность 70\u00a0%')
   })
   it('ставит неразрывный пробел перед °C', () => {
-    expect(formatUnits('температура 4 °C')).toContain('4&nbsp;°C')
+    expect(formatUnits('температура 4 °C')).toContain('4\u00a0°C')
   })
   it('пустую строку возвращает как есть', () => {
     expect(formatUnits('')).toBe('')

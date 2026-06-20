@@ -20,8 +20,7 @@ function onPick(value: string): void {
         :checked="props.modelValue === option"
         @change="onPick(option)"
       />
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <span v-html="formatUnits(option)"></span><br />
+      <span>{{ formatUnits(option) }}</span><br />
     </label>
   </template>
   <p v-else>Ошибка: варианты ответов не найдены</p>

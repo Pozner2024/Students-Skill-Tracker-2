@@ -73,16 +73,12 @@ function hideImage(e: Event): void {
     </div>
     <div class="question-content">
       <div class="question-text">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <p
-          v-if="props.question.questionDescription"
-          v-html="formatUnits(props.question.questionDescription)"
-        ></p>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <p
-          v-if="props.question.type !== 'fill_in_the_blank'"
-          v-html="formatUnits(props.question.question || '')"
-        ></p>
+        <p v-if="props.question.questionDescription">
+          {{ formatUnits(props.question.questionDescription) }}
+        </p>
+        <p v-if="props.question.type !== 'fill_in_the_blank'">
+          {{ formatUnits(props.question.question || '') }}
+        </p>
         <component
           :is="component"
           v-if="component"
