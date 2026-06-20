@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { getTopics } from '@/api/topics'
-import { parseProjectContent } from '@/utils/topicContent'
+import { parseProjectContent, sanitizeHtml } from '@/utils/topicContent'
 import type { Topic } from '@/api/types'
 import TopicCard from './TopicCard.vue'
 import BaseModal from '@/components/ui/BaseModal.vue'
@@ -53,6 +53,8 @@ function closeModal(): void {
 }
 
 const project = computed(() => parseProjectContent(selected.value?.project))
+// Санитизируем HTML проекта (серверный контент) перед v-html — как и контент темы.
+const projectHtml = computed(() => (project.value.html ? sanitizeHtml(project.value.html) : null))
 </script>
 
 <template>
@@ -97,7 +99,7 @@ const project = computed(() => parseProjectContent(selected.value?.project))
       @close="closeModal"
     >
       <!-- eslint-disable-next-line vue/no-v-html -->
-      <div v-if="project.html" v-html="project.html"></div>
+      <div v-if="projectHtml" v-html="projectHtml"></div>
       <template v-else>
         <h2 class="mb-3">Тема проекта: {{ project.title }}</h2>
         <p class="mb-0">{{ project.description }}</p>

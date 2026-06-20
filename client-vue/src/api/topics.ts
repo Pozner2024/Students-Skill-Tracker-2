@@ -52,6 +52,9 @@ export async function updateTopicContent(
       { context: 'topics.updateTopicContent' },
     )
     if (data?.success) {
+      // Сбрасываем кэш каталога, чтобы повторная загрузка тем подтянула свежий контент.
+      topicsCache = null
+      topicsCacheAt = 0
       return { success: true, message: data.message || 'Контент успешно сохранен' }
     }
     return { success: false, error: 'Ошибка при сохранении' }
