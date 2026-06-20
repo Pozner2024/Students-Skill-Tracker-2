@@ -11,7 +11,9 @@
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
     "test:unit": "vitest run",
-    "test:unit:watch": "vitest"
+    "test:unit:watch": "vitest",
+    "e2e:open": "cypress open",
+    "e2e:run": "cypress run"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^41.4.2",
@@ -29,6 +31,7 @@
     "@vue/eslint-config-typescript": "^14.8.0",
     "@vue/test-utils": "^2.4.11",
     "@vue/tsconfig": "^0.9.1",
+    "cypress": "^13.17.0",
     "eslint": "^10.5.0",
     "eslint-plugin-vue": "^10.9.2",
     "jiti": "^2.7.0",
