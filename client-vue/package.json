@@ -14,6 +14,7 @@
     "test:unit:watch": "vitest"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
     "bootstrap": "^5.3.8",
     "canvas-confetti": "^1.9.4",
     "pinia": "^3.0.4",
