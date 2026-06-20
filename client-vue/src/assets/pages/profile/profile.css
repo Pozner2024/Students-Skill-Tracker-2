@@ -1,7 +1,7 @@
-@import "./profileForm.css";
-@import "./userDataSection.css";
-@import "./filesSection.css";
-@import "./testResultsSection.css";
+@import "./profile-form.css";
+@import "./user-data.css";
+@import "./files.css";
+@import "./test-results.css";
 
 .profile h1,
 main.profile.container h1,
