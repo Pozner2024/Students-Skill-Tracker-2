@@ -156,3 +156,47 @@ export interface SavedTestResult {
   grade?: number
   [key: string]: unknown
 }
+
+export interface AdminTest {
+  test_title?: string
+  test_code?: string
+  variant?: number
+  score?: number
+  max_points?: number
+  total_questions?: number
+  grade?: number
+  completed_at?: string
+  answers_details?: Array<{
+    type?: string
+    questionNumber?: number
+    userAnswer?: unknown
+    correct?: unknown
+    isCorrect?: boolean
+    score?: number
+  }>
+}
+
+export interface AdminStudent {
+  id: number
+  fullName?: string
+  email?: string
+  groupNumber?: string
+  tests?: AdminTest[]
+  files?: UserFile[]
+}
+
+export interface AdminGroup {
+  groupNumber: string
+  students: AdminStudent[]
+}
+
+export interface GroupedResults {
+  groups: AdminGroup[]
+  noGroup: AdminStudent[]
+}
+
+export interface GroupedResultsResult {
+  success: boolean
+  data: GroupedResults
+  error?: string
+}

@@ -26,5 +26,11 @@ export const API_CONFIG = {
       DELETE: '/upload/delete',
       DOWNLOAD: '/upload/download',
     },
+    ADMIN: {
+      RESULTS: '/admin/results',
+      STUDENT_FILES: '/admin/students',
+      FILES: '/admin/files',
+      USERS: '/admin/users',
+    },
   },
 } as const

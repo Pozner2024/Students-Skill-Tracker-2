@@ -40,3 +40,22 @@ export async function getTopic(id: string | number): Promise<TopicResult> {
     return { success: false, topic: null, error: (error as Error).message }
   }
 }
+
+export async function updateTopicContent(
+  id: number | string,
+  content: unknown,
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    const data = await http.put<{ success?: boolean; message?: string }>(
+      `${API_CONFIG.ENDPOINTS.TOPIC_CONTENT}/${id}/content`,
+      { content },
+      { context: 'topics.updateTopicContent' },
+    )
+    if (data?.success) {
+      return { success: true, message: data.message || 'Контент успешно сохранен' }
+    }
+    return { success: false, error: 'Ошибка при сохранении' }
+  } catch (error) {
+    return { success: false, error: (error as Error).message }
+  }
+}
