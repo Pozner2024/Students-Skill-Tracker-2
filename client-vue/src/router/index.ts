@@ -7,6 +7,7 @@ import AboutView from '@/views/AboutView.vue'
 import ContactsView from '@/views/ContactsView.vue'
 import CriteriaView from '@/views/CriteriaView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import TopicView from '@/views/TopicView.vue'
 import { decideRedirect } from './guards'
 import { useAuthStore } from '@/stores/auth'
 
@@ -40,7 +41,7 @@ const router = createRouter({
       component: PlaceholderView,
       meta: { title: 'Тест' },
     },
-    { path: '/topic', name: 'topic', component: PlaceholderView, meta: { title: 'Информация о теме' } },
+    { path: '/topic', name: 'topic', component: TopicView, meta: { title: 'Информация о теме' } },
     {
       path: '/login',
       name: 'login',
