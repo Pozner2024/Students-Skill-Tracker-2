@@ -25,6 +25,9 @@ const result = reactive({ answeredPercentage: 0, score: 0, grade: 0 })
 const normalizedTitle = computed(() =>
   ((route.query.title as string) || topicName.value || 'Тест').replace(/^Тема:?\s*/i, ''),
 )
+// Для экрана итогов используем «сырой» title из URL (как старый TestLoader.testTitle),
+// а не серверный testTitle (он хранится с префиксом «Тема:»).
+const rawTitle = computed(() => (route.query.title as string) || 'Тест')
 const variant = computed(() => String(route.query.variant || '1'))
 const total = computed(() => test.value?.questions.length || 0)
 const currentQuestion = computed(() => test.value?.questions[currentIndex.value] || null)
@@ -118,7 +121,7 @@ onMounted(load)
       :answered-percentage="result.answeredPercentage"
       :user-score="result.score"
       :user-grade="result.grade"
-      :test-topic="topicName"
+      :test-topic="rawTitle"
     />
 
     <div
