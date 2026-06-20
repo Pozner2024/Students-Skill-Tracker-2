@@ -95,3 +95,64 @@ export interface TopicResult {
   topic: Topic | null
   error?: string
 }
+
+export type TestQuestionType =
+  | 'multiple_choice'
+  | 'fill_in_the_blank'
+  | 'ordering'
+  | 'matching'
+
+export interface TestQuestionData {
+  type: TestQuestionType
+  question?: string
+  questionDescription?: string
+  // multiple_choice
+  options?: string[]
+  correct_answer?: string
+  // fill_in_the_blank
+  correct_answers?: string[]
+  allow_any_order?: boolean
+  // ordering
+  sequence?: string[]
+  correctOrder?: string[]
+  // matching
+  left_column?: string[]
+  right_column?: string[]
+  correct_matches?: Record<string, string>
+}
+
+export interface TestData {
+  testCode: string
+  testTitle: string
+  variant: number | string
+  questions: TestQuestionData[]
+}
+
+export interface TestResultMeta {
+  success: boolean
+  data: TestData | null
+  topicName: string
+  error?: string
+}
+
+export interface TestImagesResult {
+  success: boolean
+  images: Record<string, string>
+}
+
+export interface TestResultPayload {
+  testCode: string
+  variant: number
+  score: number
+  totalQuestions: number
+  maxPoints: number
+  percentage: number
+  grade: number
+  answersDetails: unknown[]
+}
+
+export interface SavedTestResult {
+  max_points?: number
+  grade?: number
+  [key: string]: unknown
+}
