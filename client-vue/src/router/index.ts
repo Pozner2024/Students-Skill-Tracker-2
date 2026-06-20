@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
-import PlaceholderView from '@/views/PlaceholderView.vue'
 import LoginView from '@/views/LoginView.vue'
 import AboutView from '@/views/AboutView.vue'
 import ContactsView from '@/views/ContactsView.vue'
@@ -9,6 +8,7 @@ import CriteriaView from '@/views/CriteriaView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import TopicView from '@/views/TopicView.vue'
 import TestView from '@/views/TestView.vue'
+import AdminView from '@/views/AdminView.vue'
 import { decideRedirect } from './guards'
 import { useAuthStore } from '@/stores/auth'
 
@@ -33,7 +33,7 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
-      component: PlaceholderView,
+      component: AdminView,
       meta: { title: 'Кабинет администратора' },
     },
     {
