@@ -1,11 +1,11 @@
-    # ---------- build frontend ----------
-FROM node:20-alpine AS frontend-builder
+# ---------- build frontend (Vue 3 + Vite) ----------
+FROM node:22-alpine AS frontend-builder
 
 WORKDIR /app
-COPY client/package*.json ./
+COPY client-vue/package*.json ./
 RUN npm ci
 
-COPY client .
+COPY client-vue .
 RUN npm run build
 
 # ---------- runtime nginx ----------
