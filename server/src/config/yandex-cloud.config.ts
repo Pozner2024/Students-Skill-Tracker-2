@@ -30,8 +30,10 @@ export default registerAs('yandexCloud', (): YandexCloudConfig => {
     );
   }
 
-  const endpoint = (process.env.YANDEX_CLOUD_ENDPOINT || 'https://storage.yandexcloud.net').replace(/\/$/, '');
-  
+  const endpoint = (
+    process.env.YANDEX_CLOUD_ENDPOINT || 'https://storage.yandexcloud.net'
+  ).replace(/\/$/, '');
+
   // Альтернативный endpoint для Yandex Cloud: https://s3.yandexcloud.net
   // Если storage.yandexcloud.net не работает, попробуйте использовать s3.yandexcloud.net
 

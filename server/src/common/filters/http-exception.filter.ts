@@ -40,7 +40,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
       status = exception.getStatus();
       const response = exception.getResponse();
       // Если ответ - объект, извлекаем message из него
-      if (typeof response === 'object' && response !== null && 'message' in response) {
+      if (
+        typeof response === 'object' &&
+        response !== null &&
+        'message' in response
+      ) {
         message = (response as { message: string }).message;
         // Сохраняем детали для отладки
         if ('error' in response || 'hint' in response) {

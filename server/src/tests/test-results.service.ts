@@ -27,7 +27,10 @@ export class TestResultsService {
       return null;
     };
 
-    const getGradeByPercent = (scorePercent: number, questionCount?: number) => {
+    const getGradeByPercent = (
+      scorePercent: number,
+      questionCount?: number,
+    ) => {
       const gradingScale: Record<number, Array<[number, number, number]>> = {
         10: [
           [1, 8, 1],
@@ -62,8 +65,9 @@ export class TestResultsService {
         return 1;
       }
       return (
-        scale.find(([min, max]) => normalized >= min && normalized <= max)?.[2] ??
-        1
+        scale.find(
+          ([min, max]) => normalized >= min && normalized <= max,
+        )?.[2] ?? 1
       );
     };
 
@@ -119,7 +123,7 @@ export class TestResultsService {
               Math.round((score / resolvedMaxPoints) * 100),
               totalQuestions ?? undefined,
             )
-          : (typeof result?.grade === 'number' ? result.grade : null) ?? null;
+          : ((typeof result?.grade === 'number' ? result.grade : null) ?? null);
 
       return {
         ...result,
@@ -155,7 +159,10 @@ export class TestResultsService {
       return null;
     };
 
-    const getGradeByPercent = (scorePercent: number, questionCount?: number) => {
+    const getGradeByPercent = (
+      scorePercent: number,
+      questionCount?: number,
+    ) => {
       const gradingScale: Record<number, Array<[number, number, number]>> = {
         10: [
           [1, 8, 1],
@@ -190,8 +197,9 @@ export class TestResultsService {
         return 1;
       }
       return (
-        scale.find(([min, max]) => normalized >= min && normalized <= max)?.[2] ??
-        1
+        scale.find(
+          ([min, max]) => normalized >= min && normalized <= max,
+        )?.[2] ?? 1
       );
     };
 
@@ -205,7 +213,7 @@ export class TestResultsService {
             Math.round((score / resolvedMaxPoints) * 100),
             totalQuestions,
           )
-        : (typeof grade === 'number' ? grade : null) ?? null;
+        : ((typeof grade === 'number' ? grade : null) ?? null);
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },

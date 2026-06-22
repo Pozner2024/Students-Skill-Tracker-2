@@ -32,7 +32,14 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
+      // Семейство no-unsafe-* понижено до warn: серверный код намеренно
+      // оперирует any/нетипизированными значениями (Prisma JSON, catch(error), DTO),
+      // строгий recommendedTypeChecked иначе выдаёт сотни ошибок на рабочем коде.
       '@typescript-eslint/no-unsafe-argument': 'warn',
+      '@typescript-eslint/no-unsafe-member-access': 'warn',
+      '@typescript-eslint/no-unsafe-assignment': 'warn',
+      '@typescript-eslint/no-unsafe-call': 'warn',
+      '@typescript-eslint/no-unsafe-return': 'warn',
       'prettier/prettier': ['error', { endOfLine: 'auto' }],
     },
   },

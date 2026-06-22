@@ -40,7 +40,7 @@ export class AuthService {
     let hashedPassword: string;
     try {
       hashedPassword = await argon2.hash(password);
-    } catch (error) {
+    } catch {
       throw new ConflictException('Ошибка при хешировании пароля');
     }
 

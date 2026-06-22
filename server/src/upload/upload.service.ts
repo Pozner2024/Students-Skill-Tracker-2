@@ -247,14 +247,17 @@ export class UploadService {
           // (например, последовательности типа Ð, Ñ, Ò), пробуем перекодировать
           const buffer = Buffer.from(originalFileName, 'latin1');
           const utf8Name = buffer.toString('utf8');
-          
+
           // Проверяем, содержит ли перекодированное имя валидные UTF-8 символы
           // и отличается ли оно от оригинала
-          if (utf8Name !== originalFileName && /[\u0400-\u04FF]/.test(utf8Name)) {
+          if (
+            utf8Name !== originalFileName &&
+            /[\u0400-\u04FF]/.test(utf8Name)
+          ) {
             // Если содержит кириллицу, используем перекодированное имя
             originalFileName = utf8Name;
           }
-        } catch (recodeError) {
+        } catch {
           // Если перекодирование не удалось, используем оригинальное имя
         }
       } catch (e) {

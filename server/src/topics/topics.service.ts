@@ -94,21 +94,33 @@ export class TopicsService {
     content: any,
   ): Promise<{ success: boolean; message: string }> {
     try {
-      this.logger.log(`[updateTopicContent] Сохранение в БД для topic id: ${id}`);
-      this.logger.log(`[updateTopicContent] Тип content перед сохранением: ${typeof content}`);
-      
+      this.logger.log(
+        `[updateTopicContent] Сохранение в БД для topic id: ${id}`,
+      );
+      this.logger.log(
+        `[updateTopicContent] Тип content перед сохранением: ${typeof content}`,
+      );
+
       // Если content - это HTML строка, оборачиваем её в JSON объект
       let contentToSave = content;
       if (typeof content === 'string') {
-        this.logger.log(`[updateTopicContent] Content - строка, оборачиваем в JSON объект`);
-        this.logger.log(`[updateTopicContent] Первые 200 символов: ${content.substring(0, 200)}`);
+        this.logger.log(
+          `[updateTopicContent] Content - строка, оборачиваем в JSON объект`,
+        );
+        this.logger.log(
+          `[updateTopicContent] Первые 200 символов: ${content.substring(0, 200)}`,
+        );
         // Оборачиваем HTML в JSON объект для правильного хранения в JSONB
         contentToSave = { html: content };
       } else if (typeof content === 'object' && content !== null) {
-        this.logger.log(`[updateTopicContent] Content уже объект, сохраняем как есть`);
-        this.logger.log(`[updateTopicContent] Content (JSON): ${JSON.stringify(content).substring(0, 300)}`);
+        this.logger.log(
+          `[updateTopicContent] Content уже объект, сохраняем как есть`,
+        );
+        this.logger.log(
+          `[updateTopicContent] Content (JSON): ${JSON.stringify(content).substring(0, 300)}`,
+        );
       }
-      
+
       await this.prisma.topic.update({
         where: { id },
         data: { content: contentToSave },

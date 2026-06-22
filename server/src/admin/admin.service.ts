@@ -21,7 +21,10 @@ export class AdminService {
       return null;
     };
 
-    const getGradeByPercent = (scorePercent: number, questionCount?: number) => {
+    const getGradeByPercent = (
+      scorePercent: number,
+      questionCount?: number,
+    ) => {
       const gradingScale: Record<number, Array<[number, number, number]>> = {
         10: [
           [1, 10, 1],
@@ -52,7 +55,11 @@ export class AdminService {
       const percent = Number.isFinite(scorePercent) ? scorePercent : 0;
       const normalized = Math.max(0, Math.min(100, percent));
       const scale = gradingScale[questionCount ?? 10] || gradingScale[10];
-      return scale.find(([min, max]) => normalized >= min && normalized <= max)?.[2] ?? 0;
+      return (
+        scale.find(
+          ([min, max]) => normalized >= min && normalized <= max,
+        )?.[2] ?? 0
+      );
     };
 
     // 🔹 Получаем всех пользователей из базы с нужными полями
@@ -143,14 +150,19 @@ export class AdminService {
 
               if (score !== null && maxPoints && maxPoints > 0) {
                 const percentage = Math.round((score / maxPoints) * 100);
-                return getGradeByPercent(percentage, totalQuestions ?? undefined);
+                return getGradeByPercent(
+                  percentage,
+                  totalQuestions ?? undefined,
+                );
               }
 
-              return (typeof result.grade === 'number' ? result.grade : null) ?? null;
+              return (
+                (typeof result.grade === 'number' ? result.grade : null) ?? null
+              );
             })(),
             completed_at: (result.completed_at as string | Date | null) ?? null,
             test_code: testCode,
-            test_title: testCode ? testTitlesMap.get(testCode) ?? null : null, // Добавляем название из БД
+            test_title: testCode ? (testTitlesMap.get(testCode) ?? null) : null, // Добавляем название из БД
             answers_details:
               (Array.isArray(result.answers_details)
                 ? result.answers_details
@@ -192,7 +204,7 @@ export class AdminService {
 
       // Получаем файлы студента
       const files = await this.getStudentFiles(u.id);
-      
+
       this.logger.debug(
         `Student ${u.id} (${u.fullName}): ${allResults.length} tests, ${files.length} files`,
       );
@@ -369,7 +381,10 @@ export class AdminService {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Error deleting user ${userId}: ${errorMessage}`, error);
+      this.logger.error(
+        `Error deleting user ${userId}: ${errorMessage}`,
+        error,
+      );
       throw error;
     }
   }

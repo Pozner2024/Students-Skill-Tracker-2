@@ -25,5 +25,4 @@ export class AuthController {
   async login(@Body(ValidationPipe) loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
-
 }

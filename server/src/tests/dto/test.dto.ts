@@ -56,7 +56,9 @@ export class SaveTestResultDto {
 
   @IsOptional()
   @IsNumber()
-  @Transform(({ value }) => (value === null || value === undefined ? null : Number(value)))
+  @Transform(({ value }) =>
+    value === null || value === undefined ? null : Number(value),
+  )
   maxPoints?: number | null;
 
   @IsNumber()
