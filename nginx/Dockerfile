@@ -1,5 +1,5 @@
 # ---------- build frontend (Vue 3 + Vite) ----------
-FROM node:22-alpine AS frontend-builder
+FROM node:22.12-alpine AS frontend-builder
 
 WORKDIR /app
 COPY client-vue/package*.json ./
